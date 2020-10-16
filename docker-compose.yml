@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  exbook:
+    image: "docker.pkg.github.com/somft/se-project/ex-book:${VERSION:-latest}"
+    build:
+      context: .
+      dockerfile: src/ExBook/Dockerfile
+    ports:
+      - "8091:80"

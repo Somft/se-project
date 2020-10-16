@@ -1,0 +1,77 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+  Build:
+    runs-on: ubuntu-latest
+    needs: Test
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Get version
+        id: slug
+        run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/heads/})"
+        
+      - name: Build
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: somft/se-project/ex-book
+          tag_with_sha: false
+          tags: latest, ${{ steps.slug.outputs.version }}
+          dockerfile: src/ExBook/Dockerfile
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: Build
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Get version
+        id: slug
+        run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/heads/})"
+        
+      - name: Copy docker-compose.yml
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: docker-compose.yml
+          remote: ${{ secrets.PROJECT_PATH }}/docker-compose.yml
+          host: ${{ secrets.SERVER }}
+          username: ${{ secrets.SERVER_LOGIN }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+        
+      - name: Pull containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER }}
+          username: ${{ secrets.SERVER_LOGIN }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            echo ${{ steps.slug.outputs.version }} > version.txt 
+            docker login -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }} https://docker.pkg.github.com
+            export VERSION=${{ steps.slug.outputs.version }}
+            docker-compose pull
+            docker-compose up -d
