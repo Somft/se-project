@@ -1,7 +1,7 @@
 version: '2.1'
 
 services:
-  app:
+  exbook:
     container_name: 'exbook-app'
     image: "docker.pkg.github.com/somft/se-project/ex-book:${VERSION:-latest}"
     build:
@@ -9,10 +9,3 @@ services:
       dockerfile: src/ExBook/Dockerfile
     ports:
       - "127.0.0.1:8091:80"
-  db:
-    container_name: 'exbook-db'
-    image: "postgres:13.0"
-    ports:
-     - ""
-
-
