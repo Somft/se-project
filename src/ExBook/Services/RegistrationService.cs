@@ -32,6 +32,9 @@ namespace ExBook.Services
             {
                 Id = Guid.NewGuid(),
                 Login = userData.Login,
+                Email = userData.Email,
+                Name = userData.Name,
+                Surname = userData.Surname,
                 Password = userData.Password,
                 IsAdministrator = false,
             });
