@@ -2,6 +2,7 @@ using ExBook.Configuration;
 using ExBook.Extensions;
 using ExBook.Extensions.DependencyInjection;
 using ExBook.Middleware;
+using ExBook.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,8 @@ namespace ExBook
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddTransient<RegistrationService>();
 
             services.UseConfigurator(this.configuration, new[]
             {

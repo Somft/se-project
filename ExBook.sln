@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExBook.Extensions", "src\ExBook.Extensions\ExBook.Extensions.csproj", "{10DE49C5-6745-4808-8082-E1F2A1B4DF7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExBook.Extensions", "src\ExBook.Extensions\ExBook.Extensions.csproj", "{10DE49C5-6745-4808-8082-E1F2A1B4DF7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExBook.Mails", "src\ExBook.Mails\ExBook.Mails.csproj", "{8208D6A3-E9B1-4A61-B178-50C969713997}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExBook.Mails", "src\ExBook.Mails\ExBook.Mails.csproj", "{8208D6A3-E9B1-4A61-B178-50C969713997}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@
     <xsl:template match="/">
       <html>
         <body>
-          <h2>Reports</h2>
+          Click <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">here</a> to confirm an account.
         </body>
       </html>
     </xsl:template>

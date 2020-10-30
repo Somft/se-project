@@ -1,6 +1,5 @@
 ﻿using ExBook.Data;
 using ExBook.Extensions;
-using ExBook.Models.Authentication;
 using ExBook.Views.Authentication;
 
 using Microsoft.AspNetCore.Authorization;
@@ -30,57 +29,7 @@ namespace ExBook.Controllers
             this.configuration = configuration;
         }
 
-        [HttpGet]
-        [Route("/register")]
-        [AllowAnonymous]
-        public IActionResult Register()
-        {
-            return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.RedirectToHome() as IActionResult
-                : this.View(new RegisterViewModel());
-        }
 
-        [HttpPost]
-        [Route("/register")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel request)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(request);
-            }
-
-            if (request.Password != request.PasswordConfirmation)
-            {
-                return this.View(new RegisterViewModel()
-                {
-                    Message = "Passwords are not the same",
-                    Login = request.Login
-                });
-            }
-
-            if (await this.applicationDbContext.Users.AnyAsync(u => u.Login == request.Login))
-            {
-                return this.View(new RegisterViewModel()
-                {
-                    Message = "User with given login exists",
-                    Login = request.Login
-                });
-            }
-
-            var newUser = new User()
-            {
-                Password = request.Password,
-                Login = request.Login,
-                IsAdministrator = false,
-                Id = Guid.NewGuid(),
-            };
-
-            this.applicationDbContext.Users.Add(newUser);
-            await this.applicationDbContext.SaveChangesAsync();
-
-            return this.Redirect("/login");
-        }
 
         [HttpGet]
         [Route("/login")]

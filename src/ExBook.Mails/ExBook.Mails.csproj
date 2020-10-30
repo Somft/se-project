@@ -9,5 +9,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates\*.xslt" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.9" />
+    <PackageReference Include="MimeKit" Version="2.9.2" />
+  </ItemGroup>
   
 </Project>
