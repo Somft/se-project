@@ -4,11 +4,11 @@
     Users
 </h2>
 
-<table>
+<table class="table table-striped">
     <tr>
-        <th>ID</th>
-        <th>Login</th>
-        <th>Is administrator</th>
+        <th scope="col">ID</th>
+        <th scope="col">Login</th>
+        <th scope="col">Is administrator</th>
     </tr>
     @foreach (var user in Model.Users)
     {
