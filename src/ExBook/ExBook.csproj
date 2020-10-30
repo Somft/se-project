@@ -21,8 +21,4 @@
     <ProjectReference Include="..\ExBook.Mails\ExBook.Mails.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 ﻿using ExBook.Extensions.Configuration;
 using ExBook.Mails.Services;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ExBook.Configuration

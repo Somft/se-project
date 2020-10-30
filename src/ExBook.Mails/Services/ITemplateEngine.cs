@@ -1,4 +1,5 @@
 ﻿using ExBook.Mails.Templates;
+
 using System.Threading.Tasks;
 
 namespace ExBook.Mails.Services

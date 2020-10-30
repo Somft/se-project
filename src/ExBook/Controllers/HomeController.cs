@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace ExBook.Controllers
 {
     [Controller]
+    [Authorize]
     public class HomeController : Controller
     {
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return this.View();

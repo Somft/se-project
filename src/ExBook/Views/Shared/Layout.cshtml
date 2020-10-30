@@ -5,8 +5,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@(ViewData["Title"] ?? "ExBook")</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 </head>
 <body>
+    <header>
+        @if (Context.User.Identity.IsAuthenticated)
+        {
+            @Context.User.Claims.FirstOrDefault((c) => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+
+            <form asp-area="" asp-controller="Authentication" asp-action="Logout">
+                <button type="submit" class="btn btn-light">Logout</button>
+            </form>
+        }
+    </header>
+
     @RenderBody()
 
     @RenderSection("Scripts", required: false)
