@@ -1,6 +1,13 @@
 ﻿namespace ExBook.Mails.Templates
 {
-    public class EmailConfirmationContext : BaseContext
+    public class EmailConfirmationContext : EmailContext
     {
+        public EmailConfirmationContext()
+        {
+        }
+
+        public EmailConfirmationContext(string to, string subject) : base(to, subject)
+        {
+        }
     }
 }

@@ -1,0 +1,88 @@
+﻿@model ExBook.Models.Authentication.RegisterViewModel
+@{
+    ViewData["Title"] = "Registration";
+}
+<div>
+    <div class="card login-card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title text-left mb-4 mt-1">Registration</h3>
+            <hr>
+            @if (Model.Message != null)
+            {
+                <p class="text-danger text-center">@Model.Message</p>
+            }
+            <form asp-controller="Registration" asp-action="Index" method="post">
+                <div class="form-group">
+                    <label for="Login">Username</label>
+                    <input asp-for="Login" class=@GetInputClass("Login") type="text">
+                    <span asp-validation-for="Login" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Email">E-mail</label>
+                    <input asp-for="Email" class=@GetInputClass("Email") type="text">
+                    <span asp-validation-for="Email" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="Name">Name</label>
+                        <input asp-for="Name" class=@GetInputClass("Name") type="text">
+                        <span asp-validation-for="Name" class="invalid-feedback"></span>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="Surname">Surname</label>
+                        <input asp-for="Surname" class=@GetInputClass("Surname") type="text">
+                        <span asp-validation-for="Surname" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Login">Password</label>
+                    <input asp-for="Password" class=@GetInputClass("Password") type="password">
+                    <span asp-validation-for="Password" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Login">Password (repeat)</label>
+                    <input asp-for="PasswordConfirmation" class=@GetInputClass("PasswordConfirmation") type="password">
+                    <span asp-validation-for="PasswordConfirmation" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Create account  </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .login-card
+    {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    @@media screen and ( min-height: 400px )
+    {
+        .login-card
+        {
+            margin-top: calc(50vh - 360px);
+        }
+    }
+</style>
+
+@functions {
+    private string GetInputClass(string inputName)
+    {
+        string result = "form-control";
+
+        if (this.ViewData.ModelState[inputName]?.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+        {
+            result += " is-invalid";
+        }
+
+        return result;
+    }
+}

@@ -18,7 +18,7 @@ namespace ExBook.Mails.Services
             this.templateResolver = templateResolver;
         }
 
-        public async Task<string> Render<T>(string template, T context) where T : BaseContext
+        public async Task<string> Render<T>(string template, T context) where T : EmailContext
         {
             XslCompiledTransform transform = await this.CompileTransform(template);
             XmlDocument contextXml = this.SerializeContext(context);
