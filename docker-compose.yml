@@ -9,3 +9,5 @@ services:
       dockerfile: src/ExBook/Dockerfile
     ports:
       - "127.0.0.1:8091:80"
+    volumes:
+      - ./appsettings.api.json:/app/appsettings.Production.json
