@@ -8,6 +8,8 @@
     <tr>
         <th scope="col">ID</th>
         <th scope="col">Login</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Name</th>
         <th scope="col">Is administrator</th>
     </tr>
     @foreach (var user in Model.Users)
@@ -15,6 +17,8 @@
         <tr>
             <td>@user.Id</td>
             <td>@user.Login</td>
+            <td>@user.Email</td>
+            <td>@($"{user.Name} {user.Surname}")</td>
             <td>@user.IsAdministrator</td>
         </tr>
     }
