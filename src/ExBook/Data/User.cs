@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExBook.Data
 {
-    [Table("users")]
+    [Table("user")]
     public class User
     {
         [Key]
@@ -26,7 +26,11 @@ namespace ExBook.Data
         [Column("password")]
         public string Password { get; set; }
 
-        [Column("is_administrator")]
-        public bool IsAdministrator { get; set; }
+        [Column("role")]
+        public string Role { get; set; }
+
+
+        [Column("is_email_confirmed")]
+        public bool IsEmailConfirmed { get; set; }
     }
 }
