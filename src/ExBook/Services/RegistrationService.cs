@@ -6,6 +6,8 @@ using ExBook.Models.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExBook.Services
@@ -36,7 +38,7 @@ namespace ExBook.Services
                 Name = userData.Name,
                 Surname = userData.Surname,
                 Password = userData.Password,
-                IsAdministrator = false,
+                IsEmailConfirmed = false,
             });
             await this.applicationDbContext.SaveChangesAsync();
 
@@ -44,5 +46,6 @@ namespace ExBook.Services
 
             return true;
         }
+
     }
 }

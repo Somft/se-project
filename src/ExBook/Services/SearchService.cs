@@ -15,5 +15,15 @@ namespace ExBook.Services
         {
             this.applicationDbContext = applicationDbContext;
         }
+
+        public List<User> GetAllUsers()
+        {
+            return this.applicationDbContext.Users.ToList();
+        }
+
+        public List<User> GetUsersByName(string name)
+        {
+            return this.applicationDbContext.Users.Where(u => u.Name.Contains(name)).ToList();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ExBook.Extensions;
+using ExBook.Models;
 using ExBook.Models.Authentication;
 using ExBook.Services;
 
@@ -21,12 +22,33 @@ namespace ExBook.Controllers
         [HttpGet]
         [Route("/search")]
         [AllowAnonymous]
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.View()
-                : this.RedirectToHome() as IActionResult;
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                return this.HttpContext.User.Identity.IsAuthenticated
+                 ? Search(searchString)
+                 : this.RedirectToHome() as IActionResult;
+            }
+            else
+            {
+                return this.HttpContext.User.Identity.IsAuthenticated
+                    ? this.View(new UsersViewModel()
+                    {
+                        Users = searchService.GetAllUsers()
+                    })
+                    : this.RedirectToHome() as IActionResult;
+            }
+
         }
 
+        private IActionResult Search(string searchString)
+        {
+            ViewBag.Message = searchString;
+            return this.View("Index", new UsersViewModel()
+            {
+                Users = searchService.GetUsersByName(searchString)
+            });
+        }
     }
 }
