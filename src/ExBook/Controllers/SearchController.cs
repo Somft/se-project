@@ -1,6 +1,7 @@
 ﻿using ExBook.Extensions;
 using ExBook.Models;
 using ExBook.Models.Authentication;
+using ExBook.Models.Search;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
@@ -22,32 +23,34 @@ namespace ExBook.Controllers
         [HttpGet]
         [Route("/search")]
         [AllowAnonymous]
-        public IActionResult Index(string searchString)
+        public async Task<IActionResult> IndexAsync(string filterTitle, string filterLogin)
         {
-            if (!string.IsNullOrWhiteSpace(searchString))
+            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterLogin))
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
-                 ? Search(searchString)
+                 ? await this.Search(filterTitle, filterLogin)
                  : this.RedirectToHome() as IActionResult;
             }
             else
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
-                    ? this.View(new UsersViewModel()
+                    ? this.View(new SearchBookShelfBookViewModel()
                     {
-                        Users = searchService.GetAllUsers()
+                        BookShelfBooks = await searchService.GetAllBookShelfBooks(),
+                        FilterTitle = null
                     })
                     : this.RedirectToHome() as IActionResult;
             }
 
         }
 
-        private IActionResult Search(string searchString)
+        private async Task<IActionResult> Search(string filterTitle, string filterLogin)
         {
-            ViewBag.Message = searchString;
-            return this.View("Index", new UsersViewModel()
+            return this.View("Index", new SearchBookShelfBookViewModel()
             {
-                Users = searchService.GetUsersByName(searchString)
+                BookShelfBooks = await searchService.GetBookShelfBooksFiltered(filterTitle, filterLogin),
+                FilterTitle = filterTitle,
+                FilterLogin = filterLogin
             });
         }
     }

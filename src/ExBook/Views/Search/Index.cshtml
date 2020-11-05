@@ -1,4 +1,4 @@
-﻿@model ExBook.Models.UsersViewModel
+﻿@model ExBook.Models.Search.SearchBookShelfBookViewModel
 @{
     ViewData["Title"] = "Search";
 }
@@ -9,26 +9,26 @@
 </h2>
 <form asp-controller="Search" asp-action="Index" method="get">
     <p>
-        Name: <input type="text" name="SearchString" value=@ViewBag.Message>
-        <input type="submit" value="Filter" />
+        @*Name: <input type="text" name="FilterName" value=@Model.FilterName>*@
+        Title: @Html.TextBoxFor(t=>t.FilterTitle)
+        Login: @Html.TextBoxFor(t=> t.FilterLogin)
+        <input type="submit" value="Search" />
     </p>
 </form>
 <table class="table table-striped">
     <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Login</th>
-        <th scope="col">E-mail</th>
-        <th scope="col">Name</th>
-        <th scope="col">Is administrator</th>
+        <th scope="col">BookShelf Owner Name</th>
+        <th scope="col">BookShelf Owner Login</th>
+        <th scope="col">Title</th>
+        <th scope="col">Author</th>
     </tr>
-    @foreach (var user in Model.Users)
+    @foreach (var book in Model.BookShelfBooks)
     {
-        <tr>
-            <td>@user.Id</td>
-            <td>@user.Login</td>
-            <td>@user.Email</td>
-            <td>@($"{user.Name} {user.Surname}")</td>
-            <td>@user.IsEmailConfirmed</td>
-        </tr>
+<tr>
+    <td>@($"{book.BookShelf.User.Name} {book.BookShelf.User.Surname}")</td>
+    <td>@book.BookShelf.User.Login</td>
+    <td>@book.Book.Name</td>
+    <td>@book.Book.Author</td>
+</tr>
     }
 </table>
