@@ -38,6 +38,7 @@ namespace ExBook.Services
                 Name = userData.Name,
                 Surname = userData.Surname,
                 Password = userData.Password,
+                Role = "user",
                 IsEmailConfirmed = false,
             });
             await this.applicationDbContext.SaveChangesAsync();
