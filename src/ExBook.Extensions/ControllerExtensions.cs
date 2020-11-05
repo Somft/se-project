@@ -13,5 +13,9 @@ namespace ExBook.Extensions
         {
             return controller.Redirect("/login");
         }
+        public static RedirectResult RedirectToSearch(this ControllerBase controller)
+        {
+            return controller.Redirect("/search");
+        }
     }
 }
