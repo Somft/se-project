@@ -27,6 +27,8 @@ namespace ExBook
             services.AddControllersWithViews();
 
             services.AddTransient<RegistrationService>();
+            services.AddTransient<SearchService>();
+            services.AddTransient<WishListService>();
 
             services.UseConfigurator(this.configuration, new[]
             {
