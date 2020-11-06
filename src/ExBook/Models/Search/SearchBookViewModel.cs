@@ -12,5 +12,7 @@ namespace ExBook.Models.Search
         public List<Book> Books { get; set; }
         public string? FilterTitle { get; set; }
         public string? FilterAuthor { get; set; }
+
+        
     }
 }

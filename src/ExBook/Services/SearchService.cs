@@ -59,7 +59,7 @@ namespace ExBook.Services
                 .Include(bsb => bsb.BookShelf)
                 .ThenInclude(bs => bs.User)
                 .Include(bsb => bsb.Book)
-                .Where(bsb => bsb.Book.Id== Id)
+                .Where(bsb => bsb.Book.Id== Id)          
                 .ToListAsync();
             return bookShelfBooks;
         }
