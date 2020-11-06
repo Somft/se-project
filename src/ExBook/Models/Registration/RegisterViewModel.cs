@@ -31,7 +31,12 @@ namespace ExBook.Models.Authentication
         [Required]
         [MinLength(6)]
         [MaxLength(20)]
-        public string PasswordConfirmation { get; set; } = "";
+        public string PasswordConfirmation { get; } = "";
+
+        [Required]
+        [MinLength(6)]
+        [MaxLength(20)]
+        public string Tested { get; set; } = "";
 
         public string? Message { get; set; } = null;
     }
