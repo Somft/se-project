@@ -1,34 +1,56 @@
-﻿@model ExBook.Models.Search.SearchBookShelfBookViewModel
+﻿@model ExBook.Models.Search.SearchBookViewModel
 @{
     ViewData["Title"] = "Search";
 }
 
 
 <h2>
-    Users
+    Search Books
 </h2>
 <form asp-controller="Search" asp-action="Index" method="get">
     <p>
-        @*Name: <input type="text" name="FilterName" value=@Model.FilterName>*@
         Title: @Html.TextBoxFor(t=>t.FilterTitle)
-        Login: @Html.TextBoxFor(t=> t.FilterLogin)
+        Author: @Html.TextBoxFor(t=> t.FilterAuthor)
         <input type="submit" value="Search" />
     </p>
 </form>
 <table class="table table-striped">
     <tr>
-        <th scope="col">BookShelf Owner Name</th>
-        <th scope="col">BookShelf Owner Login</th>
         <th scope="col">Title</th>
         <th scope="col">Author</th>
+        <th scope="col">Cover</th>
+        <th scope="col">Available</th>
     </tr>
-    @foreach (var book in Model.BookShelfBooks)
+    @foreach (var book in Model.Books)
     {
-<tr>
-    <td>@($"{book.BookShelf.User.Name} {book.BookShelf.User.Surname}")</td>
-    <td>@book.BookShelf.User.Login</td>
-    <td>@book.Book.Name</td>
-    <td>@book.Book.Author</td>
-</tr>
+    <tr>
+        <td>@book.Name</td>
+        <td>@book.Author</td>
+        @if (@book.CoverUrl != null)
+    {
+        <td>
+            <img src=@book.CoverUrl alt="Cover" style="width:32px;height:32px;" id="test" />
+        </td>
+    }
+    else
+    {
+        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
+    }
+        @if(@book.BookShelfBook.Count>0)
+        {
+        <form asp-controller="Search" asp-route-id="@book.Id" asp-action="GetBookshelvesForBook" method="post">
+            <td><input type="submit" value="Get this book" title="Show available books" /></td>
+        </form>
+        }
+        else
+        {
+        <td><input type="submit" value="Get this book" disabled title="Sorry, currently there is no bookshelf containing this book" /></td>
+        }
+
+    </tr>
     }
 </table>
+
+<script>
+
+</script>

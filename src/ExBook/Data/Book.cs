@@ -27,6 +27,9 @@ namespace ExBook.Data
         [Column("name")]
         public string Name { get; set; }
 
+        [Column("cover_url")]
+        public string? CoverUrl { get; set; }
+
         [InverseProperty("Book")]
         public virtual ICollection<BookShelfBook> BookShelfBook { get; set; }
         [InverseProperty("Book")]
