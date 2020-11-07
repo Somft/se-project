@@ -37,9 +37,9 @@
                     foreach (var book in Model.Books)
                     {
                         <tr>
-                                        <td> @book.Book.Name</td>
-                                        <td> @book.Book.Author</td>
-                                        <td> @book.Book.Created</td>
+                            <td> @book.Book.Name</td>
+                            <td> @book.Book.Author</td>
+                            <td> @book.Book.Created</td>
 
                         </tr>
                     }
@@ -47,4 +47,11 @@
             }
         </tbody>
     </table>
+
+    <form asp-area="" asp-controller="WishList" asp-action="Add">
+        <button type="submit" class="btn btn-dark">Add</button>
+    </form>
+
 </div>
+
+

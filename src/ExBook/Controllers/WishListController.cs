@@ -34,6 +34,14 @@ namespace ExBook.Controllers
            return View (new WishListViewModel() {Books = result });
           
         }
+       
+        [HttpPost]
+        [Route("/addToList")]
+        public IActionResult Add()
+        {
+            //this.HttpContext.Response.Cookies.Delete("Authentication");
+            return this.RedirectToSearch();
+        }
 
         private Guid GetUserID()
         {
