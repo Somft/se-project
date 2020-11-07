@@ -1,11 +1,50 @@
 ﻿@model ExBook.Models.WhishList.WishListViewModel
 @{
-    ViewData["Title"] = "WishList";
+    ViewData["Title"] = "Your Wish List";
+    string[] TableHeaders = new string[] {"Book Title"
+                        ,"Author"
+                        ,"Created"
+                        };
 }
 
-<h1>Index</h1>
-@foreach(var book in Model.Books)
-{
-    <div>Book Title: @book.Book.Name </div>
-}
 
+@*<h1>Index</h1>
+    @foreach (var book in Model.Books)
+    {
+        <div>Book Title: @book.Book.Name </div>
+    }
+*@
+
+<div class="table">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                @{
+                    foreach (var head in TableHeaders)
+                    {
+                        <th>
+                            @head
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                if (Model != null)
+                {
+                    foreach (var book in Model.Books)
+                    {
+                        <tr>
+                                        <td> @book.Book.Name</td>
+                                        <td> @book.Book.Author</td>
+                                        <td> @book.Book.Created</td>
+
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
