@@ -40,7 +40,7 @@ namespace ExBook.Controllers
         public IActionResult Add()
         {
             //this.HttpContext.Response.Cookies.Delete("Authentication");
-            return this.RedirectToSearch();
+            return this.RedirectToAddToWishList();
         }
 
         private Guid GetUserID()
@@ -48,6 +48,9 @@ namespace ExBook.Controllers
             string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
             return dbContext.Users.Where(user => user.Login == login).Single().Id;
         }
+
+       
+        
 
 
     }

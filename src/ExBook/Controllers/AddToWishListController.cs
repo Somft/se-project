@@ -1,5 +1,5 @@
 ﻿using ExBook.Extensions;
-using ExBook.Models.Authentication;
+using ExBook.Models.AddToWhishList;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
@@ -11,22 +11,35 @@ namespace ExBook.Controllers
 {
     public class AddToWishListController : Controller
     {
-        private readonly AddToWishListService addToWishList;
+        private readonly AddToWishListService addToWishListService;
 
-        public AddToWishListController(AddToWishListService addToWishList)
+        public AddToWishListController(AddToWishListService addToWishListService)
         {
-            this.addToWishList = addToWishList;
+            this.addToWishListService = addToWishListService;
         }
 
         [HttpGet]
-        [Route("/add")]
+        [Route("/addtowishlist")]
     
         public IActionResult Index()
         {
-            return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.View()
-                : this.RedirectToHome() as IActionResult;
+           return this.View(new AddToWishListViewModel() );
         }
 
+        public async Task<IActionResult> Index(AddToWishListViewModel input)
+        {
+            await this.addToWishListService.AddBook(input);
+            return this.Redirect("/search");
+        }
+
+        [HttpGet]
+        [Route("/register-success")]
+        [AllowAnonymous]
+        public IActionResult Success()
+        {
+            return this.HttpContext.User.Identity.IsAuthenticated
+                ? this.RedirectToHome() as IActionResult
+                : this.View();
+        }
     }
 }

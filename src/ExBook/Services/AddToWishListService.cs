@@ -1,4 +1,5 @@
 ﻿using ExBook.Data;
+using ExBook.Models.AddToWhishList;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,26 @@ namespace ExBook.Services
             this.applicationDbContext = applicationDbContext;
         }
 
-       /* public async Task<List<WishListBook>> GetUserBook(Guid userId)
+        public async Task<bool> AddBook(AddToWishListViewModel book)
         {
-            return await applicationDbContext.WishListBook.Include(book => book.Book).Where(book => book.WishList.UserId == userId).ToListAsync();
-        }*/
+
+
+            this.applicationDbContext.Book.Add(new Book()
+            {
+                Id = Guid.NewGuid(),
+                Name = book.Name,
+                Author = book.Author,
+                Created = DateTime.Parse(book.Created)
+
+            }) ;
+
+            await this.applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+        /* public async Task<List<WishListBook>> GetUserBook(Guid userId)
+         {
+             return await applicationDbContext.WishListBook.Include(book => book.Book).Where(book => book.WishList.UserId == userId).ToListAsync();
+         }*/
     }
 }

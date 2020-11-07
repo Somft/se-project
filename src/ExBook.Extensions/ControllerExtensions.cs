@@ -17,5 +17,14 @@ namespace ExBook.Extensions
         {
             return controller.Redirect("/search");
         }
+        public static RedirectResult RedirectToWishList(this ControllerBase controller)
+        {
+            return controller.Redirect("/wishlist");
+        }
+        public static RedirectResult RedirectToAddToWishList(this ControllerBase controller)
+        {
+            return controller.Redirect("/addtowishlist");
+        }
+
     }
 }
