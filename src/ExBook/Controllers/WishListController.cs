@@ -1,32 +1,46 @@
-﻿using ExBook.Extensions;
+﻿using ExBook.Data;
+using ExBook.Extensions;
 using ExBook.Models.Authentication;
+using ExBook.Models.WhishList;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExBook.Controllers
 {
+    [Authorize]
     public class WishListController : Controller
     {
+        private ApplicationDbContext dbContext;
         private readonly WishListService wishListService;
 
-        public WishListController(WishListService wishListService)
+        public WishListController(WishListService wishListService, ApplicationDbContext dbContext)
         {
             this.wishListService = wishListService;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
         [Route("/wishlist")]
-        [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.View()
-                : this.RedirectToSearch() as IActionResult;
+           Guid userID = GetUserID();
+           var result = await wishListService.GetUserBook(userID);
+           return View (new WishListViewModel() {Books = result });
+          
         }
+
+        private Guid GetUserID()
+        {
+            string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+            return dbContext.Users.Where(user => user.Login == login).Single().Id;
+        }
+
 
     }
 }

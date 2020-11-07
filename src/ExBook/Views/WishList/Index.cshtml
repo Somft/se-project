@@ -1,7 +1,11 @@
-﻿
+﻿@model ExBook.Models.WhishList.WishListViewModel
 @{
     ViewData["Title"] = "WishList";
 }
 
 <h1>Index</h1>
+@foreach(var book in Model.Books)
+{
+    <div>Book Title: @book.Book.Name </div>
+}
 
