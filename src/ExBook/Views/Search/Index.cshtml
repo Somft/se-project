@@ -1,57 +1,101 @@
 ﻿@model ExBook.Models.Search.SearchBookViewModel
-@{
-    ViewData["Title"] = "Search";
+@{ ViewData["Title"] = "Search"; }
+
+<div class="card searchbar-card shadow-sm">
+    <div class="card-header">
+        Search Books
+    </div>
+    <div class="card-body">
+        <form asp-controller="Search" asp-action="Index" method="get">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInput">Title</label>
+                    <input type="text" class="form-control mb-2" id="FilterTitle" name="FilterTitle" placeholder="Title" value="@Model.FilterTitle">
+                </div>
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Author</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="FilterAuthor" name="FilterAuthor" placeholder="Author" value="@Model.FilterAuthor">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" id="FilterAvailable" name="FilterAvailable" type="checkbox" value="true" @(Model.FilterAvailable ? "checked=\"checked\"" : "") />
+                        <label class="form-check-label" for="autoSizingCheck">
+                            Only Available
+                        </label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="books">
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Cover</th>
+            <th scope="col">Available</th>
+        </tr>
+        @foreach (var book in Model.Books)
+        {
+<tr>
+    <td>@book.Name</td>
+    <td>@book.Author</td>
+    @if (@book.CoverUrl != null)
+    {
+<td>
+    <img src=@book.CoverUrl alt="Cover" style="width:32px;height:32px;" id="test" />
+</td> }
+                else
+                {
+<td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>}
+    @if (@book.BookShelfBook.Count > 0)
+    {
+<form asp-controller="Search" asp-route-id="@book.Id" asp-action="GetBookshelvesForBook" method="post">
+    <td><input type="submit" value="Get this book" title="Show available books" class="btn btn-primary btn-sm " /></td>
+</form> }
+                else
+                {
+<td><input type="submit" value="Get this book" disabled title="Sorry, currently there is no bookshelf containing this book" class="btn btn-secondary btn-sm" /></td>}
+
+
+    @if (!GetIsOnWishlist(Model.UserId, @book))
+    {
+<form asp-controller="Search" asp-route-id="@book.Id" asp-action="AddToWishList" method="post">
+    <td><input type="submit" value="Add to wishlist" title="Add this book to your wishlist" class="btn btn-primary btn-sm " /></td>
+</form> }
+                else
+                {
+<td><input type="submit" value="Add to wishlist" disabled title="This book is already on your wishlist" class="btn btn-secondary btn-sm" /></td>}
+</tr>
 }
 
+    </table>
+</div>
 
-<h2>
-    Search Books
-</h2>
-<form asp-controller="Search" asp-action="Index" method="get">
-    <p>
-        Title: @Html.TextBoxFor(t=>t.FilterTitle)
-        Author: @Html.TextBoxFor(t=> t.FilterAuthor)
-        <input type="submit" value="Search" />
-    </p>
-</form>
-<table class="table table-striped">
-    <tr>
-        <th scope="col">Title</th>
-        <th scope="col">Author</th>
-        <th scope="col">Cover</th>
-        <th scope="col">Available</th>
-    </tr>
-    @foreach (var book in Model.Books)
-    {
-    <tr>
-        <td>@book.Name</td>
-        <td>@book.Author</td>
-        @if (@book.CoverUrl != null)
-    {
-        <td>
-            <img src=@book.CoverUrl alt="Cover" style="width:32px;height:32px;" id="test" />
-        </td>
-    }
-    else
-    {
-        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
-    }
-        @if(@book.BookShelfBook.Count>0)
-        {
-        <form asp-controller="Search" asp-route-id="@book.Id" asp-action="GetBookshelvesForBook" method="post">
-            <td><input type="submit" value="Get this book" title="Show available books" /></td>
-        </form>
-        }
-        else
-        {
-        <td><input type="submit" value="Get this book" disabled title="Sorry, currently there is no bookshelf containing this book" /></td>
+
+@functions { private bool GetIsOnWishlist(Guid Id, ExBook.Data.Book book)
+            {
+                return book.WishListBook.Any(wlb => wlb.WishList.UserId == Id);
+            } }
+
+<style>
+    /*        .searchbar-card {
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-    </tr>
-    }
-</table>
-
-
+        @@media screen and ( min-height: 400px ) {
+            .searchbar-card {
+                margin-top: calc(50vh - 200px);
+            }
+        }*/
+</style>
 <script>
 
 </script>

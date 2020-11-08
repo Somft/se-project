@@ -74,6 +74,7 @@ namespace ExBook.Services
             if (!string.IsNullOrEmpty(filterLogin))
                 filter = filter.And(bsb => bsb.BookShelf.User.Login.Contains(filterLogin));
 
+
             List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBook
                 .Include(bsb => bsb.BookShelf)
                 .ThenInclude(bs => bs.User)
@@ -83,7 +84,7 @@ namespace ExBook.Services
             return bookShelfBooks;
         }
 
-        public async Task<List<Book>> GetBooksFiltered(string filterTitle, string filterAuthor)
+        public async Task<List<Book>> GetBooksFiltered(string filterTitle, string filterAuthor, bool filterAvailable)
         {
             Expression<Func<Book, bool>> filter = PredicateBuilder.True<Book>();
 
@@ -92,6 +93,9 @@ namespace ExBook.Services
 
             if (!string.IsNullOrEmpty(filterAuthor))
                 filter = filter.And(b => b.Author.Contains(filterAuthor));
+
+            if(filterAvailable)
+            filter = filter.And(b => b.BookShelfBook.Count>0);
 
             List<Book> books = await this.applicationDbContext.Book
                 .Include(b=>b.BookShelfBook)
@@ -105,9 +109,43 @@ namespace ExBook.Services
         {
             List<Book> books = await this.applicationDbContext.Book
                 .Include(b => b.BookShelfBook)
+                .Include(b => b.WishListBook)
+                .ThenInclude(wlb=> wlb.WishList)
                 .OrderByDescending(b => b.BookShelfBook.Count)
                 .ToListAsync();
             return books;
+        }
+
+        internal void AddToWishList(Guid bookId, Guid guid)
+        {
+            var wishlist = applicationDbContext.WishList
+                .Include(wsl => wsl.WishListBook)
+                .FirstOrDefault(wsl => wsl.UserId == guid);
+
+            if (wishlist == null)
+            {
+                WishList newWishList = new WishList()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = guid
+                };
+                newWishList.WishListBook.Add(new WishListBook()
+                {
+                    BookId = bookId
+                });
+                 this.applicationDbContext.Add(newWishList);
+                this.applicationDbContext.SaveChanges();
+            }
+            else
+            {
+                wishlist.WishListBook.Add(new WishListBook()
+                {
+                    Id = Guid.NewGuid(),
+                    BookId = bookId
+                });
+                this.applicationDbContext.SaveChanges();
+            }
+
         }
     }
 }

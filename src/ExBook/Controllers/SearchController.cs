@@ -1,4 +1,5 @@
-﻿using ExBook.Extensions;
+﻿using ExBook.Data;
+using ExBook.Extensions;
 using ExBook.Models;
 using ExBook.Models.Authentication;
 using ExBook.Models.Search;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
+using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace ExBook.Controllers
@@ -15,21 +18,22 @@ namespace ExBook.Controllers
     public class SearchController : Controller
     {
         private readonly SearchService searchService;
-
-        public SearchController(SearchService searchService)
+        private ApplicationDbContext dbContext;
+        public SearchController(SearchService searchService, ApplicationDbContext dbContext)
         {
             this.searchService = searchService;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
         [Route("/search")]
         [AllowAnonymous]
-        public async Task<IActionResult> IndexAsync(string filterTitle, string filterAuthor)
+        public async Task<IActionResult> IndexAsync(string filterTitle, string filterAuthor, bool filterAvailable)
         {
-            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterAuthor))
+            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterAuthor)|| filterAvailable)
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
-                 ? await this.SearchBooks(filterTitle, filterAuthor)
+                 ? await this.SearchBooks(filterTitle, filterAuthor, filterAvailable)
                  : this.RedirectToHome() as IActionResult;
             }
             else
@@ -39,20 +43,24 @@ namespace ExBook.Controllers
                     {
                         Books = await searchService.GetAllAvailableBooks(),
                         FilterTitle = null,
-                        FilterAuthor = null
+                        FilterAuthor = null,
+                        FilterAvailable = false,
+                        UserId= GetUserID()
                     })
                     : this.RedirectToHome() as IActionResult;
             }
 
         }
 
-        private async Task<IActionResult> SearchBooks(string filterTitle, string filterAuthor)
+        private async Task<IActionResult> SearchBooks(string filterTitle, string filterAuthor, bool filterAvailable)
         {
             return this.View("Index", new SearchBookViewModel()
             {
-                Books = await searchService.GetBooksFiltered(filterTitle, filterAuthor),
+                Books = await searchService.GetBooksFiltered(filterTitle, filterAuthor, filterAvailable),
                 FilterTitle = filterTitle,
-                FilterAuthor = filterAuthor
+                FilterAuthor = filterAuthor,
+                FilterAvailable = filterAvailable,
+                UserId = GetUserID()
             });
         }
 
@@ -109,6 +117,25 @@ namespace ExBook.Controllers
         {
             var model = "https://covers.openlibrary.org/b/id/9271451-M.jpg";
             return PartialView("FullSizeCover", model);
+        }
+        private Guid GetUserID()
+        {
+            string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+            return dbContext.Users.Where(user => user.Login == login).Single().Id;
+        }
+
+        [HttpPost]
+        [Route("/AddToWishlist")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddToWishlist(Guid Id)
+        {
+            if (this.HttpContext.User.Identity.IsAuthenticated)
+            {
+                searchService.AddToWishList(Id, GetUserID());
+                return new EmptyResult();
+            }
+            else
+            return this.RedirectToHome() as IActionResult; ;
         }
 
     }

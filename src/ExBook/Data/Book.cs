@@ -22,7 +22,7 @@ namespace ExBook.Data
         [Column("created", TypeName = "date")]
         public DateTime? Created { get; set; }
         [Column("isbn")]
-        public string Isbn { get; set; }
+        public string? Isbn { get; set; }
         [Required]
         [Column("name")]
         public string Name { get; set; }
