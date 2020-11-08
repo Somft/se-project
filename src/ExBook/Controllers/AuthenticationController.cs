@@ -94,6 +94,7 @@ namespace ExBook.Controllers
                 this.configuration["Jwt:Audience"],
                 new[]
                 {
+                        new Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new Claim(ClaimTypes.NameIdentifier, user.Login),
                         new Claim(ClaimTypes.Email, "test"),
                 },
