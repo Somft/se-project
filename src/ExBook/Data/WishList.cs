@@ -9,7 +9,7 @@ namespace ExBook.Data
     {
         public WishList()
         {
-            WishListBooks = new HashSet<WishListBook>();
+            this.WishListBooks = new HashSet<WishListBook>();
         }
 
         public Guid Id { get; set; }

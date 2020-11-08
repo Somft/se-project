@@ -9,8 +9,8 @@ namespace ExBook.Data
     {
         public Book()
         {
-            BookShelfBooks = new HashSet<BookShelfBook>();
-            WishListBooks = new HashSet<WishListBook>();
+            this.BookShelfBooks = new HashSet<BookShelfBook>();
+            this.WishListBooks = new HashSet<WishListBook>();
         }
 
         public Guid Id { get; set; }

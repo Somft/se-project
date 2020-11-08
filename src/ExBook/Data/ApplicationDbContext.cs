@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -229,7 +228,7 @@ namespace ExBook.Data
                         x => x.HasOne<Subject>().WithMany().HasForeignKey("subject_id"),
                         x => x.HasOne<Book>().WithMany().HasForeignKey("book_id"));
 
-            OnModelCreatingPartial(modelBuilder);
+            this.OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

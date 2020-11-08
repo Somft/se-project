@@ -1,11 +1,8 @@
 ﻿using ExBook.Extensions;
-using ExBook.Models.Authentication;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Threading.Tasks;
 
 namespace ExBook.Controllers
 {
