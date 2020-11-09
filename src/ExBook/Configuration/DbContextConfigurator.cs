@@ -29,6 +29,7 @@ namespace ExBook.Configuration
                     services.AddDbContext<ApplicationDbContext>(configuration =>
                     {
                         configuration.UseNpgsql(connectionString);
+                        configuration.UseLazyLoadingProxies();
                     });
                     break;
 
@@ -36,6 +37,7 @@ namespace ExBook.Configuration
                     services.AddDbContext<ApplicationDbContext>(configuration =>
                     {
                         configuration.UseSqlite(connectionString);
+                        configuration.UseLazyLoadingProxies();
                     });
                     break;
                 default:

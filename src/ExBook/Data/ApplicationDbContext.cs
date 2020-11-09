@@ -1,25 +1,28 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System.Collections.Generic;
+
+#nullable disable
 
 namespace ExBook.Data
 {
     public partial class ApplicationDbContext : DbContext
     {
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Book> Book { get; set; } = null!;
-        public virtual DbSet<BookShelf> BookShelf { get; set; } = null!;
-        public virtual DbSet<BookShelfBook> BookShelfBook { get; set; } = null!;
-        public virtual DbSet<Rating> Rating { get; set; } = null!;
-        public virtual DbSet<Subject> Subject { get; set; } = null!;
-        public virtual DbSet<Transaction> Transaction { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
-        public virtual DbSet<WishList> WishList { get; set; } = null!;
-        public virtual DbSet<WishListBook> WishListBook { get; set; } = null!;
+        public virtual DbSet<Book> Books { get; set; }
+        public virtual DbSet<BookShelf> BookShelves { get; set; }
+        public virtual DbSet<BookShelfBook> BookShelfBooks { get; set; }
+        public virtual DbSet<Rating> Ratings { get; set; }
+        public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<WishList> WishLists { get; set; }
+        public virtual DbSet<WishListBook> WishListBooks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,15 +30,39 @@ namespace ExBook.Data
 
             modelBuilder.Entity<Book>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("book");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Author).HasColumnName("author");
+
+                entity.Property(e => e.CoverUrl).HasColumnName("cover_url");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("date")
+                    .HasColumnName("created");
+
+                entity.Property(e => e.Isbn).HasColumnName("isbn");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<BookShelf>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("book_shelf");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.BookShelf)
+                    .WithMany(p => p.BookShelves)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_shelf_fk");
@@ -43,16 +70,26 @@ namespace ExBook.Data
 
             modelBuilder.Entity<BookShelfBook>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("book_shelf_book");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.BookId).HasColumnName("book_id");
+
+                entity.Property(e => e.BookShelfId).HasColumnName("book_shelf_id");
+
+                entity.Property(e => e.Photo).HasColumnName("photo");
 
                 entity.HasOne(d => d.Book)
-                    .WithMany(p => p.BookShelfBook)
+                    .WithMany(p => p.BookShelfBooks)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_shelf_book_fk");
 
                 entity.HasOne(d => d.BookShelf)
-                    .WithMany(p => p.BookShelfBook)
+                    .WithMany(p => p.BookShelfBooks)
                     .HasForeignKey(d => d.BookShelfId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("book_shelf_book_fk_1");
@@ -60,11 +97,20 @@ namespace ExBook.Data
 
             modelBuilder.Entity<Rating>(entity =>
             {
-                entity.HasIndex(e => e.TransactionId)
-                    .HasName("rating_un")
+                entity.ToTable("rating");
+
+                entity.HasIndex(e => e.TransactionId, "rating_un")
                     .IsUnique();
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Comment).HasColumnName("comment");
+
+                entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
+
+                entity.Property(e => e.Value).HasColumnName("value");
 
                 entity.HasOne(d => d.Transaction)
                     .WithOne(p => p.Rating)
@@ -75,25 +121,77 @@ namespace ExBook.Data
 
             modelBuilder.Entity<Subject>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("subject");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<Transaction>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("transaction");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("status");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("user");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email");
+
+                entity.Property(e => e.IsEmailConfirmed).HasColumnName("is_email_confirmed");
+
+                entity.Property(e => e.Login)
+                    .IsRequired()
+                    .HasColumnName("login");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasColumnName("password");
+
+                entity.Property(e => e.Role)
+                    .IsRequired()
+                    .HasColumnName("role");
+
+                entity.Property(e => e.Surname)
+                    .IsRequired()
+                    .HasColumnName("surname");
             });
 
             modelBuilder.Entity<WishList>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("wish_list");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.WishList)
+                    .WithMany(p => p.WishLists)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("wish_list_fk");
@@ -101,19 +199,38 @@ namespace ExBook.Data
 
             modelBuilder.Entity<WishListBook>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("wish_list_book");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.BookId).HasColumnName("book_id");
+
+                entity.Property(e => e.WishListId).HasColumnName("wish_list_id");
 
                 entity.HasOne(d => d.Book)
-                    .WithMany(p => p.WishListBook)
+                    .WithMany(p => p.WishListBooks)
                     .HasForeignKey(d => d.BookId)
                     .HasConstraintName("wish_list_book_fk_1");
 
                 entity.HasOne(d => d.WishList)
-                    .WithMany(p => p.WishListBook)
+                    .WithMany(p => p.WishListBooks)
                     .HasForeignKey(d => d.WishListId)
                     .HasConstraintName("wish_list_book_fk");
             });
 
+            modelBuilder.Entity<Book>()
+                    .HasMany(x => x.Subjects)
+                    .WithMany(x => x.Books)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "book_subject",
+                        x => x.HasOne<Subject>().WithMany().HasForeignKey("subject_id"),
+                        x => x.HasOne<Book>().WithMany().HasForeignKey("book_id"));
+
+            this.OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
