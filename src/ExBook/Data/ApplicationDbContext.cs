@@ -143,6 +143,24 @@ namespace ExBook.Data
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasColumnName("status");
+
+                entity.Property(e => e.InitiatorId)
+                    .IsRequired()
+                    .HasColumnName("recipient_id");
+
+                entity.Property(e => e.RecipientId)
+                    .IsRequired()
+                    .HasColumnName("initiator_id");
+
+                entity.HasOne(d => d.Initiator)
+                    .WithMany(p => p.InitiatedTransactions)
+                    .HasForeignKey(d => d.InitiatorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.Recipient)
+                    .WithMany(p => p.ReceivedTransactions)
+                    .HasForeignKey(d => d.RecipientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -227,6 +245,22 @@ namespace ExBook.Data
                         "book_subject",
                         x => x.HasOne<Subject>().WithMany().HasForeignKey("subject_id"),
                         x => x.HasOne<Book>().WithMany().HasForeignKey("book_id"));
+
+            modelBuilder.Entity<Transaction>()
+                    .HasMany(x => x.InitiatorBooks)
+                    .WithMany(x => x.InitiatorTransactions)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "transaction_initiator_book",
+                        x => x.HasOne<BookShelfBook>().WithMany().HasForeignKey("book_shelf_book_id"),
+                        x => x.HasOne<Transaction>().WithMany().HasForeignKey("transaction_id"));
+
+            modelBuilder.Entity<Transaction>()
+                    .HasMany(x => x.RecipientBooks)
+                    .WithMany(x => x.RecipientTransactions)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "transaction_recipient_book",
+                        x => x.HasOne<BookShelfBook>().WithMany().HasForeignKey("book_shelf_book_id"),
+                        x => x.HasOne<Transaction>().WithMany().HasForeignKey("transaction_id"));
 
             this.OnModelCreatingPartial(modelBuilder);
         }

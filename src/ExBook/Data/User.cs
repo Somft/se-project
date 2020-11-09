@@ -11,6 +11,8 @@ namespace ExBook.Data
         {
             this.BookShelves = new HashSet<BookShelf>();
             this.WishLists = new HashSet<WishList>();
+            this.InitiatedTransactions = new HashSet<Transaction>();
+            this.ReceivedTransactions = new HashSet<Transaction>();
         }
 
         public Guid Id { get; set; }
@@ -24,5 +26,7 @@ namespace ExBook.Data
 
         public virtual ICollection<BookShelf> BookShelves { get; set; }
         public virtual ICollection<WishList> WishLists { get; set; }
+        public virtual ICollection<Transaction> InitiatedTransactions { get; set; }
+        public virtual ICollection<Transaction> ReceivedTransactions { get; set; }
     }
 }
