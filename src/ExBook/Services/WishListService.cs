@@ -20,7 +20,7 @@ namespace ExBook.Services
 
         public async Task<List<WishListBook>> GetUserBook(Guid userId)
         {
-            return await applicationDbContext.WishListBook.Include(book => book.Book).Where(book => book.WishList.UserId == userId).ToListAsync();
+            return await applicationDbContext.WishListBooks.Include(book => book.Book).Where(book => book.WishList.UserId == userId).ToListAsync();
         }
     }
 }
