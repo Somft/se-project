@@ -75,12 +75,12 @@ namespace ExBook.Services
 
         public async Task<bool> RemoveBook(Guid Id)
         {
-            Book bok = this.applicationDbContext.Books.Include(b => b.Subjects).FirstOrDefault(b => b.Id == Id);
-            WishListBook bok2 = this.applicationDbContext.WishListBooks.FirstOrDefault(b => b.BookId == Id);
+            
+            WishListBook bok = this.applicationDbContext.WishListBooks.FirstOrDefault(b => b.BookId == Id);
             
             
-            this.applicationDbContext.WishListBooks.Remove(bok2);
-            this.applicationDbContext.Books.Remove(bok);
+            this.applicationDbContext.WishListBooks.Remove(bok);
+           
             
             await this.applicationDbContext.SaveChangesAsync();
 
