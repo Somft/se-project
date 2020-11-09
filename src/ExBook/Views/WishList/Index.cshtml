@@ -50,13 +50,18 @@
                             <td> @book.Book.Name</td>
                             <td> @book.Book.Author</td>
                             <td> @book.Book.Created</td>
-
+                            <form asp-controller="AddToWishList" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromWishList" method="post">
+                                <td><input type="submit" value="Remove this book" /></td>
+                            </form>
                         </tr>
+
+                       
+                        
                     }
                 }
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
     <div class="center">
         <form asp-area="" asp-controller="WishList" asp-action="Add">

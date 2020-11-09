@@ -18,11 +18,18 @@ namespace ExBook.Services
         {
             this.applicationDbContext = applicationDbContext;
         }
-
-        public async Task<bool> AddBook(AddToWishListViewModel book, Guid user)
+        
+        public async Task<bool> AddBook(AddToWishListViewModel book, Guid? user)
         {
             WishList userWishList = this.applicationDbContext.WishLists.FirstOrDefault(b => b.UserId == user); // whishlist from current user
-            
+            if ( userWishList == null)
+            {
+                userWishList = new WishList()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Value
+                };
+            }
             Book bok = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == book.Name);
 
             if (bok != null) //book already exists
@@ -61,6 +68,20 @@ namespace ExBook.Services
                 }) ;
             }
 
+            await this.applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveBook(Guid Id)
+        {
+            Book bok = this.applicationDbContext.Books.Include(b => b.Subjects).FirstOrDefault(b => b.Id == Id);
+            WishListBook bok2 = this.applicationDbContext.WishListBooks.FirstOrDefault(b => b.BookId == Id);
+            
+            
+            this.applicationDbContext.WishListBooks.Remove(bok2);
+            this.applicationDbContext.Books.Remove(bok);
+            
             await this.applicationDbContext.SaveChangesAsync();
 
             return true;

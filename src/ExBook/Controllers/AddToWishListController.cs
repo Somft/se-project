@@ -35,8 +35,8 @@ namespace ExBook.Controllers
         {
             string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
             Guid num = dbContext.Users.Where(user => user.Login == login).Single().Id;
-
-            if( !await this.addToWishListService.AddBook(input, num))
+            
+            if ( !await this.addToWishListService.AddBook(input, this.HttpContext.User.GetId()))
             {
                 input.Message = "Book exists on your wish list";
                 return this.View(input);
@@ -48,7 +48,15 @@ namespace ExBook.Controllers
             }
         }
 
-        
+        public async Task<IActionResult> RemoveBookFromWishList(Guid Id)
+        {
+            await addToWishListService.RemoveBook(Id);
+            return this.RedirectToWishList();
+           
+        }
+
+
+
 
     }
 }
