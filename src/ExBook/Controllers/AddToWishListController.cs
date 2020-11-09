@@ -41,19 +41,14 @@ namespace ExBook.Controllers
                 input.Message = "Book exists on your wish list";
                 return this.View(input);
             }
-
-            return this.Redirect("/search");
-
+            else
+            {
+                input.Message = "Book added successfully!";
+                return this.View(input);
+            }
         }
 
-        [HttpGet]
-        [Route("/register-success")]
-        [AllowAnonymous]
-        public IActionResult Success()
-        {
-            return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.RedirectToHome() as IActionResult
-                : this.View();
-        }
+        
+
     }
 }

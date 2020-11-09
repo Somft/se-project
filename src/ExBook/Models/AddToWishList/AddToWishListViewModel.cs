@@ -8,17 +8,17 @@ namespace ExBook.Models.AddToWhishList
     {
         [Required]
         [MinLength(1)]
-        [MaxLength(20)]
+        [MaxLength(60)]
         public string Name { get; set; } = "";
 
         [Required]
         [MinLength(1)]
-        [MaxLength(20)]
+        [MaxLength(60)]
         public string Author { get; set; } = "";
 
         [Required]
         [MinLength(1)]
-        [MaxLength(20)]
+        [MaxLength(60)]
         public string Created { get; set; } = "";
         public string? Message { get; set; } = null;
 
