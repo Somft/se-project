@@ -1,12 +1,7 @@
 ﻿using ExBook.Data;
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ExBook.Models.UserAccount
+namespace ExBook.Models
 {
     public class UserAccountViewModel
     {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 using ExBook.Data;
 using ExBook.Extensions;
-using ExBook.Models.UserAccount;
-using ExBook.Services;
+using ExBook.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +18,15 @@ namespace ExBook.Controllers
             this.applicationDbContext = applicationDbContext;
         }
 
-        [HttpGet]
-        [Route("/useraccount")]
-        [AllowAnonymous]
-        public IActionResult AccountInfo()
+        [Authorize]
+        public IActionResult Index()
         {
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View(new UserAccountViewModel()
                 {
-                    CurrentUser = this.applicationDbContext.Users.First(i => i.Id == this.HttpContext.User.getID)
+                    CurrentUser = this.applicationDbContext.Users.FirstOrDefault(i => i.Id == this.HttpContext.User.GetId())
                 })
-                : this.RedirectToHome() as IActionResult; 
+                : this.RedirectToHome() as IActionResult;
         }
     }
 }
