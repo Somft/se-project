@@ -21,54 +21,49 @@ namespace ExBook.Services
 
         public async Task<bool> AddBook(AddToWishListViewModel book, Guid user)
         {
-            Guid userWishList = this.applicationDbContext.WishLists.Where(b => b.UserId == user).Single().Id; // whishlist from current user
+            WishList userWishList = this.applicationDbContext.WishLists.FirstOrDefault(b => b.UserId == user); // whishlist from current user
             
-            if (await this.applicationDbContext.Books.AnyAsync(b => b.Name == book.Name)) //book already exists
+            Book bok = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == book.Name);
+
+            if (bok != null) //book already exists
             {
-                Guid bookId = this.applicationDbContext.Books.Where(b => b.Name == book.Name).Single().Id; // book with the same name
                
-                if( await this.applicationDbContext.WishListBooks.AnyAsync(b => b.WishListId ==  userWishList && b.BookId == bookId)) // exists in wishlist? throw error
+                if( await this.applicationDbContext.WishListBooks.AnyAsync(b => b.WishListId ==  userWishList.Id && b.BookId == bok.Id)) // exists in wishlist? throw error
                 {
                     return false;
                 }
                 else // if no, add to wishlist
                 {
-                    AddAsWish(userWishList, bookId);
-                        
+                    userWishList.WishListBooks.Add(new WishListBook()
+                    {
+                        Id = Guid.NewGuid(),
+                        BookId = bok.Id
+                    });
+
                 }
             }
             else // book doesnt exists, add to Book and wishlist
             {
-               
-                this.applicationDbContext.Books.Add(new Book()
+                bok = new Book()
                 {
                     Id = Guid.NewGuid(),
                     Name = book.Name,
                     Author = book.Author,
                     Created = DateTime.Parse(book.Created)
 
-                });
-                
-                await this.applicationDbContext.SaveChangesAsync();
-                Guid bookId = this.applicationDbContext.Books.Where(b => b.Name == book.Name).Single().Id; // book Id
-                AddAsWish(userWishList, bookId);
-            }
+                };
+                this.applicationDbContext.Books.Add(bok);
 
-            
+                userWishList.WishListBooks.Add(new WishListBook()
+                {
+                    Id = Guid.NewGuid(),
+                    BookId = bok.Id
+                }) ;
+            }
 
             await this.applicationDbContext.SaveChangesAsync();
 
             return true;
-        }
-
-        public void AddAsWish(Guid userList, Guid bookId)
-        {
-            this.applicationDbContext.WishListBooks.Add(new WishListBook()
-            {
-                Id = Guid.NewGuid(),
-                WishListId = userList,
-                BookId = bookId
-            });
         }
     }
 }
