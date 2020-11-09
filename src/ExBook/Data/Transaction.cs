@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
+#nullable disable
 
 namespace ExBook.Data
 {
-    [Table("transaction")]
     public partial class Transaction
     {
-        [Key]
-        [Column("id")]
-        public Guid Id { get; set; }
-        [Required]
-        [Column("status")]
-        public string Status { get; set; }
+        public Transaction()
+        {
+            this.RecipientBooks = new HashSet<BookShelfBook>();
+            this.InitiatorBooks = new HashSet<BookShelfBook>();
+        }
 
-        [InverseProperty("Transaction")]
+        public Guid Id { get; set; }
+        public string Status { get; set; }
+        public Guid RecipientId { get; set; }
+        public Guid InitiatorId { get; set; }
+
+        public virtual User Recipient { get; set; }
+        public virtual User Initiator { get; set; }
         public virtual Rating Rating { get; set; }
+        public virtual ICollection<BookShelfBook> RecipientBooks { get; set; }
+        public virtual ICollection<BookShelfBook> InitiatorBooks { get; set; }
     }
 }
