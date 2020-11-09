@@ -29,6 +29,7 @@ namespace ExBook.Services
                     Id = Guid.NewGuid(),
                     UserId = user.Value
                 };
+                this.applicationDbContext.Add(userWishList);
             }
             Book bok = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == book.Name);
 
