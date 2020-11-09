@@ -20,6 +20,7 @@ namespace ExBook.Models.AddToWhishList
         [MinLength(1)]
         [MaxLength(20)]
         public string Created { get; set; } = "";
+        public string? Message { get; set; } = null;
 
     }
 

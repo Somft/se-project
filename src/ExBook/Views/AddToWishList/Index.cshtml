@@ -7,6 +7,10 @@
         <div class="card-body">
             <h3 class="card-title text-left mb-4 mt-1">Add book to your wish list</h3>
             <hr>
+            @if (Model.Message != null)
+            {
+                <p class="text-danger text-center">@Model.Message</p>
+            }
             <form asp-controller="AddToWishList" asp-action="Index" method="post">
                 <div class="form-group">
                     <label for="Name">Name</label>
@@ -17,7 +21,7 @@
                 <div class="form-group">
                     <label for="Author">Author</label>
                     <input asp-for="Author" class=@GetInputClass("Author") placeholder="login" type="text">
-                    <span asp-validation-for="Author" class="invalid-feedback" ></span>
+                    <span asp-validation-for="Author" class="invalid-feedback"></span>
                 </div>
 
                 <div class="form-row">
@@ -30,7 +34,7 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block"> Add book  </button>
                 </div>
-            </form>  
+            </form>
         </div>
     </div>
 </div>

@@ -16,9 +16,9 @@ namespace ExBook.Controllers
     [Authorize]
     public class WishListController : Controller
     {
-        private ApplicationDbContext dbContext;
+        
         private readonly WishListService wishListService;
-
+        private ApplicationDbContext dbContext;
         public WishListController(WishListService wishListService, ApplicationDbContext dbContext)
         {
             this.wishListService = wishListService;
