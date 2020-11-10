@@ -18,11 +18,10 @@ namespace ExBook.Controllers
     public class SearchController : Controller
     {
         private readonly SearchService searchService;
-        private ApplicationDbContext dbContext;
-        public SearchController(SearchService searchService, ApplicationDbContext dbContext)
+
+        public SearchController(SearchService searchService)
         {
             this.searchService = searchService;
-            this.dbContext = dbContext;
         }
 
         [HttpGet]
@@ -45,7 +44,7 @@ namespace ExBook.Controllers
                         FilterTitle = null,
                         FilterAuthor = null,
                         FilterAvailable = false,
-                        UserId= GetUserID()
+                        UserId= this.HttpContext.User.GetId().Value
                     })
                     : this.RedirectToHome() as IActionResult;
             }
@@ -60,7 +59,7 @@ namespace ExBook.Controllers
                 FilterTitle = filterTitle,
                 FilterAuthor = filterAuthor,
                 FilterAvailable = filterAvailable,
-                UserId = GetUserID()
+                UserId = this.HttpContext.User.GetId().Value
             });
         }
 
@@ -92,7 +91,7 @@ namespace ExBook.Controllers
             else
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
-                    ? this.View(new SearchBookShelfBookViewModel()
+                    ? this.View("Bookshelves",new SearchBookShelfBookViewModel()
                     {
                         BookShelfBooks = await searchService.GetAllBookShelfBooks(),
                         FilterTitle = null,
@@ -105,7 +104,7 @@ namespace ExBook.Controllers
 
         private async Task<IActionResult> SearchBookShelf(string filterTitle, string filterLogin)
         {
-            return this.View("Index", new SearchBookShelfBookViewModel()
+            return this.View("Bookshelves", new SearchBookShelfBookViewModel()
             {
                 BookShelfBooks = await searchService.GetBookShelfBooksFiltered(filterTitle, filterLogin),
                 FilterTitle = filterTitle,
@@ -113,30 +112,32 @@ namespace ExBook.Controllers
             });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> AddToWishlistAsync(string Id)
+        {
+            if (this.HttpContext.User.Identity.IsAuthenticated)
+            {
+                Guid bookId;
+                if(Guid.TryParse(Id,out bookId))
+                {
+                    await searchService.AddToWishList(Guid.Parse(Id), this.HttpContext.User.GetId().Value);
+                    return Json(true);
+                }
+            }
+                return Json(false);
+        }
+
+        /// <summary>
+        /// todo 
+        /// </summary>
+        /// <param name="CoverUrl"></param>
+        /// <returns></returns>
         public ActionResult FullSizeCover(string CoverUrl)
         {
             var model = "https://covers.openlibrary.org/b/id/9271451-M.jpg";
             return PartialView("FullSizeCover", model);
         }
-        private Guid GetUserID()
-        {
-            string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
-            return dbContext.Users.Where(user => user.Login == login).Single().Id;
-        }
 
-        [HttpPost]
-        [Route("/AddToWishlist")]
-        [AllowAnonymous]
-        public async Task<IActionResult> AddToWishlist(Guid Id)
-        {
-            if (this.HttpContext.User.Identity.IsAuthenticated)
-            {
-                searchService.AddToWishList(Id, GetUserID());
-                return new EmptyResult();
-            }
-            else
-            return this.RedirectToHome() as IActionResult; ;
-        }
 
     }
 }

@@ -21,21 +21,44 @@ namespace ExBook.Services
             this.applicationDbContext = applicationDbContext;
         }
 
-        public List<User> GetAllUsers()
+        #region Books
+        public async Task<List<Book>> GetBooksFiltered(string filterTitle, string filterAuthor, bool filterAvailable)
         {
-            return this.applicationDbContext.Users.ToList();
+            Expression<Func<Book, bool>> filter = PredicateBuilder.True<Book>();
+
+            if (!string.IsNullOrEmpty(filterTitle))
+                filter = filter.And(b => b.Name.Contains(filterTitle));
+
+            if (!string.IsNullOrEmpty(filterAuthor))
+                filter = filter.And(b => b.Author.Contains(filterAuthor));
+
+            if (filterAvailable)
+                filter = filter.And(b => b.BookShelfBooks.Count > 0);
+
+            List<Book> books = await this.applicationDbContext.Books
+                .Include(b => b.BookShelfBooks)
+                .Where(filter)
+                .OrderByDescending(b => b.BookShelfBooks.Count)
+                .ToListAsync();
+            return books;
         }
 
-        public async Task<List<User>> GetUsersByName(string name)
+        public async Task<List<Book>> GetAllAvailableBooks()
         {
-            List<User> users = await this.applicationDbContext.Users.Where(u => u.Name.Contains(name)).ToListAsync();
-            return users;
+            List<Book> books = await this.applicationDbContext.Books
+                .Include(b => b.BookShelfBooks)
+                .Include(b => b.WishListBooks)
+                .ThenInclude(wlb => wlb.WishList)
+                .OrderByDescending(b => b.BookShelfBooks.Count)
+                .ToListAsync();
+            return books;
         }
+        #endregion Books
 
-
+        #region BookshelfBooks
         public async Task<List<BookShelfBook>> GetAllBookShelfBooks()
         {
-            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBook
+            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBooks
                 .Include(bsb => bsb.BookShelf)
                 .ThenInclude(bs=>bs.User)
                 .Include(bsb=> bsb.Book)              
@@ -44,7 +67,7 @@ namespace ExBook.Services
         }
         public async Task<List<BookShelfBook>> GetBookShelfBooksByTitle(string title)
         {
-            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBook
+            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBooks
                 .Include(bsb => bsb.BookShelf)
                 .ThenInclude(bs => bs.User)
                 .Include(bsb => bsb.Book)
@@ -55,7 +78,7 @@ namespace ExBook.Services
 
         public async Task<List<BookShelfBook>> GetBookShelfBooksById(Guid Id)
         {
-            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBook
+            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBooks
                 .Include(bsb => bsb.BookShelf)
                 .ThenInclude(bs => bs.User)
                 .Include(bsb => bsb.Book)
@@ -75,7 +98,7 @@ namespace ExBook.Services
                 filter = filter.And(bsb => bsb.BookShelf.User.Login.Contains(filterLogin));
 
 
-            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBook
+            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBooks
                 .Include(bsb => bsb.BookShelf)
                 .ThenInclude(bs => bs.User)
                 .Include(bsb => bsb.Book)
@@ -84,68 +107,41 @@ namespace ExBook.Services
             return bookShelfBooks;
         }
 
-        public async Task<List<Book>> GetBooksFiltered(string filterTitle, string filterAuthor, bool filterAvailable)
+        #endregion  BookshelfBooks
+
+        #region WishList
+        public async Task AddToWishList(Guid bookId, Guid guid)
         {
-            Expression<Func<Book, bool>> filter = PredicateBuilder.True<Book>();
-
-            if (!string.IsNullOrEmpty(filterTitle))
-                filter = filter.And(b => b.Name.Contains(filterTitle));
-
-            if (!string.IsNullOrEmpty(filterAuthor))
-                filter = filter.And(b => b.Author.Contains(filterAuthor));
-
-            if(filterAvailable)
-            filter = filter.And(b => b.BookShelfBook.Count>0);
-
-            List<Book> books = await this.applicationDbContext.Book
-                .Include(b=>b.BookShelfBook)
-                .Where(filter)
-                .OrderByDescending(b=>b.BookShelfBook.Count)
-                .ToListAsync();
-            return books;
-        }
-
-        public async Task<List<Book>> GetAllAvailableBooks()
-        {
-            List<Book> books = await this.applicationDbContext.Book
-                .Include(b => b.BookShelfBook)
-                .Include(b => b.WishListBook)
-                .ThenInclude(wlb=> wlb.WishList)
-                .OrderByDescending(b => b.BookShelfBook.Count)
-                .ToListAsync();
-            return books;
-        }
-
-        internal void AddToWishList(Guid bookId, Guid guid)
-        {
-            var wishlist = applicationDbContext.WishList
-                .Include(wsl => wsl.WishListBook)
-                .FirstOrDefault(wsl => wsl.UserId == guid);
+            var wishlist = await applicationDbContext.WishLists
+                .Include(wsl => wsl.WishListBooks)
+                .FirstOrDefaultAsync(wsl => wsl.UserId == guid);
 
             if (wishlist == null)
             {
-                WishList newWishList = new WishList()
+                wishlist = new WishList()
                 {
                     Id = Guid.NewGuid(),
                     UserId = guid
                 };
-                newWishList.WishListBook.Add(new WishListBook()
-                {
-                    BookId = bookId
-                });
-                 this.applicationDbContext.Add(newWishList);
-                this.applicationDbContext.SaveChanges();
+             await  this.applicationDbContext.AddAsync(wishlist);
+            }
+            var book = wishlist.WishListBooks.FirstOrDefault(wlb => wlb.BookId == bookId);
+            // if exists - remove from wishlist
+            if (book!=null)
+            {
+                wishlist.WishListBooks.Remove(book);
+                this.applicationDbContext.Remove(book);
             }
             else
             {
-                wishlist.WishListBook.Add(new WishListBook()
+                wishlist.WishListBooks.Add(new WishListBook()
                 {
                     Id = Guid.NewGuid(),
                     BookId = bookId
                 });
-                this.applicationDbContext.SaveChanges();
             }
-
+            await this.applicationDbContext.SaveChangesAsync();       
         }
+        #endregion WishList
     }
 }

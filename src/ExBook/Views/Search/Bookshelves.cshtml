@@ -8,7 +8,7 @@
         Search Books on bookshelves
     </div>
     <div class="card-body">
-        <form asp-controller="Search" asp-action="Index" method="get">
+        <form asp-controller="Search" asp-action="Bookshelves" method="get">
             <div class="form-row align-items-center">
                 <div class="col-auto">
                     <label class="sr-only" for="inlineFormInput">Title</label>
@@ -19,12 +19,20 @@
                     <div class="input-group mb-2">
                         <input type="text" class="form-control" id="FilterLogin" name="FilterLogin" placeholder="Login" value="@Model.FilterLogin">
                     </div>
-                </div>               
+                </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-2">Search</button>
                 </div>
-            </div>
         </form>
+        <div class="col-auto">
+            <form asp-controller="Search" asp-action="Index" method="get">
+                <button type="submit" class="btn btn-info mb-2">Return</button>
+            </form>
+        </div>
+
+    </div>
+
+
     </div>
 </div>
 <table class="table table-striped">
@@ -35,23 +43,28 @@
         <th scope="col">Author</th>
         <th scope="col">Cover</th>
         <th scope="col">Photo</th>
+        <th scope="col">Transactions</th>
     </tr>
     @foreach (var book in Model.BookShelfBooks)
     {
-        <tr>
-            <td>@($"{book.BookShelf.User.Name} {book.BookShelf.User.Surname}")</td>
-            <td>@book.BookShelf.User.Login</td>
-            <td>@book.Book.Name</td>
-            <td>@book.Book.Author</td>
-            @if (@book.Book.CoverUrl != null)
-            {
-                <td><img src=@book.Book.CoverUrl alt="Cover" style="width:32px;height:32px;"></td>
-            }
-            else
-            {
-                <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
-            }
-            <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Real Photo" style="width:32px;height:32px;"></td>
-        </tr>
+<tr>
+    <td>@($"{book.BookShelf.User.Name} {book.BookShelf.User.Surname}")</td>
+    <td>@book.BookShelf.User.Login</td>
+    <td>@book.Book.Name</td>
+    <td>@book.Book.Author</td>
+    @if (@book.Book.CoverUrl != null)
+    {
+        <td><img src=@book.Book.CoverUrl alt="Cover" style="width:32px;height:32px;"></td>
+    }
+    else
+    {
+        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
+    }
+    <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Real Photo" style="width:32px;height:32px;"></td>
+
+    <form asp-controller="Search" asp-route-id="@book.BookId" asp-action="GetBookshelvesForBook" method="post">
+        <td><input type="submit" value="Send offer"  class="btn btn-primary btn-sm " /></td>
+    </form>
+</tr>
     }
 </table>
