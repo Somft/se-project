@@ -1,5 +1,12 @@
 ﻿using ExBook.Data;
 
+using Microsoft.EntityFrameworkCore;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace ExBook.Services
 {
     public class WishListService
@@ -9,6 +16,11 @@ namespace ExBook.Services
         public WishListService(ApplicationDbContext applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
+        }
+
+        public async Task<List<WishListBook>> GetUserBook(Guid userId)
+        {
+            return await applicationDbContext.WishListBooks.Include(book => book.Book).Where(book => book.WishList.UserId == userId).ToListAsync();
         }
     }
 }

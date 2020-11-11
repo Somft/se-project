@@ -1,0 +1,54 @@
+﻿@model ExBook.Models.AddToWhishList.AddToWishListViewModel
+@{
+    ViewData["Title"] = "Add Book To Wish List";
+}
+<div>
+    <div class="card login-card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title text-left mb-4 mt-1">Add book to your wish list</h3>
+            <hr>
+            @if (Model.Message != null)
+            {
+                <p class="text-danger text-center">@Model.Message</p>
+            }
+            <form asp-controller="AddToWishList" asp-action="Index" method="post">
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <input asp-for="Name" class=@GetInputClass("Name") type="text">
+                    <span asp-validation-for="Name" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Author">Author</label>
+                    <input asp-for="Author" class=@GetInputClass("Author") placeholder="login" type="text">
+                    <span asp-validation-for="Author" class="invalid-feedback"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="Created">Created</label>
+                        <input asp-for="Created" class=@GetInputClass("Created") type="text">
+                        <span asp-validation-for="Created" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Add book  </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetInputClass(string inputName)
+    {
+        string result = "form-control";
+
+        if (this.ViewData.ModelState[inputName]?.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+        {
+            result += " is-invalid";
+        }
+
+        return result;
+    }
+}
