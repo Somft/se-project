@@ -23,12 +23,15 @@
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-2">Search</button>
                 </div>
-        </form>
-        <div class="col-auto">
+                <div class="col-auto">
+                    <button type="reset" class="btn btn-danger mb-2" id="clearSearch">Clear</button>
+                </div>
+</form>
+        @*<div class="col-auto">
             <form asp-controller="Search" asp-action="Index" method="get">
                 <button type="submit" class="btn btn-info mb-2">Return</button>
             </form>
-        </div>
+        </div>*@
 
     </div>
 
@@ -68,3 +71,10 @@
 </tr>
     }
 </table>
+
+<script>
+    window.onload = function () {
+        document.getElementById('FilterTitle').value = "@Model.FilterTitle";
+        document.getElementById('FilterLogin').value = "@Model.FilterLogin";
+    };
+</script>

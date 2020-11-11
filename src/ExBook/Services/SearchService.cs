@@ -22,7 +22,7 @@ namespace ExBook.Services
         }
 
         #region Books
-        public async Task<List<Book>> GetBooksFiltered(string filterTitle, string filterAuthor, bool filterAvailable)
+        public async Task<List<Book>> GetBooksFiltered(string filterTitle, string filterAuthor, bool filterAvailable, string filterSubject)
         {
             Expression<Func<Book, bool>> filter = PredicateBuilder.True<Book>();
 
@@ -35,8 +35,14 @@ namespace ExBook.Services
             if (filterAvailable)
                 filter = filter.And(b => b.BookShelfBooks.Count > 0);
 
+            if (!string.IsNullOrEmpty(filterSubject))
+                filter = filter.And(b => b.Subjects.Any(s=> s.Name.Equals(filterSubject)));
+
             List<Book> books = await this.applicationDbContext.Books
                 .Include(b => b.BookShelfBooks)
+                .Include(b => b.Subjects)
+                .Include(b => b.WishListBooks)
+                .ThenInclude(wlb => wlb.WishList)
                 .Where(filter)
                 .OrderByDescending(b => b.BookShelfBooks.Count)
                 .ToListAsync();
@@ -47,6 +53,7 @@ namespace ExBook.Services
         {
             List<Book> books = await this.applicationDbContext.Books
                 .Include(b => b.BookShelfBooks)
+                .Include(b => b.Subjects)
                 .Include(b => b.WishListBooks)
                 .ThenInclude(wlb => wlb.WishList)
                 .OrderByDescending(b => b.BookShelfBooks.Count)
@@ -143,5 +150,16 @@ namespace ExBook.Services
             await this.applicationDbContext.SaveChangesAsync();       
         }
         #endregion WishList
+
+        #region Subjects
+        public async Task<List<string>> GetAllSubjectsNames()
+        {
+            List<string> subjects = await this.applicationDbContext.Subjects
+                .Select(s=>s.Name)
+                .ToListAsync();
+
+            return subjects;
+        }
+        #endregion Subjects
     }
 }

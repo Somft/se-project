@@ -7,6 +7,7 @@ using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System;
 using System.Linq;
@@ -27,12 +28,12 @@ namespace ExBook.Controllers
         [HttpGet]
         [Route("/search")]
         [AllowAnonymous]
-        public async Task<IActionResult> IndexAsync(string filterTitle, string filterAuthor, bool filterAvailable)
+        public async Task<IActionResult> IndexAsync(string filterTitle, string filterAuthor, bool filterAvailable, string filterSubject)
         {
-            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterAuthor)|| filterAvailable)
+            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterAuthor) || filterAvailable|| !string.IsNullOrEmpty(filterSubject))
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
-                 ? await this.SearchBooks(filterTitle, filterAuthor, filterAvailable)
+                 ? await this.SearchBooks(filterTitle, filterAuthor, filterAvailable, filterSubject)
                  : this.RedirectToHome() as IActionResult;
             }
             else
@@ -41,21 +42,24 @@ namespace ExBook.Controllers
                     ? this.View(new SearchBookViewModel()
                     {
                         Books = await searchService.GetAllAvailableBooks(),
+                        Subjects = new SelectList(await searchService.GetAllSubjectsNames()),
                         FilterTitle = null,
                         FilterAuthor = null,
                         FilterAvailable = false,
-                        UserId= this.HttpContext.User.GetId().Value
+                        FilterSubject = null,
+                        UserId = this.HttpContext.User.GetId().Value
                     })
                     : this.RedirectToHome() as IActionResult;
             }
 
         }
 
-        private async Task<IActionResult> SearchBooks(string filterTitle, string filterAuthor, bool filterAvailable)
+        private async Task<IActionResult> SearchBooks(string filterTitle, string filterAuthor, bool filterAvailable, string filterSubject)
         {
             return this.View("Index", new SearchBookViewModel()
             {
-                Books = await searchService.GetBooksFiltered(filterTitle, filterAuthor, filterAvailable),
+                Books = await searchService.GetBooksFiltered(filterTitle, filterAuthor, filterAvailable, filterSubject),
+                Subjects = new SelectList(await searchService.GetAllSubjectsNames()),
                 FilterTitle = filterTitle,
                 FilterAuthor = filterAuthor,
                 FilterAvailable = filterAvailable,
@@ -69,12 +73,12 @@ namespace ExBook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetBookshelvesForBookAsync(Guid Id)
         {
-                return this.HttpContext.User.Identity.IsAuthenticated
-                    ? this.View("Bookshelves",new SearchBookShelfBookViewModel()
-                    {
-                        BookShelfBooks = await searchService.GetBookShelfBooksById(Id)
-                    })
-                    : this.RedirectToHome() as IActionResult;
+            return this.HttpContext.User.Identity.IsAuthenticated
+                ? this.View("Bookshelves", new SearchBookShelfBookViewModel()
+                {
+                    BookShelfBooks = await searchService.GetBookShelfBooksById(Id)
+                })
+                : this.RedirectToHome() as IActionResult;
         }
 
         [HttpGet]
@@ -91,7 +95,7 @@ namespace ExBook.Controllers
             else
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
-                    ? this.View("Bookshelves",new SearchBookShelfBookViewModel()
+                    ? this.View("Bookshelves", new SearchBookShelfBookViewModel()
                     {
                         BookShelfBooks = await searchService.GetAllBookShelfBooks(),
                         FilterTitle = null,
@@ -118,13 +122,13 @@ namespace ExBook.Controllers
             if (this.HttpContext.User.Identity.IsAuthenticated)
             {
                 Guid bookId;
-                if(Guid.TryParse(Id,out bookId))
+                if (Guid.TryParse(Id, out bookId))
                 {
                     await searchService.AddToWishList(Guid.Parse(Id), this.HttpContext.User.GetId().Value);
                     return Json(true);
                 }
             }
-                return Json(false);
+            return Json(false);
         }
 
         /// <summary>

@@ -10,12 +10,20 @@
             <div class="form-row align-items-center">
                 <div class="col-auto">
                     <label class="sr-only" for="inlineFormInput">Title</label>
-                    <input type="text" class="form-control mb-2" id="FilterTitle" name="FilterTitle" placeholder="Title" value="@Model.FilterTitle">
+                    <input type="text" class="form-control mb-2" id="FilterTitle" name="FilterTitle" placeholder="Title">
                 </div>
                 <div class="col-auto">
                     <label class="sr-only" for="inlineFormInputGroup">Author</label>
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="FilterAuthor" name="FilterAuthor" placeholder="Author" value="@Model.FilterAuthor">
+                        <input type="text" class="form-control" id="FilterAuthor" name="FilterAuthor" placeholder="Author" >
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <label class="sr-only" for="inlineFormInputGroup">Author</label>
+                    <div class="input-group mb-2">
+                        <select asp-for="FilterSubject" asp-items="Model.Subjects" id="FilterSubject">
+                            <option value="">All</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-auto">
@@ -26,15 +34,19 @@
                         </label>
                     </div>
                 </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Search</button>
+                </div>
+                <div class="col-auto">
+                    <button type="reset" class="btn btn-danger mb-2" id="clearSearch">Clear</button>
+                </div>
         </form>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-2">Search</button>
-        </div>
-        <div class="col-auto">
+        @*<div class="col-auto">
             <form asp-controller="Home" asp-action="Index" method="get">
                 <button type="submit" class="btn btn-info mb-2">Return</button>
             </form>
-        </div>
+        </div>*@
     </div>
 </div>
 </div>
@@ -43,6 +55,7 @@
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Author</th>
+            <th scope="col">Subject</th>
             <th scope="col">Cover</th>
             <th scope="col">Available</th>
             <th scope="col">Add to wishlist</th>
@@ -52,6 +65,12 @@
             <tr>
                 <td>@book.Name</td>
                 <td>@book.Author</td>
+                <td>
+                    @foreach (var subject in book.Subjects)
+                    { 
+                        @subject.Name <br/>
+                    }
+                    </td>
                 @if (@book.CoverUrl != null)
                 {
                     <td>
@@ -143,4 +162,9 @@
             });
         }
     }
+
+    window.onload = function () {
+        document.getElementById('FilterTitle').value = "@Model.FilterTitle";
+        document.getElementById('FilterAuthor').value = "@Model.FilterAuthor";
+    };
 </script>
