@@ -10,14 +10,41 @@
 </head>
 <body>
     <header>
-        @if (Context.User.Identity.IsAuthenticated)
-        {
-            @Context.User.Claims.FirstOrDefault((c) => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">ExBook</a>
 
-            <form asp-area="" asp-controller="Authentication" asp-action="Logout">
-                <button type="submit" class="btn btn-light">Logout</button>
-            </form>
-        }
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">My Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Search")">Search</a>
+                    </li>
+                    @if (Context.User.Identity.IsAuthenticated)
+                    {
+                        <form asp-area="" asp-controller="Authentication" asp-action="Logout" id="logoutForm">
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Logout", "Authentication")" id="submitLogout">Logout</a>
+                            </li>
+                        </form>
+                    }
+                </ul>
+                    <form asp-controller="Search" asp-action="Index" method="get" class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="filterTitle">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+            </div>
+        </nav>
+
+
+
     </header>
 
     @RenderBody()
@@ -37,9 +64,20 @@
             errorElement: 'span',
             errorClass: 'label label-danger',
         });
+
+        $(function () {
+            $("#submitLogout").click(function () {
+                document.getElementById("logoutForm").submit();
+                return false;
+            });
+        });
+    </script>
     </script>
 
 
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+<style>
+</style>

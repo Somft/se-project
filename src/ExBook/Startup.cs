@@ -30,6 +30,8 @@ namespace ExBook
             services.AddTransient<SearchService>();
             services.AddTransient<WishListService>();
 
+            services.AddMvc();
+
             services.UseConfigurator(this.configuration, new[]
             {
                 typeof(AuthenticationConfigurator),
