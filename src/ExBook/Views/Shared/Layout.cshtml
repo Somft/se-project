@@ -5,12 +5,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@(ViewData["Title"] ?? "ExBook")</title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/Content/Styles/styles.css">
 </head>
 <body>
+
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light pink bg-light">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -24,25 +27,35 @@
                     @if (Context.User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "UserAccount")">My Account</a>
+                            <i class="far fa-user">
+                                <a class="nav-link" href="@Url.Action("Index", "UserAccount")">My Account</a>
+                            </i>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "WishList")">Wishlist</a>
+                            <i class="fas fa-list">
+                                <a class="nav-link" href="@Url.Action("Index", "WishList")">Wishlist</a>
+                            </i>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Search")">Search</a>
+                            <i class="fas fa-search">
+                                <a class="nav-link" href="@Url.Action("Index", "Search")">Search</a>
+                            </i>
                         </li>
                         <form asp-area="" asp-controller="Authentication" asp-action="Logout" id="logoutForm">
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Logout", "Authentication")" id="submitLogout">Logout</a>
+                                <i class="fas fa-sign-out-alt">
+                                    <a class="nav-link" href="@Url.Action("Logout", "Authentication")" id="submitLogout">Logout</a>
+                                </i>
                             </li>
                         </form>
                     }
                 </ul>
-                    <form asp-controller="Search" asp-action="Index" method="get" class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="filterTitle">
-                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+
+                <form asp-controller="Search" asp-action="Index" method="get" class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="filterTitle">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+                </form>
             </div>
         </nav>
 
@@ -77,6 +90,62 @@
     </script>
     </script>
 
+    <!---contacts-->
+    <div class=" container-fluid padding">
+        <div class="row-text-center padding">
+            <div class="col-12">
+                <h2>Connect</h2>
+
+            </div>
+            <div class="col-12 social padding">
+                <a href="facebook.com/dziekankiaeii/"><i class="fab fa-facebook"></i></a>
+                <a href="youtube.com/c/HRejterzy/"><i class="fab fa-youtube"></i></a>
+                <a href="instagram.com/iansomerhalder/"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+    </div>
+
+    <!---Ending of the page-->
+    <footer>
+    <div class="container-fluid padding">
+        <div class="row-text-center">
+            <div class="col-md-4">
+                <img src="~/logo2.png" />
+                <hr class="light">
+                <p>669-519-178</p>
+                <p>Gliwice, Akademicka 16</p>
+                <p>Poland</p>
+            </div>
+            <div class="col-md-4">
+                <hr class="light">
+                <h5>Our staff</h5>
+                <hr class="light">
+                <p>Bartłomiej Piura</p>
+                <p>Bartosz Groffik</p>
+                <p>Paweł Szafraniec</p>
+                <p>Łukasz Kwiecień</p>
+                <p>Oliwia Mlonek</p>
+                <p>Emilia Gosiewska</p>
+            </div>
+            <div class="col-md-4">
+                <hr class="light">
+                <h5>Our service hours</h5>
+                <hr class="light">
+                <p>Monday-Friday: 8:00-16:00</p>
+                <p>Saturday: 8:00-13:00</p>
+                <p>Sunday: Unfortunately, our phone service isn't available</p>
+
+            </div>
+            <div class="col-12">
+                <hr class="light" >
+                <h5>&copy: ex-book.piura.pl</h5>
+            </div>
+        </div>
+    </div>
+    </footer>
+    .fa-facebook {
+    }
 
     @RenderSection("Scripts", required: false)
 </body>
@@ -84,3 +153,4 @@
 
 <style>
 </style>
++60
