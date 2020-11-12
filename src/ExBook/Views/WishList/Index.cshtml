@@ -1,7 +1,75 @@
-﻿
+﻿@model ExBook.Models.WhishList.WishListViewModel
 @{
-    ViewData["Title"] = "WishList";
+    ViewData["Title"] = "Your Wish List";
+    string[] TableHeaders = new string[] {"Book Title"
+                        ,"Author"
+                        ,"Created"
+                        };
 }
 
-<h1>Index</h1>
+
+@*<h1>Index</h1>
+    @foreach (var book in Model.Books)
+    {
+        <div>Book Title: @book.Book.Name </div>
+    }
+*@
+<style>
+    .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<div class="table">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                @{
+                    foreach (var head in TableHeaders)
+                    {
+                        <th>
+                            @head
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                if (Model != null)
+                {
+                    foreach (var book in Model.Books)
+                    {
+                        <tr>
+                            <td> @book.Book.Name</td>
+                            <td> @book.Book.Author</td>
+                            <td> @book.Book.Created</td>
+                            <form asp-controller="AddToWishList" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromWishList" method="post">
+                                <td><input type="submit" value="Remove this book" /></td>
+                            </form>
+                        </tr>
+
+                       
+                        
+                    }
+                }
+            }
+            </tbody>
+        </table>
+
+    <div class="center">
+        <form asp-area="" asp-controller="WishList" asp-action="Add">
+            <button type="submit" class="btn btn-dark">Add</button>
+        </form>
+    </div>
+
+
+</div>
+
 
