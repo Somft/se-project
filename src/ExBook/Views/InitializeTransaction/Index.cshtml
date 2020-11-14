@@ -1,0 +1,28 @@
+﻿@model ExBook.Models.InitializeTransaction.InitializeTransactionViewModel
+@{
+    ViewData["Title"] = "Start transaction";
+}
+
+<h1>co</h1>
+
+<div>
+    <table>
+        <tr>
+            <th scope="col">Author</th>
+            <th scope="col">Title</th>
+            <th scope="col">Add to the offer</th>
+        </tr>
+        @{ if (Model != null)
+        @foreach (var book in Model.CurrentUserBooks)
+        {
+            <tr>
+                <td>@book.Book.Name</td>
+                <td>@book.Book.Author</td>
+                <form asp-controller="InitializeTransaction" asp-action="AddBookToTransaction" method="post" >
+                   <td><input type="submit" value="Add" /></td>
+                </form>
+            </tr>
+            }
+         }
+    </table>
+</div>
