@@ -2,6 +2,7 @@ using ExBook.Configuration;
 using ExBook.Extensions;
 using ExBook.Extensions.DependencyInjection;
 using ExBook.Middleware;
+using ExBook.OpenLibrary;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,9 @@ namespace ExBook
             services.AddTransient<SearchService>();
             services.AddTransient<WishListService>();
             services.AddTransient<AddToWishListService>();
+
+            services.AddTransient<OpenLibraryClient>();
+            services.AddHttpClient();
 
             services.AddMvc();
 
