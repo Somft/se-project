@@ -30,7 +30,7 @@ namespace ExBook
             services.AddTransient<SearchService>();
             services.AddTransient<WishListService>();
             services.AddTransient<AddToWishListService>();
-
+            services.AddTransient<InitializeTransactionService>();
             services.AddMvc();
 
             services.UseConfigurator(this.configuration, new[]

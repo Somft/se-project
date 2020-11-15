@@ -1,16 +1,20 @@
-﻿using System;
+﻿using ExBook.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ExBook.Data;
 using System.Threading.Tasks;
+
 
 namespace ExBook.Models.InitializeTransaction
 {
     public class InitializeTransactionViewModel
     {
-        //current user bookshelf
-        //bookshelf of a user receiving transaction
-        public List<BookShelfBook> CurrentUserBooks  { get; set; }
+      
+        public Data.Transaction transaction  { get; set; }
+        public BookShelfBook initialBook { get; set; }
+        public ICollection<BookShelfBook> initiatorBooks { get; set; }
+        public ICollection<BookShelfBook>recipientBooks { get; set; }
 
     }
 }

@@ -65,7 +65,7 @@
     }
     <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Real Photo" style="width:32px;height:32px;"></td>
 
-    <form asp-controller="InitializeTransaction" asp-route-id="@book.BookId" asp-action="Index" method="post">
+    <form asp-controller="InitializeTransaction" asp-route-id="@book.Id"  asp-action="Index" method="post">
         <td><input type="submit" value="Send offer" class="btn btn-primary btn-sm"/></td>
     </form>
 </tr>
@@ -79,7 +79,7 @@
     };
 </script>
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(document).ready(function () {
 
       $('#startTransaction').click(function (e)
@@ -88,4 +88,4 @@
       });
 
     });
-</script>
+</script>*@
