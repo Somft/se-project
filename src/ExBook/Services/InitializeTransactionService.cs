@@ -56,12 +56,13 @@ namespace ExBook.Services
 
         }
 
-        public async Task AddBookToRecipientBooks(Guid bookID, Transaction transaction)
+        public async Task AddBookToRecipientBooks(Guid bookID, Guid transactionID)
         {
 
-           
-            var book = transaction.RecipientBooks.FirstOrDefault(tib => tib.BookId == bookID);
-       
+
+             var transaction = await this.applicationDbContext.Transactions
+                .FirstOrDefaultAsync(trans => trans.Id == transactionID);
+            var book = transaction.RecipientBooks.FirstOrDefault(rbb => rbb.BookId == bookID);
 
             if(book == null)
             {

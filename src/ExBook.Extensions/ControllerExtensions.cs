@@ -25,10 +25,13 @@ namespace ExBook.Extensions
         {
             return controller.Redirect("/addtowishlist");
         }
+<<<<<<< HEAD
         public static RedirectResult RedirectToInitializeTransaction(this ControllerBase controller)
         {
             return controller.Redirect("/initializetransaction");
         }
+=======
+>>>>>>> origin/master
 
     }
 }

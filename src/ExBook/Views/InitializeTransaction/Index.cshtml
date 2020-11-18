@@ -31,7 +31,7 @@
 </div>
 <br />
 <div>
-    <div class="card-header">
+    <div  class="card-header">
         Add more books you want to get from the exchange
     </div>
     <table class="table table-striped">
@@ -53,7 +53,7 @@
                     <td>
                         <input type="submit" value="Add to transaction" title="Add this book to the transaction" class="btn btn-primary btn-sm" 
                                id="@book.Id"
-                               onclick="AddBookToRecipientBooks('@book.Id');" />
+                               onclick="AddToRecipientBooks('@book.Id',' @Model.transaction.Id' );" />
                     </td>
 
                 }
@@ -62,7 +62,7 @@
                     <td>
                         <input type="submit" value="Add to transaction" title="This book is already included in the transaction" class="btn btn-secondary btn-sm"
                                id="@book.Id"
-                               onclick="AddBookToRecipientBooks('@book.Id');" />
+                               onclick="AddToRecipientBooks('@book.Id','@Model.transaction.Id');" />
                     </td>
                 }
             </tr>
@@ -71,7 +71,8 @@
 
     </table>
 </div>
-@functions {
+@functions 
+{
     private bool GetIsInRecipientBooks(ExBook.Data.BookShelfBook bsb)
     {
         return Model.transaction.RecipientBooks.Any(trb => trb.Id == bsb.Id);
@@ -85,19 +86,20 @@
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript">
-    function AddBookToRecipientBooks(Id) {
+    function AddToRecipientBooks(idb, idt)
+    {
         {
             $.ajax({
-                url: '/InitializeTransaction/AddBookToRecipientBooks',
-                data: { Id: Id },
+                url: '/InitializeTransaction/AddToRecipientBooks',
+                data: { idb: idb, idt: idt },
                 type: 'POST'
             }).done(function (response) {
                 if (response == true) {
-                    if ($(document.getElementById(Id)).hasClass('btn-primary')) {
-                        $(document.getElementById(Id)).removeClass('btn-primary').addClass('btn-secondary');
+                    if ($(document.getElementById(idb)).hasClass('btn-primary')) {
+                        $(document.getElementById(idb)).removeClass('btn-primary').addClass('btn-secondary');
                     }
                     else {
-                        $(document.getElementById(Id)).removeClass('btn-secondary').addClass('btn-primary');
+                        $(document.getElementById(idb)).removeClass('btn-secondary').addClass('btn-primary');
                     }
 
                 }

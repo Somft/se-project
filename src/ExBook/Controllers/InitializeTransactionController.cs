@@ -17,14 +17,13 @@ namespace ExBook.Controllers
         private readonly ApplicationDbContext applicationDbContext;
         private readonly SearchService searchService;
         private readonly InitializeTransactionService initializeTransactionService;
-        private Transaction transaction;
+
         public InitializeTransactionController(ApplicationDbContext applicationDbContext,SearchService searchService, InitializeTransactionService initializeTransactionService)
         {
             this.applicationDbContext = applicationDbContext;
             this.searchService = searchService;
             this.initializeTransactionService = initializeTransactionService;
-            this.transaction = new Transaction();
-
+            
         }
 
         [HttpPost]
@@ -36,24 +35,27 @@ namespace ExBook.Controllers
                 BookShelfBook bsb = await this.initializeTransactionService.GetBookShelfBookById(id);
                 var init = await this.initializeTransactionService.GetUserById(InitiatorId);
                 var reci = await this.initializeTransactionService.GetUserById(bsb.BookShelf.UserId);
-                this.transaction.Id = Guid.NewGuid();              
 
-                    this.transaction.Initiator = init;
-                this.transaction.Recipient = reci;
-                this.transaction.InitiatorId = InitiatorId;
-                this.transaction.RecipientId = bsb.BookShelf.UserId;
-                   
+                Transaction transaction = new Transaction();
+                transaction.Id = Guid.NewGuid();             
+                transaction.Initiator = init;
+                transaction.Recipient = reci;
+                transaction.InitiatorId = InitiatorId;
+                transaction.RecipientId = bsb.BookShelf.UserId;
+                transaction.Status = "initialized";
+
+                await this.applicationDbContext.AddAsync(transaction);
+                this.applicationDbContext.SaveChanges();
 
                 return this.View(new InitializeTransactionViewModel()
                 {
-                    transaction = this.transaction,
+                    transaction = transaction,
                     initialBook = bsb,
                     recipientBooks = reci.BookShelves.FirstOrDefault().BookShelfBooks,
                     initiatorBooks = init.BookShelves.FirstOrDefault().BookShelfBooks
 
                 }) ;
             }
-
             else
             {
                 return this.RedirectToHome() as IActionResult;
@@ -61,14 +63,18 @@ namespace ExBook.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AddBookToRecipientBooksAsync(string id)
+        public async Task<JsonResult> AddToRecipientBooksAsync(string idb, string idt)
         {
             if (this.HttpContext.User.Identity.IsAuthenticated)
             {
                 Guid bookId;
-                if(Guid.TryParse(id, out bookId))
-                await this.initializeTransactionService.AddBookToRecipientBooks(Guid.Parse(id), this.transaction);
-                return Json(true);   
+                Guid transactionID;
+
+                if(Guid.TryParse(idb, out bookId) && Guid.TryParse(idt, out transactionID))
+                {
+                        await this.initializeTransactionService.AddBookToRecipientBooks(Guid.Parse(idb), Guid.Parse(idt));
+                        return Json(true);
+                }
             }
             return Json(false);
         }

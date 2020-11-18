@@ -26,6 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ExBook.Extensions\ExBook.Extensions.csproj" />
     <ProjectReference Include="..\ExBook.Mails\ExBook.Mails.csproj" />
+<<<<<<< HEAD
+=======
+    <ProjectReference Include="..\ExBook.OpenLibrary\ExBook.OpenLibrary.csproj" />
+>>>>>>> origin/master
   </ItemGroup>
 
 </Project>
