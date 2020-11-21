@@ -43,11 +43,7 @@ namespace ExBook.Controllers
             return this.RedirectToAddToWishList();
         }
 
-<<<<<<< HEAD
         public Guid GetUserID()
-=======
-        private Guid GetUserID()
->>>>>>> origin/master
         {
             string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
             return dbContext.Users.Where(user => user.Login == login).Single().Id;

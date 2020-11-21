@@ -11,10 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System;
 using System.Linq;
-<<<<<<< HEAD
 using System.Runtime.CompilerServices;
-=======
->>>>>>> origin/master
 using System.Security.Policy;
 using System.Threading.Tasks;
 
@@ -71,10 +68,6 @@ namespace ExBook.Controllers
             });
         }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
         [HttpPost]
         [Route("/searchShelves")]
         [AllowAnonymous]
