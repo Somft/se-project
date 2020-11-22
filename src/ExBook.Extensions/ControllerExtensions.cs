@@ -25,9 +25,9 @@ namespace ExBook.Extensions
         {
             return controller.Redirect("/addtowishlist");
         }
-        public static RedirectResult RedirectToInitializeTransaction(this ControllerBase controller)
+        public static RedirectResult RedirectToFinalizeTransaction(this ControllerBase controller)
         {
-            return controller.Redirect("/initializetransaction");
+            return controller.Redirect("/finalizetransaction");
         }
 
     }

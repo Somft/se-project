@@ -50,30 +50,71 @@ namespace ExBook.Services
             return bookshelf;
         }
 
-        #region TransactionBooks
-        public void AddBookToInititatorBooks()
+        public async Task<Transaction> GetTransactionById(Guid id)
+        {
+            Transaction transaction = await this.applicationDbContext.Transactions
+                .Include(b => b.Recipient)
+                .ThenInclude(b => b.BookShelves)
+                .ThenInclude(b => b.BookShelfBooks)
+                .ThenInclude(b => b.Book)
+                .Include(b => b.Initiator)
+                .ThenInclude(b => b.BookShelves)
+                .ThenInclude(b => b.BookShelfBooks)
+                .ThenInclude(b => b.Book)
+                .FirstOrDefaultAsync(b => b.Id == id);
+            return transaction;
+
+        }
+
+
+
+        #region AddTransactionBooks
+        public async Task AddBookToInitiatorBooks(Guid bookID, Guid transactionID)
         {
 
+            var transaction = await GetTransactionById(transactionID);
+            var book = transaction.InitiatorBooks.FirstOrDefault(rbb => rbb.Id == bookID);
+            
+
+            if (book == null)
+            {
+                var booktoAdd = transaction.Initiator.BookShelves
+                    .FirstOrDefault()
+                    .BookShelfBooks
+                    .FirstOrDefault(bb => bb.Id == bookID);
+                transaction.InitiatorBooks.Add(booktoAdd);
+            }
+            else
+            {
+                transaction.InitiatorBooks.Remove(book);
+               
+            }
+            await this.applicationDbContext.SaveChangesAsync();
         }
 
         public async Task AddBookToRecipientBooks(Guid bookID, Guid transactionID)
         {
 
 
-             var transaction = await this.applicationDbContext.Transactions
-                .FirstOrDefaultAsync(trans => trans.Id == transactionID);
-            var book = transaction.RecipientBooks.FirstOrDefault(rbb => rbb.BookId == bookID);
+            var transaction = await GetTransactionById(transactionID);
+            var book = transaction.RecipientBooks.FirstOrDefault(rbb => rbb.Id == bookID);
 
             if(book == null)
             {
-                transaction.RecipientBooks.Add(book);
+                var booktoAdd = transaction.Recipient.BookShelves
+                   .FirstOrDefault()
+                   .BookShelfBooks
+                   .FirstOrDefault(bb => bb.Id == bookID);
+                transaction.RecipientBooks.Add(booktoAdd);
             }
             else
             {
                 transaction.RecipientBooks.Remove(book);
+
             }
+            await this.applicationDbContext.SaveChangesAsync();
         }
-        #endregion TransactionBooks
+        #endregion AddTransactionBooks
 
 
     }

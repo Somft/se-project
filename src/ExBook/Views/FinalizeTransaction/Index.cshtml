@@ -1,0 +1,47 @@
+﻿@model ExBook.Models.FinalizeTransaction.FinalizeTransactionViewModel;
+@{
+    ViewData["Title"] = "Finish the transaction";
+}
+
+<h1 style="color:cornflowerblue;text-align:center">Transaction summary</h1>
+
+@if(@Model.transaction.InitiatorBooks.Count > 0)
+{
+<div style="text-align:center">Your books</div>
+<table width="100%" class="table table-striped">
+    <tr>
+        <th scope="col">Author</th>
+        <th scope="col">Title</th>
+    </tr>
+
+
+    @foreach (var book in Model.transaction.InitiatorBooks)
+    {
+        <tr>
+            <td>@book.Book.Name</td>
+            <td>@book.Book.Author</td>
+        </tr>
+    }
+</table>
+}
+
+<div style="text-align:center">Recipient books</div>
+<table width="100%" class="table table-striped">
+    <tr>
+        <th scope="col">Author</th>
+        <th scope="col">Title</th>
+    </tr>
+    @foreach (var book in Model.transaction.RecipientBooks)
+    {
+        <tr>
+            <td>@book.Book.Name</td>
+            <td>@book.Book.Author</td>
+        </tr>
+    }
+</table>
+<br />
+<br />
+<div style="text-align:center">
+    <input type="submit" class="btn btn-primary btn-sm" value="Send" />
+</div>
+

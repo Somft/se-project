@@ -9,6 +9,7 @@ using ExBook.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExBook.Extensions;
+using ExBook.Models.FinalizeTransaction;
 
 namespace ExBook.Controllers
 {
@@ -29,7 +30,8 @@ namespace ExBook.Controllers
         [HttpPost]
         [Route("/initializetransaction")]
         public async Task<IActionResult> Index(Guid id)
-        {   if (HttpContext.User.Identity.IsAuthenticated)
+        {   
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
                 Guid InitiatorId = this.HttpContext.User.GetId().Value;
                 BookShelfBook bsb = await this.initializeTransactionService.GetBookShelfBookById(id);
@@ -43,6 +45,7 @@ namespace ExBook.Controllers
                 transaction.InitiatorId = InitiatorId;
                 transaction.RecipientId = bsb.BookShelf.UserId;
                 transaction.Status = "initialized";
+                transaction.RecipientBooks.Add(bsb);
 
                 await this.applicationDbContext.AddAsync(transaction);
                 this.applicationDbContext.SaveChanges();
@@ -62,6 +65,29 @@ namespace ExBook.Controllers
             }
         }
 
+
+      
+
+
+        #region AddTransactionBooks
+
+        [HttpPost]
+        public async Task<JsonResult> AddToInitiatorBooksAsync(string idb, string idt)
+        {
+            if (this.HttpContext.User.Identity.IsAuthenticated)
+            {
+                Guid bookId;
+                Guid transactionID;
+
+                if (Guid.TryParse(idb, out bookId) && Guid.TryParse(idt, out transactionID))
+                {
+                    await this.initializeTransactionService.AddBookToInitiatorBooks(Guid.Parse(idb), Guid.Parse(idt));
+                    return Json(true);
+                }
+            }
+            return Json(false);
+        }
+
         [HttpPost]
         public async Task<JsonResult> AddToRecipientBooksAsync(string idb, string idt)
         {
@@ -79,7 +105,8 @@ namespace ExBook.Controllers
             return Json(false);
         }
 
-
-
+        #endregion AddTransactionBooks
     }
+
+    
 }

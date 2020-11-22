@@ -14,7 +14,7 @@ namespace ExBook.Models.InitializeTransaction
         public Data.Transaction transaction  { get; set; }
         public BookShelfBook initialBook { get; set; }
         public ICollection<BookShelfBook> initiatorBooks { get; set; }
-        public ICollection<BookShelfBook>recipientBooks { get; set; }
+        public ICollection<BookShelfBook> recipientBooks { get; set; }
 
     }
 }
