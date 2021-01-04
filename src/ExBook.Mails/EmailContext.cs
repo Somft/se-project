@@ -1,4 +1,6 @@
-﻿namespace ExBook.Mails.Templates
+﻿using ExBook.Mails.Services;
+
+namespace ExBook.Mails.Templates
 {
     public class EmailContext
     {
@@ -17,6 +19,11 @@
                 Address = to
             };
             this.Subject = subject;
+        }
+
+        public EmailContext(Mail mailToSend) : this(mailToSend.Subject, mailToSend.To)
+        {
+
         }
     }
 }

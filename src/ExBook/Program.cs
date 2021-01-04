@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Hosting;
+
+using System.Linq;
 
 namespace ExBook
 {
@@ -15,6 +19,15 @@ namespace ExBook
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureAppConfiguration((config) =>
+                    {
+                        config.Sources
+                         .Select(source => source as JsonConfigurationSource)
+                         .Where(source => source != null)
+                         .ToList()
+                         .ForEach(source => config.AddJsonFile(source!.Path.Replace(".json", "") + ".secrets.json", true));
+
+                    });
                     webBuilder.UseStartup<Startup>();
                 });
         }
