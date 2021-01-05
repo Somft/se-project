@@ -1,4 +1,5 @@
-﻿using ExBook.Mails.Templates;
+﻿using ExBook.Extensions;
+using ExBook.Mails.Templates;
 using System;
 using System.Threading.Tasks;
 
@@ -22,10 +23,10 @@ namespace ExBook.Mails.Services
             var newMail = new Mail
             {
                 Id = Guid.NewGuid(),
-                Content = content,
-                Error = null,
                 To = context.To?.Address ?? "",
                 Subject = context.Subject,
+                Content = content,
+                Owner = EnvironmentUtils.GetMachineIdentifier(),
             };
 
             await mailQueueDbContext.Mails.AddAsync(newMail);

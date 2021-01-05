@@ -1,4 +1,5 @@
 ﻿using ExBook.Mails.Templates;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,17 +43,20 @@ namespace ExBook.Mails.Services
             MailQueueDbContext dbContext = scope.ServiceProvider.GetRequiredService<MailQueueDbContext>();
             MailSender mailSender = scope.ServiceProvider.GetRequiredService<MailSender>();
 
-            while (await dbContext.Mails.AnyAsync(mail => mail.Error == null && !mail.Success))
+            Expression<Func<Mail, bool>> query = mail => mail.Error == null && !mail.Success;
+
+            while (await dbContext.Mails.AnyAsync(query))
             {
                 using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
-                Mail mailToSend = await dbContext.Mails.FirstAsync(mail => mail.Error == null && !mail.Success);
+                Mail mailToSend = await dbContext.Mails.FirstAsync(query);
 
                 try
                 {
                     await mailSender.SendEmail(mailToSend.Content, new EmailContext(mailToSend));
                     mailToSend.Success = true;
+                    mailToSend.Sent = DateTime.UtcNow;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     mailToSend.Error = e.Message;
                 }

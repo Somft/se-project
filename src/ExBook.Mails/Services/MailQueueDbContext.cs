@@ -36,6 +36,8 @@ namespace ExBook.Mails.Services
                   .HasDefaultValue("")
                   .HasColumnName("content");
 
+
+
                 entity.Property(e => e.Error)
                   .HasColumnName("error");
 
@@ -43,6 +45,18 @@ namespace ExBook.Mails.Services
                   .IsRequired()
                   .HasDefaultValue(false)
                   .HasColumnName("success");
+
+                entity.Property(e => e.Created)
+                  .IsRequired()
+                  .HasDefaultValueSql("now()")
+                  .HasColumnName("created");
+
+                entity.Property(e => e.Sent)
+                  .HasColumnName("sent");
+
+                entity.Property(e => e.Owner)
+                  .HasColumnName("owner");
+
             });
         }
     }
