@@ -10,7 +10,7 @@ namespace ExBook.OpenLibrary.Dto
         public string Name { get; set; } = "";
 
         [JsonProperty("birth_date")]
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
     }
 }

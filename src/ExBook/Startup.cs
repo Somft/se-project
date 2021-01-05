@@ -43,6 +43,7 @@ namespace ExBook
                 typeof(DbContextConfigurator),
                 typeof(LoggingConfigurator),
                 typeof(MailConfigurator),
+                typeof(CacheConfigurator)
             });
         }
 

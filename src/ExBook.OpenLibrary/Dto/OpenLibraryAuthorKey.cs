@@ -7,7 +7,7 @@ namespace ExBook.OpenLibrary.Dto
         [JsonProperty("author")]
         public Element Author { get; set; } = new Element();
 
-        [JsonProperty("type")]
-        public Element Type { get; set; } = new Element();
+        //[JsonProperty("type")]
+        //public Element Type { get; set; } = new Element();
     }
 }
