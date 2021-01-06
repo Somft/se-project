@@ -23,6 +23,7 @@ namespace ExBook.Data
         public string Role { get; set; }
         public string Surname { get; set; }
         public bool IsEmailConfirmed { get; set; }
+        public bool IsEmailAuthenticationEnabled { get; set; }
 
         public virtual ICollection<BookShelf> BookShelves { get; set; }
         public virtual ICollection<WishList> WishLists { get; set; }
