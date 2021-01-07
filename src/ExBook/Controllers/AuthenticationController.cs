@@ -81,11 +81,11 @@ namespace ExBook.Controllers
             return this.RedirectToLogin();
         }
 
-        [HttpGet]
+        [HttpGet("/confirm-account")]
         [AllowAnonymous]
         public IActionResult ConfirmAccount()
         {
-
+            return null;
         }
 
         private async Task<User?> AuthenticateAsync(string login, string password)
