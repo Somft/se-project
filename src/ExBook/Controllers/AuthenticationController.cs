@@ -1,5 +1,7 @@
 ﻿using ExBook.Data;
 using ExBook.Extensions;
+using ExBook.Mails.Services;
+using ExBook.Mails.Templates;
 using ExBook.Views.Authentication;
 
 using Microsoft.AspNetCore.Authorization;
@@ -22,14 +24,14 @@ namespace ExBook.Controllers
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IConfiguration configuration;
+        private readonly IMailSender mailSender;
 
-        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration)
+        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration, IMailSender mailSender)
         {
             this.applicationDbContext = applicationDbContext;
             this.configuration = configuration;
+            this.mailSender = mailSender;
         }
-
-
 
         [HttpGet]
         [Route("/login")]
@@ -66,10 +68,21 @@ namespace ExBook.Controllers
                 });
             }
 
+            if (user.IsEmailAuthenticationEnabled)
+            {
+                await this.mailSender.SendEmail("Authentication", new AuthenticationContext(user.Email, "Loging in")
+                {
+                    Token = this.GenerateJwt(user)
+                });
 
-            this.HttpContext.Response.Cookies.Append("Authentication", this.GenerateJwt(user), new CookieOptions());
+                return this.Redirect("/TODO");
+            }
+            else
+            {
+                this.HttpContext.Response.Cookies.Append("Authentication", this.GenerateJwt(user), new CookieOptions());
+                return this.RedirectToHome();
 
-            return this.RedirectToHome();
+            }
         }
 
 
