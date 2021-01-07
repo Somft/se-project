@@ -48,18 +48,28 @@ namespace ExBook.Controllers
         {
             User? user = await this.AuthenticateAsync(request.Login, request.Password);
 
-            if (user != null)
+            if (user == null)
             {
-                this.HttpContext.Response.Cookies.Append("Authentication", this.GenerateJwt(user), new CookieOptions());
-
-                return this.RedirectToHome();
+                return this.View(new LoginViewModel()
+                {
+                    Message = "Incorrect username or password",
+                    Login = request.Login
+                });
             }
 
-            return this.View(new LoginViewModel()
+            if (!user.IsEmailConfirmed)
             {
-                Message = "Incorrect username or password",
-                Login = request.Login
-            });
+                return this.View(new LoginViewModel()
+                {
+                    Message = "Account is not active",
+                    Login = request.Login
+                });
+            }
+
+
+            this.HttpContext.Response.Cookies.Append("Authentication", this.GenerateJwt(user), new CookieOptions());
+
+            return this.RedirectToHome();
         }
 
 
@@ -69,6 +79,13 @@ namespace ExBook.Controllers
         {
             this.HttpContext.Response.Cookies.Delete("Authentication");
             return this.RedirectToLogin();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ConfirmAccount()
+        {
+
         }
 
         private async Task<User?> AuthenticateAsync(string login, string password)
@@ -96,7 +113,7 @@ namespace ExBook.Controllers
                 {
                         new Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new Claim(ClaimTypes.NameIdentifier, user.Login),
-                        new Claim(ClaimTypes.Email, "test"),
+                        new Claim(ClaimTypes.Email, user.Email),
                 },
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
