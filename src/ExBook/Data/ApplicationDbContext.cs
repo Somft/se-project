@@ -201,6 +201,21 @@ namespace ExBook.Data
                 entity.Property(e => e.IsEmailAuthenticationEnabled)
                     .IsRequired()
                     .HasColumnName("is_email_authentication_enabled");
+
+                entity.Property(e => e.ContactNumber)
+                    .HasColumnName("contact_number");
+
+                entity.Property(e => e.Address)
+                    .HasColumnName("address");
+
+                entity.Property(e => e.PostalCode)
+                    .HasColumnName("postal_code");
+
+                entity.Property(e => e.City)
+                    .HasColumnName("city");
+
+                entity.Property(e => e.Country)
+                    .HasColumnName("country");
             });
 
             modelBuilder.Entity<WishList>(entity =>

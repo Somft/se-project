@@ -12,15 +12,25 @@
         <th scope="col">Name</th>
         <th scope="col">Role</th>
         <th scope="col">Is administrator</th>
+        <th scope="col">Contact</th>
+        <th scope="col">Address</th>
+        <th scope="col">Postal Code</th>
+        <th scope="col">City</th>
+        <th scope="col">Country</th>
     </tr>
     @{var user = Model.CurrentUser;
-    <tr>
-        <td>@user.Id</td>
-        <td>@user.Login</td>
-        <td>@user.Email</td>
-        <td>@($"{user.Name} {user.Surname}")</td>
-        <td>@user.Role</td>
-        <td>@user.IsEmailConfirmed</td>
-    </tr>
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.Login</td>
+            <td>@user.Email</td>
+            <td>@($"{user.Name} {user.Surname}")</td>
+            <td>@user.Role</td>
+            <td>@user.IsEmailConfirmed</td>
+            <td>@($"{user.ContactNumber??"No data"}") </td>
+            <td>@($"{user.Address??"No data"}") </td>
+            <td>@($"{user.PostalCode??"No data"}") </td>
+            <td>@($"{user.City??"No data"}") </td>
+            <td>@($"{user.Country??"No data"}") </td>
+        </tr>
         }
 </table>
