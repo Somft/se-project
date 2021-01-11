@@ -175,7 +175,8 @@ namespace ExBook.Data
                     .IsRequired()
                     .HasColumnName("email");
 
-                entity.Property(e => e.IsEmailConfirmed).HasColumnName("is_email_confirmed");
+                entity.Property(e => e.IsEmailConfirmed)
+                    .HasColumnName("is_email_confirmed");
 
                 entity.Property(e => e.Login)
                     .IsRequired()
@@ -196,6 +197,10 @@ namespace ExBook.Data
                 entity.Property(e => e.Surname)
                     .IsRequired()
                     .HasColumnName("surname");
+
+                entity.Property(e => e.IsEmailAuthenticationEnabled)
+                    .IsRequired()
+                    .HasColumnName("is_email_authentication_enabled");
             });
 
             modelBuilder.Entity<WishList>(entity =>
