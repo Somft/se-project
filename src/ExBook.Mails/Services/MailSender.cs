@@ -22,7 +22,7 @@ namespace ExBook.Mails.Services
         public async Task SendEmail<T>(string template, T context) where T : EmailContext
         {
             string content = await this.templateEngine.Render<T>(template, context);
-            await this.SendEmail(content, context);
+            await this.SendEmail(content, context as EmailContext);
         }
 
         public async Task SendEmail((string content, EmailContext context)[] emails)
