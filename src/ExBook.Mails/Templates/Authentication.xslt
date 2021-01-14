@@ -7,6 +7,7 @@
     <html>
       <body>
         Click <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">here</a> to confirm an account.
+      <xsl:value-of select="Token"/>  
       </body>
     </html>
   </xsl:template>

@@ -22,7 +22,7 @@ namespace ExBook.Configuration
             IConfigurationSection identitySettingsSection = this.configuration.GetSection("App:Mail");
             services.Configure<MailSettings>(identitySettingsSection);
 
-            if (this.configuration.GetValue("App:Mail:QueueEnabled", true))
+            if (this.configuration.GetValue("App:Mail:QueueEnabled", false))
             {
 
 
