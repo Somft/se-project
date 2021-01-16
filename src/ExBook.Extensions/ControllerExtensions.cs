@@ -26,5 +26,10 @@ namespace ExBook.Extensions
             return controller.Redirect("/addtowishlist");
         }
 
+        public static RedirectResult RedirectToAdminPanel(this ControllerBase controller)
+        {
+            return controller.Redirect("/admin");
+        }
+
     }
 }

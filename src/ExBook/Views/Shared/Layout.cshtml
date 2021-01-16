@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>@(ViewData["Title"] ?? "ExBook")</title>
     <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="~/Content/Styles/styles.css">
 </head>
@@ -27,26 +27,36 @@
                     @if (Context.User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            
-                                <a class="nav-link" href="@Url.Action("Index", "UserAccount")"><i class="far fa-user"></i> My Account</a>
-                            
+
+                            <a class="nav-link" href="@Url.Action("Index", "UserAccount")"><i class="far fa-user"></i> My Account</a>
+
                         </li>
                         <li class="nav-item">
-                            
-                                <a class="nav-link" href="@Url.Action("Index", "WishList")"><i class="fas fa-list"></i> Wishlist</a>
-                            
+
+                            <a class="nav-link" href="@Url.Action("Index", "WishList")"><i class="fas fa-list"></i> Wishlist</a>
+
                         </li>
 
                         <li class="nav-item">
-                           
-                                <a class="nav-link" href="@Url.Action("Index", "Search")"><i class="fas fa-search"></i> Search</a>
-                           
+
+                            <a class="nav-link" href="@Url.Action("Index", "Search")"><i class="fas fa-search"></i> Search</a>
+
                         </li>
+                        @if (ExBook.Extensions.ClaimsPrincipalExtensions.HasRole(Context.User, "admin"))
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link" href="@Url.Action("Index", "AdministrationPanel")"><i class="fas fa-user-cog"></i> Admin Panel</a>
+
+                            </li>
+                        }
+
+
                         <form asp-area="" asp-controller="Authentication" asp-action="Logout" id="logoutForm">
                             <li class="nav-item">
-                                
-                                    <a class="nav-link" href="@Url.Action("Logout", "Authentication")" id="submitLogout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                               
+
+                                <a class="nav-link" href="@Url.Action("Logout", "Authentication")" id="submitLogout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
                             </li>
                         </form>
                     }
@@ -58,7 +68,7 @@
                 </form>
             </div>
         </nav>
-        
+
 
 
     </header>
@@ -68,6 +78,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <script>
         jQuery.validator.setDefaults({
@@ -88,11 +100,11 @@
             });
         });
     </script>
-   
-   
 
-  
-  
+
+
+
+
 
     @RenderSection("Scripts", required: false)
 </body>

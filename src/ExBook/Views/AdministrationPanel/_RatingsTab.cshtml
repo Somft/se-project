@@ -1,0 +1,20 @@
+﻿@model List<ExBook.Data.Rating>
+<div class="users">
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Comment</th>
+            <th scope="col">Value</th>
+            <th scope="col">Initiatior</th>
+            <th scope="col">Recipient</th>
+        </tr>
+        @foreach (var rating in Model)
+        {
+            <tr>
+                <td>@rating.Comment</td>
+                <td>@rating.Value</td>
+                <td>@rating.Transaction.Initiator.Login</td>
+                <td>@rating.Transaction.Recipient.Login</td>
+            </tr>
+        }
+    </table>
+</div>

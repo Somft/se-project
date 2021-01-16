@@ -1,0 +1,22 @@
+﻿@model List<ExBook.Data.User>
+    <div class="users">
+        <table class="table table-striped">
+            <tr>
+                <th scope="col">Login</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">EmailConfirmed</th>
+                <th scope="col">2FA</th>
+            </tr>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Login</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>@user.IsEmailConfirmed</td>
+                    <td>@user.IsEmailAuthenticationEnabled</td>
+                </tr>
+            }
+        </table>
+    </div>
