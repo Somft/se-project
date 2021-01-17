@@ -36,8 +36,4 @@
     <ProjectReference Include="..\ExBook.Mails\ExBook.Mails.csproj" />
     <ProjectReference Include="..\ExBook.OpenLibrary\ExBook.OpenLibrary.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
 </Project>

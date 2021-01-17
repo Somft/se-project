@@ -33,7 +33,7 @@ namespace ExBook.Data
 
             public static string Rejected { get; } = "REJECTED";
 
-            public static string Removed { get; } = "REMOVED";
+            public static string Accepted { get; } = "ACCEPTED";
         }
     }
 }
