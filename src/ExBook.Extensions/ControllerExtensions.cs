@@ -25,6 +25,9 @@ namespace ExBook.Extensions
         {
             return controller.Redirect("/addtowishlist");
         }
-
+        public static RedirectResult RedirectToEMailAuthorization(this ControllerBase controller)
+        {
+            return controller.Redirect("/login-token-sent");
+        }
     }
 }

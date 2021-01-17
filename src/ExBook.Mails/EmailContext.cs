@@ -12,7 +12,7 @@ namespace ExBook.Mails.Templates
 
         }
 
-        public EmailContext(string subject, string to)
+        public EmailContext(string to, string subject)
         {
             this.To = new EmailAddress
             {

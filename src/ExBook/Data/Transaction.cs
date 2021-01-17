@@ -23,5 +23,17 @@ namespace ExBook.Data
         public virtual Rating Rating { get; set; }
         public virtual ICollection<BookShelfBook> RecipientBooks { get; set; }
         public virtual ICollection<BookShelfBook> InitiatorBooks { get; set; }
+
+
+        public static class Statuses
+        {
+            public static string Initialized { get; } = "INIT";
+
+            public static string Reviewed { get; } = "REVIEW";
+
+            public static string Rejected { get; } = "REJECTED";
+
+            public static string Accepted { get; } = "ACCEPTED";
+        }
     }
 }
