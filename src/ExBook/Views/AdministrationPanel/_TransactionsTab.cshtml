@@ -1,18 +1,24 @@
 ﻿@model List<ExBook.Data.Transaction>
-<div class="users">
-    <table class="table table-striped">
-        <tr>
-            <th scope="col">Status</th>
-            <th scope="col">Initiatior</th>
-            <th scope="col">Recipient</th>
-        </tr>
-        @foreach (var transaction in Model)
-        {
-            <tr>
-                <td>@transaction.Status</td>
-                <td>@transaction.Initiator.Login</td>
-                <td>@transaction.Recipient.Login</td>
-            </tr>
-        }
-    </table>
-</div>
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Status</th>
+                        <th scope="col">Initiatior</th>
+                        <th scope="col">Recipient</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model)
+                    {
+                        <tr>
+                            <td>@transaction.Status</td>
+                            <td>@transaction.Initiator.Login</td>
+                            <td>@transaction.Recipient.Login</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>

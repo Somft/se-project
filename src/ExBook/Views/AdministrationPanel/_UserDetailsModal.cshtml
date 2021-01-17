@@ -1,0 +1,100 @@
+﻿@model ExBook.Data.User
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body form-horizontal">
+            <div class="card">
+                <div class="card-header">
+                    User Details
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputLogin">Email</label>
+                            <input type="text" class="form-control" id="inputLogin" placeholder="Login" value="@Model.Login" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputPassword">Password</label>
+                            <input type="text" class="form-control" id="inputPassword" placeholder="Password" value="@Model.Password" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputEmail">Email</label>
+                            <input type="text" class="form-control" id="inputEmail" placeholder="Email" value="@Model.Email" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputRole">Role</label>
+                            <input type="text" class="form-control" id="inputRole" placeholder="Role" value="@Model.Role" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputName">Name</label>
+                            <input type="text" class="form-control" id="inputName" placeholder="Name" value="@Model.Name" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputSurname">Surname</label>
+                            <input type="text" class="form-control" id="inputSurname" placeholder="Surname" value="@Model.Surname" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            @Html.CheckBoxFor(u => u.IsEmailConfirmed, new { onclick = "return false" })
+                            <label class="form-check-label" for="IsEmailConfirmed"> Email Confirmed </label>
+                            @*<input class="form-check-input" id="inputEmailConfirmed" name="inputEmailConfirmed" type="checkbox" value="@Model.IsEmailConfirmed" readonly />*@
+                        </div>
+                        <div class="form-group col-md-4">
+                            @Html.CheckBoxFor(u => u.IsEmailAuthenticationEnabled, new { onclick = "return false" })
+                            <label class="form-check-label" for="IsEmailAuthenticationEnabled"> 2FA Enabled </label>
+                            @*<input class="form-check-input" id="input2FA" name="input2FA" type="checkbox" value="@Model.IsEmailAuthenticationEnabled" readonly />*@
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputContactNumber">Contact Number</label>
+                            <input type="text" class="form-control" id="inputContactNumber" placeholder="Number" value="@Model.ContactNumber" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputAddress">Address</label>
+                            <input type="text" class="form-control" id="inputAddress" placeholder="Address" value="@Model.Address" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">City</label>
+                            <input type="text" class="form-control" id="inputCity" placeholder="City" value="@Model.City" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputZip">Postal Code</label>
+                            <input type="text" class="form-control" id="inputZip" placeholder="Postal Code" value="@Model.PostalCode" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCountry">Country</label>
+                            <input type="text" class="form-control" id="inputCountry" placeholder="Country" value="@Model.Country" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts
+{
+        <script type="text/javascript">
+    @*window.onload = function () {
+        document.getElementById('inputLogin').value = "@Model.Login";
+        document.getElementById('inputPassword').value = "@Model.Password";
+        document.getElementById('inputEmail').value = "@Model.Email";
+        document.getElementById('inputRole').value = "@Model.Role";
+        document.getElementById('inputName').value = "@Model.Name";
+        document.getElementById('inputSurname').value = "@Model.Surname";
+        document.getElementById('inputContactNumber').value = "@Model.ContactNumber";
+        document.getElementById('inputAddress').value = "@Model.Address";
+        document.getElementById('inputZip').value = "@Model.PostalCode";
+        document.getElementById('inputCountry').value = "@Model.Country";
+        document.getElementById('inputEmailConfirmed').value = "@Model.IsEmailConfirmed";
+        document.getElementById('input2FA').value = "@Model.IsEmailAuthenticationEnabled";
+    };*@
+        </script>
+    }
+

@@ -43,5 +43,10 @@ namespace ExBook.Services
     .ToListAsync();
             return ratings;
         }
+
+        public async Task<User> GetUserById(Guid id)
+        {
+            return await this.applicationDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
     }
 }

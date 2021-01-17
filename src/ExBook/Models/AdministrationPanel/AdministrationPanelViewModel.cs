@@ -10,7 +10,7 @@ namespace ExBook.Models.AdministrationPanel
     public class AdministrationPanelViewModel
     {
         public List<User> Users { get; set; }
-        public List<Transaction> Transactions { get; set; }
+        public List<ExBook.Data.Transaction> Transactions { get; set; }
         public List<Rating> Ratings { get; set; }
     }
 }

@@ -38,5 +38,12 @@ namespace ExBook.Controllers
         {
             return PartialView("_EditTransaction", await administrationPanelService.GetTransactions());
         }
+
+        public async Task<ActionResult> ShowUserDetailsAsync(string userId)
+        {
+            Guid id = Guid.Parse(userId);
+            var user = await administrationPanelService.GetUserById(id);
+            return PartialView("_UserDetailsModal", user);
+        }
     }
 }

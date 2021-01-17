@@ -1,22 +1,40 @@
 ﻿@model List<ExBook.Data.User>
-    <div class="users">
-        <table class="table table-striped">
-            <tr>
-                <th scope="col">Login</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col">EmailConfirmed</th>
-                <th scope="col">2FA</th>
-            </tr>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>@user.Login</td>
-                    <td>@user.Email</td>
-                    <td>@user.Role</td>
-                    <td>@user.IsEmailConfirmed</td>
-                    <td>@user.IsEmailAuthenticationEnabled</td>
-                </tr>
-            }
-        </table>
-    </div>
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Login</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">EmailConfirmed</th>
+                        <th scope="col">2FA</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Login</td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
+                            <td>
+                                @Html.CheckBoxFor(u => (u.FirstOrDefault(us => us.Id == user.Id)).IsEmailConfirmed, new { onclick = "return false" })
+                            </td>
+                            <td>
+                                @Html.CheckBoxFor(u => (u.FirstOrDefault(us => us.Id == user.Id)).IsEmailAuthenticationEnabled, new { onclick = "return false" })
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-secondary users" onclick="Open('@user.Id');">View</button>
+                                    <button type="button" class="btn btn-secondary users">Edit</button>
+                                    <button type="button" class="btn btn-secondary users">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        </div>
