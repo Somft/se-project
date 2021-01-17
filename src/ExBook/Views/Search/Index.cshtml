@@ -6,6 +6,7 @@
         Search Books
     </div>
     <div class="card-body">
+        <div class="modal fade " id="coverModal" role="dialog"></div>
         <form asp-controller="Search" asp-action="Index" method="get">
             <div class="form-row align-items-center">
                 <div class="col-auto">
@@ -15,7 +16,7 @@
                 <div class="col-auto">
                     <label class="sr-only" for="inlineFormInputGroup">Author</label>
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="FilterAuthor" name="FilterAuthor" placeholder="Author" >
+                        <input type="text" class="form-control" id="FilterAuthor" name="FilterAuthor" placeholder="Author">
                     </div>
                 </div>
                 <div class="col-auto">
@@ -43,10 +44,10 @@
                 </div>
         </form>
         @*<div class="col-auto">
-            <form asp-controller="Home" asp-action="Index" method="get">
-                <button type="submit" class="btn btn-info mb-2">Return</button>
-            </form>
-        </div>*@
+                <form asp-controller="Home" asp-action="Index" method="get">
+                    <button type="submit" class="btn btn-info mb-2">Return</button>
+                </form>
+            </div>*@
     </div>
 </div>
 </div>
@@ -67,19 +68,19 @@
                 <td>@book.Author</td>
                 <td>
                     @foreach (var subject in book.Subjects)
-                    { 
-                        @subject.Name <br/>
+                    {
+                        @subject.Name <br />
                     }
-                    </td>
+                </td>
                 @if (@book.CoverUrl != null)
                 {
                     <td>
-                        <img src=@book.CoverUrl alt="Cover" style="width:32px;height:32px;" id="test" />
+                        <img src=@book.CoverUrl alt="Cover" style="width:32px;height:32px;" id="test" onclick="Open('@book.CoverUrl');" />
                     </td>
                 }
                 else
                 {
-                    <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
+                    <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:32px;height:32px;"></td>
                 }
                 @if (CheckBookshelves(Model.UserId, @book))
                 {
@@ -121,7 +122,7 @@
 </div>
 
 
-@functions {  bool GetIsOnWishlist(Guid Id, ExBook.Data.Book book)
+@functions { bool GetIsOnWishlist(Guid Id, ExBook.Data.Book book)
     {
         return book.WishListBooks.Any(wlb => wlb.WishList.UserId == Id);
     }
@@ -135,10 +136,10 @@
                 return true;
         }
         else
-            return false;       
+            return false;
     }
 
-    }
+}
 
 <style>
     /*        .searchbar-card {
@@ -155,8 +156,9 @@
         pointer-events: none;
     }
 </style>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">
+@section Scripts
+{
+    <script type="text/javascript">
     function addToWishList(Id) {
         {
             $.ajax({
@@ -177,8 +179,23 @@
         }
     }
 
+    function Open(cover) {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("FullSizeCover", "Search")',
+                    data: { CoverUrl: cover },
+                    success: function (data) {
+                        $('#coverModal').html(data);
+                        $('#coverModal').modal('show');
+                    }
+                })
+    };
+
     window.onload = function () {
         document.getElementById('FilterTitle').value = "@Model.FilterTitle";
         document.getElementById('FilterAuthor').value = "@Model.FilterAuthor";
     };
-</script>
+
+
+    </script>
+}
