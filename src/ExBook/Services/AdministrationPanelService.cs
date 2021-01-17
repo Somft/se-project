@@ -48,5 +48,33 @@ namespace ExBook.Services
         {
             return await this.applicationDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
+
+        public async Task DeleteUserById(Guid id)
+        {
+            var user = await this.applicationDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user != null)
+            {
+                this.applicationDbContext.Remove(user);
+                await this.applicationDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<Transaction> GetTransactionById(Guid id)
+        {
+            return await this.applicationDbContext.Transactions.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task DeleteTransactionById(Guid id)
+        {
+            var transaction = await this.applicationDbContext.Transactions
+                .Include(t=>t.InitiatorBooks)
+                .Include(t=>t.RecipientBooks)
+                .FirstOrDefaultAsync(u => u.Id == id);
+            if (transaction != null)
+            {
+                this.applicationDbContext.Remove(transaction);
+                await this.applicationDbContext.SaveChangesAsync();
+            }
+        }
     }
 }

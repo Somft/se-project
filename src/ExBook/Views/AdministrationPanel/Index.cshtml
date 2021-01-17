@@ -5,9 +5,8 @@
         <div class="card-header">
             Administration Panel
         </div>
-        <div class="card-body">           
-            <div class="modal fade" id="usersModal" role="dialog" data-url='@Url.Action("ShowUserDetails","AdministrationPanel")'></div>
-            <div class="modal fade" id="transactionModal" role="dialog" data-url='@Url.Action("PartialViewTest","AdministrationPanel")'></div>
+        <div class="card-body">
+            <div class="modal fade" id="viewModal" role="dialog"></div>
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
@@ -54,8 +53,32 @@
                     url: '@Url.Action("ShowUserDetails", "AdministrationPanel")',
                     data: { userId: currentId },
                     success: function (data) {
-                        $('#usersModal').html(data);
-                        $('#usersModal').modal('show');
+                        $('#viewModal').html(data);
+                        $('#viewModal').modal('show');
+                    }
+                })
+        };
+
+                            function DeleteUser(currentId) {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("DeleteUserConfirmation", "AdministrationPanel")',
+                    data: { userId: currentId },
+                    success: function (data) {
+                        $('#viewModal').html(data);
+                        $('#viewModal').modal('show');
+                    }
+                })
+        };
+
+                            function DeleteTransaction(currentId) {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("DeleteTransactionConfirmation", "AdministrationPanel")',
+                    data: { transactionId: currentId },
+                    success: function (data) {
+                        $('#viewModal').html(data);
+                        $('#viewModal').modal('show');
                     }
                 })
             };
