@@ -1,14 +1,34 @@
-﻿<!DOCTYPE html>
+﻿@using ExBook.Extensions
+@using ExBook.Data
+
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@(ViewData["Title"] ?? "ExBook")</title>
-    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/Content/Styles/styles.css">
 </head>
 <body>
 
@@ -17,7 +37,9 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">ExBook</a>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                ExBook
+            </a>
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -30,6 +52,14 @@
 
                             <a class="nav-link" href="@Url.Action("Index", "UserAccount")"><i class="far fa-user"></i> My Account</a>
 
+            @if (Context.User.Identity.IsAuthenticated)
+            {
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+
+                            <a class="nav-link" href="@Url.Action("Index", "UserAccount")"><i class="far fa-user"></i> My Account</a>
+
                         </li>
                         <li class="nav-item">
 
@@ -38,6 +68,29 @@
                         </li>
 
                         <li class="nav-item">
+
+                            <a class="nav-link" href="@Url.Action("UserTransactions", "Transaction")">
+                                <i class="fas fa-book"></i>
+                                Transactions
+                                @{int transactions = GetTransactions();}
+
+                                @if (transactions > 0)
+                                {
+                                    <span class="badge badge-pill badge-info">@transactions</span>
+                                }
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+                            <form asp-area="" asp-controller="Authentication" asp-action="Logout" id="logoutForm">
+                                <a class="nav-link" href="@Url.Action("Logout", "Authentication")" id="submitLogout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </form>
+                        </li>
+
+
+                    </ul>
 
                             <a class="nav-link" href="@Url.Action("Index", "Search")"><i class="fas fa-search"></i> Search</a>
 
@@ -62,11 +115,14 @@
                     }
                 </ul>
 
-                <form asp-controller="Search" asp-action="Index" method="get" class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="filterTitle">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
+                    <form asp-controller="Search" asp-action="Index" method="get" class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="filterTitle">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            }
         </nav>
 
 
@@ -92,13 +148,13 @@
         errorClass: 'label label-danger',
     });
 
-    $(function () {
-        $("#submitLogout").click(function () {
-            document.getElementById("logoutForm").submit();
-            return false;
+        $(function () {
+            $("#submitLogout").click(function () {
+                document.getElementById("logoutForm").submit();
+                return false;
+            });
         });
-    });
-</script>
+    </script>
 
 
 
@@ -110,16 +166,19 @@
 </html>
 
 <style>
-    .navbar {
+    .navbar
+    {
     }
 
-    .hover {
+    .hover
+    {
         overflow: hidden;
         position: relative;
         padding-bottom: 60%;
     }
 
-    .hover-overlay {
+    .hover-overlay
+    {
         width: 100%;
         height: 200%;
         position: absolute;
@@ -129,7 +188,8 @@
         transition: all 0.4s;
     }
 
-    .hover img {
+    .hover img
+    {
         width: 100%;
         position: absolute;
         top: 0;
@@ -137,12 +197,14 @@
         transition: all 0.3s;
     }
 
-    .hover-content {
+    .hover-content
+    {
         position: relative;
         z-index: 99;
     }
 
-    .hover-1 img {
+    .hover-1 img
+    {
         width: 105%;
         position: absolute;
         top: 0;
@@ -150,7 +212,8 @@
         transition: all 0.3s;
     }
 
-    .hover-1-content {
+    .hover-1-content
+    {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -158,45 +221,54 @@
         transition: all 0.4s;
     }
 
-    .hover-1 .hover-overlay {
+    .hover-1 .hover-overlay
+    {
         background: rgba(0, 0, 0, 0.5);
     }
 
-    .hover-1-description {
+    .hover-1-description
+    {
         transform: translateY(0.5rem);
         transition: all 0.4s;
         opacity: 0;
     }
 
-    .hover-1:hover .hover-1-content {
+    .hover-1:hover .hover-1-content
+    {
         bottom: 2rem;
     }
 
-    .hover-1:hover .hover-1-description {
+    .hover-1:hover .hover-1-description
+    {
         opacity: 1;
         transform: none;
     }
 
-    .hover-1:hover img {
+    .hover-1:hover img
+    {
         left: 0;
         margin-left: auto;
         margin-right: auto;
     }
 
-    .hover-1:hover .hover-overlay {
+    .hover-1:hover .hover-overlay
+    {
         opacity: 0;
     }
 
-    .container {
+    .container
+    {
         margin-top: 10%;
     }
 
-    .book {
+    .book
+    {
         position: relative;
         overflow: hidden;
     }
 
-        .book:before {
+        .book:before
+        {
             position: absolute;
             content: '';
             width: 80%;
@@ -210,16 +282,19 @@
             transition: .5s;
         }
 
-        .book:hover:before {
+        .book:hover:before
+        {
             left: 10%;
         }
 
-        .book img {
+        .book img
+        {
             width: 100%;
             height: auto;
         }
 
-    .book-text {
+    .book-text
+    {
         width: 100%;
         padding: 0 18px;
         position: absolute;
@@ -230,47 +305,74 @@
         transition: 1.1s;
     }
 
-        .book-text h3 {
+        .book-text h3
+        {
             font-family: poppins;
         }
 
-    .book:hover .book-text {
+    .book:hover .book-text
+    {
         top: 3px;
     }
 
-    .social a {
+    .social a
+    {
         font-size: 4.5em;
         padding: 3rem;
     }
 
-    .fa-facebook {
+    .fa-facebook
+    {
         color: #3b5998;
     }
 
-    .fa-instagram {
+    .fa-instagram
+    {
         color: #517fa4;
     }
 
-    .fa-youtube {
+    .fa-youtube
+    {
         color: #bb0000;
     }
 
         .fa-facebook:hover,
         .fa-instagram:hover,
-        .fa-youtube:hover {
+        .fa-youtube:hover
+        {
             color: darkgreen;
         }
 
-    footer {
+    footer
+    {
         background-color: #3f3f3f;
         color: #d5d5d5;
         padding-top: 2rem;
     }
 
-    hr.light {
+    hr.light
+    {
         border-top: 1px solid #d5d5d5;
         width: 75%;
         margin-top: .8rem;
         margin-bottom: 1rem;
     }
 </style>
+
+
+@functions {
+    @inject ExBook.Data.ApplicationDbContext ApplicationDbContext
+
+    private int GetTransactions()
+    {
+        if (!this.Context.User.GetId().HasValue)
+        {
+            return 0;
+        }
+
+        return ApplicationDbContext.Transactions
+            .Where(t => t.RecipientId == this.Context.User.GetId())
+            .Where(t => t.Status == Transaction.Statuses.Initialized)
+            .Count();
+    }
+}

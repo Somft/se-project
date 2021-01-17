@@ -82,6 +82,11 @@ namespace ExBook.Data
 
                 entity.Property(e => e.Photo).HasColumnName("photo");
 
+                entity.Property(e => e.IsLocked)
+                    .IsRequired()
+                    .HasDefaultValue(false)
+                    .HasColumnName("is_locked");
+
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.BookShelfBooks)
                     .HasForeignKey(d => d.BookId)
