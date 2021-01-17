@@ -81,7 +81,7 @@
                 {
                     <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
                 }
-                @if (@book.BookShelfBooks.Count > 0)
+                @if (CheckBookshelves(Model.UserId, @book))
                 {
                     <form asp-controller="Search" asp-route-id="@book.Id" asp-action="GetBookshelvesForBook" method="post">
                         <td><input type="submit" value="Get this book" title="Show available books" class="btn btn-primary btn-sm " /></td>
@@ -121,10 +121,24 @@
 </div>
 
 
-@functions { private bool GetIsOnWishlist(Guid Id, ExBook.Data.Book book)
+@functions {  bool GetIsOnWishlist(Guid Id, ExBook.Data.Book book)
     {
         return book.WishListBooks.Any(wlb => wlb.WishList.UserId == Id);
-    } }
+    }
+    bool CheckBookshelves(Guid Id, ExBook.Data.Book book)
+    {
+        if (book.BookShelfBooks.Count > 0)
+        {
+            if (book.BookShelfBooks.Count == 1 && book.BookShelfBooks.Any(bsb => bsb.BookShelf.UserId == Id))
+                return false;
+            else
+                return true;
+        }
+        else
+            return false;       
+    }
+
+    }
 
 <style>
     /*        .searchbar-card {
