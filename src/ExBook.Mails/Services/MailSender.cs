@@ -1,5 +1,5 @@
 ﻿using ExBook.Mails.Templates;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using MimeKit;
@@ -22,10 +22,10 @@ namespace ExBook.Mails.Services
         public async Task SendEmail<T>(string template, T context) where T : EmailContext
         {
             string content = await this.templateEngine.Render<T>(template, context);
-            await this.SendEmail(context, content);
+            await this.SendEmail(content, context as EmailContext);
         }
 
-        private async Task SendEmail<T>(T context, string content) where T : EmailContext
+        public async Task SendEmail((string content, EmailContext context)[] emails)
         {
             var smtpClient = new MailKit.Net.Smtp.SmtpClient();
             smtpClient.Connect(this.configuration.Host, this.configuration.Port, this.configuration.UseSsl);
@@ -33,7 +33,24 @@ namespace ExBook.Mails.Services
             {
                 smtpClient.Authenticate(this.configuration.User, this.configuration.Password);
             }
-            smtpClient.Send(this.CreateMimeMessage(context, content));
+
+            foreach(var (content, context) in emails)
+            {
+                await smtpClient.SendAsync(this.CreateMimeMessage(context, content));
+            }
+            
+            smtpClient.Disconnect(true);
+        }
+
+        public async Task SendEmail(string content, EmailContext context)
+        {
+            var smtpClient = new MailKit.Net.Smtp.SmtpClient();
+            smtpClient.Connect(this.configuration.Host, this.configuration.Port, this.configuration.UseSsl);
+            if (this.configuration.User != null || this.configuration.Password != null)
+            {
+                smtpClient.Authenticate(this.configuration.User, this.configuration.Password);
+            }
+            await smtpClient.SendAsync(this.CreateMimeMessage(context, content));
             smtpClient.Disconnect(true);
         }
 
