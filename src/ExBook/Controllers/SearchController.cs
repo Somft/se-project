@@ -76,7 +76,7 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View("Bookshelves", new SearchBookShelfBookViewModel()
                 {
-                    BookShelfBooks = await searchService.GetBookShelfBooksById(Id)
+                    BookShelfBooks = await searchService.GetBookShelfBooksById(Id, this.HttpContext.User.GetId().Value)
                 })
                 : this.RedirectToHome() as IActionResult;
         }
