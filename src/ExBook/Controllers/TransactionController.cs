@@ -24,7 +24,7 @@ namespace ExBook.Controllers
             this.dbContext = applicationDbContext;
             this.initializeTransactionService = initializeTransactionService;
 
-        }
+        }        
 
         [HttpGet]
         [Route("/transation")]
@@ -61,6 +61,13 @@ namespace ExBook.Controllers
                     .Where(b => !transaction.InitiatorBooks.Select(b => b.Id).Contains(b.Id))
                     .ToList()
             });
+        }
+
+        [HttpGet]
+        [Route("/transactions")]
+        public async Task<IActionResult> UserTransactions()
+        {
+            return View();
         }
 
         [HttpPost]
