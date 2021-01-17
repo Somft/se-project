@@ -1,6 +1,214 @@
-﻿
+﻿@using ExBook.Extensions
+@using ExBook.Data
+
+@model ExBook.Models.Transaction.TransactionViewModel
 @{
-    ViewData["Title"] = "Transaction";
+    ViewData["Title"] = "Start transaction";
 }
 
+<h3 class="card-title">Exchange with @GetRecipientName()</h3>
+<div class="row">
 
+    <div class="col-12 col-md-6 p-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    @if (IsInitiatorLogged())
+                    {
+                        @("Your books")
+                    }
+                    else
+                    {
+                        @(GetInitiatorName() +" books")
+                    }
+                </h4>
+
+
+                <h5>Books in transaction</h5>
+                <table class="table table-striped">
+                    <tr>
+                        <th scope="col">Author</th>
+                        <th scope="col">Title</th>
+                        <th scope="col"></th>
+                    </tr>
+
+                    @foreach (var book in Model.Transaction.InitiatorBooks)
+                    {
+                        <tr>
+                            <td>@book.Book.Name</td>
+                            <td>@book.Book.Author</td>
+                            @if (IsEditingEnabled())
+                            {
+                                <td>
+                                    <form asp-controller="Transaction"
+                                          asp-action="RemoveInitiatorBooks"
+                                          asp-route-transactionId="@Model.Transaction.Id"
+                                          asp-route-bookId="@book.Id"
+                                          method="post">
+                                        <input type="submit" value="-" class="btn btn-danger btn-sm " />
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+
+                @if (IsEditingEnabled())
+                {
+                    <h5>Books available</h5>
+                    <table class="table table-striped">
+                        <tr>
+                            <th scope="col">Author</th>
+                            <th scope="col">Title</th>
+                            <th scope="col"></th>
+                        </tr>
+
+                        @foreach (var book in Model.InitiatorBooks)
+                        {
+                            <tr>
+                                <td>@book.Book.Name</td>
+                                <td>@book.Book.Author</td>
+                                <td>
+                                    <form asp-controller="Transaction"
+                                          asp-action="AddInitiatorBooks"
+                                          asp-route-transactionId="@Model.Transaction.Id"
+                                          asp-route-bookId="@book.Id"
+                                          method="post">
+                                        <input type="submit" value="+" class="btn btn-primary btn-sm " />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 p-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    @if (IsRecipiedLogged())
+                    {
+                        @("Your books")
+                    }
+                    else
+                    {
+                        @(GetRecipientName() + " books")
+                    }
+                </h4>
+
+                <h5>Books in transaction</h5>
+                <table class="table table-striped">
+                    <tr>
+                        <th scope="col">Author</th>
+                        <th scope="col">Title</th>
+                        <th scope="col"></th>
+                    </tr>
+
+                    @foreach (var book in Model.Transaction.RecipientBooks)
+                    {
+                        <tr>
+                            <td>@book.Book.Name</td>
+                            <td>@book.Book.Author</td>
+                            @if (IsEditingEnabled())
+                            {
+                                <td>
+                                    <form asp-controller="Transaction"
+                                          asp-action="RemoveRecipientBooks"
+                                          asp-route-transactionId="@Model.Transaction.Id"
+                                          asp-route-bookId="@book.Id"
+                                          method="post">
+                                        <input type="submit" value="-" class="btn btn-danger btn-sm " />
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+
+                @if (IsEditingEnabled())
+                {
+                    <h5>Books available</h5>
+                    <table class="table table-striped">
+                        <tr>
+                            <th scope="col">Author</th>
+                            <th scope="col">Title</th>
+                            <th scope="col"></th>
+                        </tr>
+
+                        @foreach (var book in Model.RecipientBooks)
+                        {
+                            <tr>
+                                <td>@book.Book.Name</td>
+                                <td>@book.Book.Author</td>
+                                <td>
+                                    <form asp-controller="Transaction"
+                                          asp-action="AddRecipientBooks"
+                                          asp-route-transactionId="@Model.Transaction.Id"
+                                          asp-route-bookId="@book.Id"
+                                          method="post">
+                                        <input type="submit" value="+" class="btn btn-primary btn-sm " />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-12 p-2">
+        <div class="card text-right p-2">
+            @if (IsInitiatorLogged())
+            {
+                @if (this.Model.Transaction.Status == Transaction.Statuses.Initialized)
+                {
+                    <form asp-controller="Transaction"
+                          asp-action="SendToReview"
+                          asp-route-transactionId="@Model.Transaction.Id"
+                          method="post">
+                        <input type="submit" value="Submit" class="btn btn-primary btn-sm " />
+                    </form>
+                }
+
+                @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
+                {
+                    <div class="alert alert-info" role="alert" style="width: max-content;">
+                        This transaction is currently reviewed.
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@functions
+{
+    private bool IsRecipiedLogged()
+    {
+        return this.Context.User.GetId() == this.Model.Transaction.RecipientId;
+    }
+
+    private bool IsInitiatorLogged()
+    {
+        return this.Context.User.GetId() == this.Model.Transaction.InitiatorId;
+    }
+
+    private string GetRecipientName()
+    {
+        return this.Model.Transaction.Recipient.Name + " " + this.Model.Transaction.Recipient.Surname;
+    }
+
+    private string GetInitiatorName()
+    {
+        return this.Model.Transaction.Initiator.Name + " " + this.Model.Transaction.Initiator.Surname;
+    }
+
+    private bool IsEditingEnabled()
+    {
+        return IsInitiatorLogged() && this.Model.Transaction.Status == Transaction.Statuses.Initialized;
+    }
+} 

@@ -65,11 +65,11 @@
     }
     <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Real Photo" style="width:32px;height:32px;"></td>
 
-    <form asp-controller="InitializeTransaction" asp-route-id="@book.Id" asp-action="Index" method="post">
+    <form asp-controller="Transaction" asp-route-id="@book.Id" asp-action="Initialize" method="post">
         <td><input type="submit" value="Send offer" class="btn btn-primary btn-sm" /></td>
     </form>
     <form asp-controller="Search" asp-route-id="@book.BookId" asp-action="GetBookshelvesForBook" method="post">
-        <td><input type="submit" value="Send offer"  class="btn btn-primary btn-sm " /></td>
+        <td><input type="submit" value="Search"  class="btn btn-primary btn-sm " /></td>
     </form>
 </tr>
     }
@@ -81,14 +81,3 @@
         document.getElementById('FilterLogin').value = "@Model.FilterLogin";
     };
 </script>
-
-@*<script type="text/javascript">
-    $(document).ready(function () {
-
-      $('#startTransaction').click(function (e)
-      {
-          location.href = '@Url.Content("~/InitializeTransaction/Index")';
-      });
-
-    });
-</script>*@
