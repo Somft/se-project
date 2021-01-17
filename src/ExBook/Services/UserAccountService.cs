@@ -23,7 +23,7 @@ namespace ExBook.Services
         }
 
       
-        public async Task<User> GetCurrentUser(Guid? userId)
+        public async Task<User> GetUser(Guid? userId)
         {
             return await this.applicationDbContext.Users
                 .FirstOrDefaultAsync(i => i.Id == userId);
@@ -31,7 +31,7 @@ namespace ExBook.Services
 
         public async Task<User> UpdateData(Guid? userId, User sentUserData)
         {
-            User currentUser = await GetCurrentUser(userId);
+            User currentUser = await GetUser(sentUserData.Id);
             currentUser.ContactNumber = sentUserData.ContactNumber;
             currentUser.Address = sentUserData.Address;
             currentUser.PostalCode = sentUserData.PostalCode;

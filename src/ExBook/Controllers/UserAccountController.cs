@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ExBook.Data;
@@ -29,7 +30,7 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View("Show",new UserAccountViewModel()
                 {
-                    CurrentUser = await userAccountService.GetCurrentUser(this.HttpContext.User.GetId())
+                    ModifiedUser = await userAccountService.GetUser(this.HttpContext.User.GetId())
                 })
                 : this.RedirectToHome() as IActionResult;
         }
@@ -42,11 +43,24 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View("Edit", new UserAccountViewModel()
                 {
-                    CurrentUser = await userAccountService.GetCurrentUser(this.HttpContext.User.GetId())
-
+                    ModifiedUser = await userAccountService.GetUser(this.HttpContext.User.GetId())
                 })
                 : this.RedirectToHome() as IActionResult;
         }
+
+        [HttpGet]
+        [Route("/editAdmin")]
+        public async Task<IActionResult> EditAdmin(Guid ModifiedUserId)
+        {
+            return this.HttpContext.User.Identity.IsAuthenticated
+                ? this.View("Edit", new UserAccountViewModel()
+                {
+                    ModifiedUser = await userAccountService.GetUser(ModifiedUserId),
+                    CurrentUser = await userAccountService.GetUser(this.HttpContext.User.GetId())
+                })
+                : this.RedirectToHome() as IActionResult;
+        }
+
 
         [HttpPost]
         [Route("/show")]
@@ -55,7 +69,7 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View("Show", new UserAccountViewModel()
                 {
-                    CurrentUser = await userAccountService.UpdateData(this.HttpContext.User.GetId(),sentUserData)
+                    ModifiedUser = await userAccountService.UpdateData(this.HttpContext.User.GetId(),sentUserData)
                                         
                 })
                 : this.RedirectToHome() as IActionResult;
