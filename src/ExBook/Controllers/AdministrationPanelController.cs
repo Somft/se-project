@@ -33,5 +33,10 @@ namespace ExBook.Controllers
                 Ratings = await administrationPanelService.GetRatings()
             });
         }
+
+        public async Task<ActionResult> PartialViewTestAsync()
+        {
+            return PartialView("_EditTransaction", await administrationPanelService.GetTransactions());
+        }
     }
 }

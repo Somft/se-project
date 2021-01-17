@@ -1,0 +1,22 @@
+﻿@model List<ExBook.Data.Transaction>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body form-horizontal">
+                <table class="table table-striped">
+                    <tr>
+                        <th scope="col">Status</th>
+                        <th scope="col">Initiatior</th>
+                        <th scope="col">Recipient</th>
+                    </tr>
+                    @foreach (var transaction in Model)
+                    {
+                        <tr>
+                            <td>@transaction.Status</td>
+                            <td>@transaction.Initiator.Login</td>
+                            <td>@transaction.Recipient.Login</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
