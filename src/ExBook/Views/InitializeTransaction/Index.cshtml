@@ -1,0 +1,109 @@
+﻿@model ExBook.Models.InitializeTransaction.InitializeTransactionViewModel
+@{
+    ViewData["Title"] = "Start transaction";
+}
+
+<div>
+    <div class="card-header">
+        Add books you can exchange
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Author</th>
+            <th scope="col">Title</th>
+            <th scope="col">Add to the offer</th>
+        </tr>
+
+
+        @foreach (var book in Model.initiatorBooks)
+        {
+            <tr>
+                <td>@book.Book.Name</td>
+                <td>@book.Book.Author</td>
+                <form asp-controller="InitializeTransaction" asp-action="AddBookToTransaction" method="post">
+                    <td><input type="submit" value="Add" /></td>
+                </form>
+            </tr>
+        }
+
+
+    </table>
+</div>
+<br />
+<div>
+    <div  class="card-header">
+        Add more books you want to get from the exchange
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Author</th>
+            <th scope="col">Title</th>
+            <th scope="col">Add to the offer</th>
+        </tr>
+
+
+        @foreach (var book in Model.recipientBooks)
+        {
+            <tr>
+                <td>@book.Book.Name</td>
+                <td>@book.Book.Author</td>
+
+                @if (!GetIsInRecipientBooks(@book))
+                {
+                    <td>
+                        <input type="submit" value="Add to transaction" title="Add this book to the transaction" class="btn btn-primary btn-sm" 
+                               id="@book.Id"
+                               onclick="AddToRecipientBooks('@book.Id',' @Model.transaction.Id' );" />
+                    </td>
+
+                }
+                else
+                {
+                    <td>
+                        <input type="submit" value="Add to transaction" title="This book is already included in the transaction" class="btn btn-secondary btn-sm"
+                               id="@book.Id"
+                               onclick="AddToRecipientBooks('@book.Id','@Model.transaction.Id');" />
+                    </td>
+                }
+            </tr>
+        }
+
+
+    </table>
+</div>
+@functions 
+{
+    private bool GetIsInRecipientBooks(ExBook.Data.BookShelfBook bsb)
+    {
+        return Model.transaction.RecipientBooks.Any(trb => trb.Id == bsb.Id);
+    }
+
+    private bool GetIsInInitiatorBooks(ExBook.Data.BookShelfBook bsb)
+    {
+        return Model.transaction.InitiatorBooks.Any(trb => trb.Id == bsb.Id);
+    }
+}
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function AddToRecipientBooks(idb, idt)
+    {
+        {
+            $.ajax({
+                url: '/InitializeTransaction/AddToRecipientBooks',
+                data: { idb: idb, idt: idt },
+                type: 'POST'
+            }).done(function (response) {
+                if (response == true) {
+                    if ($(document.getElementById(idb)).hasClass('btn-primary')) {
+                        $(document.getElementById(idb)).removeClass('btn-primary').addClass('btn-secondary');
+                    }
+                    else {
+                        $(document.getElementById(idb)).removeClass('btn-secondary').addClass('btn-primary');
+                    }
+
+                }
+            });
+        }
+    }
+</script>    

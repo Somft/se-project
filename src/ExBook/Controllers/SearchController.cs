@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Threading.Tasks;
 
@@ -66,7 +67,6 @@ namespace ExBook.Controllers
                 UserId = this.HttpContext.User.GetId().Value
             });
         }
-
 
         [HttpPost]
         [Route("/searchShelves")]
