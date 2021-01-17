@@ -7,5 +7,10 @@
         public AuthenticationContext(string to, string subject) : base(to, subject)
         {
         }
+
+        public AuthenticationContext()
+        {
+
+        }
     }
 }

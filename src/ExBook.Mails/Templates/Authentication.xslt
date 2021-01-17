@@ -6,7 +6,14 @@
   <xsl:template match="/">
     <html>
       <body>
-        Click <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">here</a> to confirm an account.
+        Click
+        <a>
+          <xsl:attribute name="href">
+            <xsl:value-of select="AuthenticationContext/Token"/>
+          </xsl:attribute>
+          here
+        </a>
+        to confirm an account.
       </body>
     </html>
   </xsl:template>

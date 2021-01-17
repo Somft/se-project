@@ -31,5 +31,13 @@ namespace ExBook.Extensions
             return controller.Redirect("/admin");
         }
 
+        public static RedirectResult RedirectToInitializeTransaction(this ControllerBase controller)
+        {
+            return controller.Redirect("/initializetransaction");
+        }
+        public static RedirectResult RedirectToEMailAuthorization(this ControllerBase controller)
+        {
+            return controller.Redirect("/login-token-sent");
+        }
     }
 }

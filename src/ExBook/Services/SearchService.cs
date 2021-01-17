@@ -94,6 +94,17 @@ namespace ExBook.Services
             return bookShelfBooks;
         }
 
+        public async Task<List<BookShelfBook>> GetBookShelfBooksById(Guid Id, Guid UserId)
+        {
+            List<BookShelfBook> bookShelfBooks = await this.applicationDbContext.BookShelfBooks
+                .Include(bsb => bsb.BookShelf)
+                .ThenInclude(bs => bs.User)
+                .Include(bsb => bsb.Book)
+                .Where(bsb => bsb.Book.Id == Id && bsb.BookShelf.UserId!=UserId)
+                .ToListAsync();
+            return bookShelfBooks;
+        }
+
         public async Task<List<BookShelfBook>> GetBookShelfBooksFiltered(string filterTitle, string filterLogin)
         {
             Expression<Func<BookShelfBook, bool>> filter = PredicateBuilder.True<BookShelfBook>();

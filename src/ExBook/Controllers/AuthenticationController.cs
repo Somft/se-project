@@ -1,4 +1,6 @@
-﻿using ExBook.Data;
+﻿
+
+using ExBook.Data;
 using ExBook.Extensions;
 using ExBook.Mails.Services;
 using ExBook.Mails.Templates;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 using System;
@@ -25,12 +28,14 @@ namespace ExBook.Controllers
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IConfiguration configuration;
         private readonly IMailSender mailSender;
+        private readonly ILogger logger;
 
-        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration, IMailSender mailSender)
+        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration, IMailSender mailSender, ILogger<AuthenticationController> logger)
         {
             this.applicationDbContext = applicationDbContext;
             this.configuration = configuration;
             this.mailSender = mailSender;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -70,12 +75,16 @@ namespace ExBook.Controllers
 
             if (user.IsEmailAuthenticationEnabled)
             {
+
+                var token = this.GenerateJwt(user);
+                var url = this.configuration["App:Url"] + "login-token?token=" + token;
+                logger.LogInformation(url);
                 await this.mailSender.SendEmail("Authentication", new AuthenticationContext(user.Email, "Loging in")
                 {
-                    Token = this.GenerateJwt(user)
+                    Token = url
                 });
 
-                return this.Redirect("/TODO");
+                return this.RedirectToEMailAuthorization();
             }
             else
             {
@@ -83,6 +92,23 @@ namespace ExBook.Controllers
                 return this.RedirectToHome();
 
             }
+        }
+
+        [HttpGet]
+        [Route("/login-token")]
+        [AllowAnonymous]
+        public IActionResult LoginWithToken(string token)
+        {
+            this.HttpContext.Response.Cookies.Append("Authentication", token, new CookieOptions());
+            return this.RedirectToHome();
+        }
+
+        [HttpGet]
+        [Route("/login-token-sent")]
+        [AllowAnonymous]
+        public IActionResult LoginWithTokenSent()
+        {
+            return this.View("LoginTokenSent");
         }
 
 
