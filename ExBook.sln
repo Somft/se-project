@@ -17,11 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExBook.Extensions", "src\Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExBook.Mails", "src\ExBook.Mails\ExBook.Mails.csproj", "{8208D6A3-E9B1-4A61-B178-50C969713997}"
 EndProject
-<<<<<<< HEAD
-=======
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExBook.OpenLibrary", "src\ExBook.OpenLibrary\ExBook.OpenLibrary.csproj", "{E423EADF-F308-44E3-9952-9D168E0560CF}"
 EndProject
->>>>>>> origin/master
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,13 +37,10 @@ Global
 		{8208D6A3-E9B1-4A61-B178-50C969713997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8208D6A3-E9B1-4A61-B178-50C969713997}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8208D6A3-E9B1-4A61-B178-50C969713997}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-=======
 		{E423EADF-F308-44E3-9952-9D168E0560CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E423EADF-F308-44E3-9952-9D168E0560CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E423EADF-F308-44E3-9952-9D168E0560CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E423EADF-F308-44E3-9952-9D168E0560CF}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> origin/master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
