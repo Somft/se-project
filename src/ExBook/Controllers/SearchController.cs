@@ -136,9 +136,14 @@ namespace ExBook.Controllers
         /// </summary>
         /// <param name="CoverUrl"></param>
         /// <returns></returns>
-        public ActionResult FullSizeCover(string CoverUrl)
+        public ActionResult FullSizeCover(string Cover)
         {
-            var model = "https://covers.openlibrary.org/b/id/9271451-M.jpg";
+            string CoverUrl;
+            if (!Cover.Contains("https:"))
+                CoverUrl = ExBook.Extensions.BookCoverExtensions.GetLargeCoverUrl(Cover);
+            else
+                CoverUrl = Cover;
+
             return PartialView("_FullSizeCover", CoverUrl);
         }
 
