@@ -72,12 +72,6 @@ namespace ExBook.Services
                        CoverUrl = bookAPI?.Covers.FirstOrDefault().ToString() ?? null,
                        Isbn = bookAPI?.Key ?? null
                        
-                       /*Id = Guid.NewGuid(),
-                       Name = book.Name,
-                       Author = book.Author,
-                       Created = DateTime.Parse(book.Created),
-                       CoverUrl = null,
-                       Isbn = null*/
                    };
                     this.applicationDbContext.Books.Add(bok);
 

@@ -19,30 +19,19 @@
 <style>
 
 .container {
-  padding: 1rem 0rem;
-  position: relative;
+  padding: 2rem 0rem;
 }
 
 h4 {
-  margin: 1rem 0rem 1rem;
+  margin: 2rem 0rem 1rem;
 }
 
   td, th {
     vertical-align: middle;
   }
-    .center {
-      /*  margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);*/
-         display: inline-block;
-          vertical-align: bottom;
-    }
+
     .header {
-      padding: 60px;
-      text-align: center;
+      text-align: left;
       background: white;
       color: black;
       font-size: 30px;
@@ -51,17 +40,34 @@ h4 {
    position: relative;
    bottom: 20px;
    right: 20px;
+   background-color: #000000;
+   color: #FFFFFF;
+   padding: 10px;
+   border-radius: 10px;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   margin:10px;
+   height: 40px;
      }
-    
-    
-    
-    
+     
+     .parent{
+       position: relative;
+       top: 10%;
+
+
+      
+     }
+
 
 </style>
-<div class="header">
-    <h1>Your wishlist</h1>
-</div>
+
+
+
+<div class = "parent">
 <div class="container">
+    <div class="header">
+        <h1>Your wishlist</h1>
+    </div>
     <div class="row">
         <div class="col-12">
             <table class="table table-hover">
@@ -101,14 +107,15 @@ h4 {
                 </tbody>
             </table>
         </div>
-        
+
     </div>
-<div >
-            <form asp-area="" asp-controller="WishList" asp-action="Add">
-                <button type="submit" class="vertical-center" >Add</button>
-            </form>
+    <div >
+        <form asp-area="" asp-controller="WishList" asp-action="Add">
+            <button type="submit" class="vertical-center">Add new book</button>
+        </form>
+    </div>
 </div>
-</div>
+</div>   
 
      
 
