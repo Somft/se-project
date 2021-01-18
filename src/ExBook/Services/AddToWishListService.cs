@@ -56,19 +56,29 @@ namespace ExBook.Services
             }
             else // book doesnt exists, add to Book and wishlist
             {
+                Book bok2 = null;
                 var bookAPI = await SearchBook(book.Name, book.Author);
-                Book bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
+                if(bookAPI != null)
+                     bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
+               
                 if (bok2 == null) //book doesnt exists in database
                 {
                     bok = new Book()
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = bookAPI.Title ?? book.Name,
-                        Author = bookAPI.Authors.FirstOrDefault().Name ?? book.Author,
-                        Created = bookAPI.FirstPublishDate ?? DateTime.Parse(book.Created),
-                        CoverUrl = bookAPI.Covers.FirstOrDefault().ToString() ?? null,
-                        Isbn = bookAPI.Key ?? null
-                    };
+                   {
+                       Id = Guid.NewGuid(),
+                       Name = bookAPI?.Title ?? book.Name,
+                       Author = bookAPI?.Authors.FirstOrDefault().Name ?? book.Author,
+                       Created = bookAPI?.FirstPublishDate ?? DateTime.Parse(book.Created),
+                       CoverUrl = bookAPI?.Covers.FirstOrDefault().ToString() ?? null,
+                       Isbn = bookAPI?.Key ?? null
+                       
+                       /*Id = Guid.NewGuid(),
+                       Name = book.Name,
+                       Author = book.Author,
+                       Created = DateTime.Parse(book.Created),
+                       CoverUrl = null,
+                       Isbn = null*/
+                   };
                     this.applicationDbContext.Books.Add(bok);
 
                     userWishList.WishListBooks.Add(new WishListBook()
