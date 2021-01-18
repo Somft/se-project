@@ -33,6 +33,7 @@ namespace ExBook
             services.AddTransient<AddToWishListService>();
             services.AddTransient<AdministrationPanelService>();
             services.AddTransient<InitializeTransactionService>();
+            services.AddTransient<UserAccountService>();
 
             services.AddTransient<OpenLibraryClient>();
             services.AddHttpClient();

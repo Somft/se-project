@@ -4,14 +4,14 @@ using System.Text;
 
 namespace ExBook.Extensions
 {
-   public static class BookCoverExtensions
+    public static class BookCoverExtensions
     {
         private static string baseUrl = @"https://covers.openlibrary.org/b/id/{0}.jpg";
         public static string? GetOriginalCoverUrl(string coverId)
         {
             if (!string.IsNullOrWhiteSpace(coverId))
             {
-              string url =  String.Format(baseUrl, coverId);
+                string url = String.Format(baseUrl, coverId);
                 return url;
             }
             else
@@ -33,7 +33,7 @@ namespace ExBook.Extensions
         {
             if (!string.IsNullOrWhiteSpace(coverId))
             {
-                string url = String.Format(baseUrl, coverId+"-M");
+                string url = String.Format(baseUrl, coverId + "-M");
                 return url;
             }
             else

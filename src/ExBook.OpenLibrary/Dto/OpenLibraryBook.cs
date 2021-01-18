@@ -12,6 +12,7 @@ namespace ExBook.OpenLibrary.Dto
         public string Title { get; set; } = "";
 
         [JsonProperty("description")]
+        [JsonConverter(typeof(OpenLibraryDescriptionConverter))]
         public string Description { get; set; } = "";
 
         [JsonProperty("first_publish_date")]

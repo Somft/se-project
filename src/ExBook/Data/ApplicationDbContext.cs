@@ -120,7 +120,7 @@ namespace ExBook.Data
                 entity.HasOne(d => d.Transaction)
                     .WithOne(p => p.Rating)
                     .HasForeignKey<Rating>(d => d.TransactionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("rating_fk");
             });
 
@@ -277,7 +277,7 @@ namespace ExBook.Data
                     .UsingEntity<Dictionary<string, object>>(
                         "transaction_initiator_book",
                         x => x.HasOne<BookShelfBook>().WithMany().HasForeignKey("book_shelf_book_id"),
-                        x => x.HasOne<Transaction>().WithMany().HasForeignKey("transaction_id"));
+                        x => x.HasOne<Transaction>().WithMany().HasForeignKey("transaction_id").OnDelete(DeleteBehavior.ClientCascade));
 
             modelBuilder.Entity<Transaction>()
                     .HasMany(x => x.RecipientBooks)
@@ -285,7 +285,7 @@ namespace ExBook.Data
                     .UsingEntity<Dictionary<string, object>>(
                         "transaction_recipient_book",
                         x => x.HasOne<BookShelfBook>().WithMany().HasForeignKey("book_shelf_book_id"),
-                        x => x.HasOne<Transaction>().WithMany().HasForeignKey("transaction_id"));
+                        x => x.HasOne<Transaction>().WithMany().HasForeignKey("transaction_id").OnDelete(DeleteBehavior.ClientCascade));
 
             this.OnModelCreatingPartial(modelBuilder);
         }

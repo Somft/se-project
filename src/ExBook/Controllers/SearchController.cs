@@ -139,7 +139,7 @@ namespace ExBook.Controllers
         public ActionResult FullSizeCover(string CoverUrl)
         {
             var model = "https://covers.openlibrary.org/b/id/9271451-M.jpg";
-            return PartialView("FullSizeCover", model);
+            return PartialView("_FullSizeCover", CoverUrl);
         }
 
 
