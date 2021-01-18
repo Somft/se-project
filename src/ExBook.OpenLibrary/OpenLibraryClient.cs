@@ -34,23 +34,30 @@ namespace ExBook.OpenLibrary
         {
             return await this.cache.GetOrCreateAsync($"OL-BOOK-{openLibraryId}", async (_) =>
             {
-                openLibraryId = openLibraryId.Replace("/works/", "");
+                try
+                {
+                    openLibraryId = openLibraryId.Replace("/works/", "");
 
-                using HttpClient client = this.clientFactory.CreateClient();
+                    using HttpClient client = this.clientFactory.CreateClient();
 
-                HttpResponseMessage response = await client.GetAsync($"{baseUrl}/works/{openLibraryId}.json");
+                    HttpResponseMessage response = await client.GetAsync($"{baseUrl}/works/{openLibraryId}.json");
 
-                if (!response.IsSuccessStatusCode)
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return null;
+                    }
+
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    OpenLibraryBook book = JsonConvert.DeserializeObject<OpenLibraryBook>(responseString);
+                    book.Authors = (await book.AuthorsKeys.SelectAsync(async (author) => await this.GetAuthor(author.Author.Key)))
+                        .Where(a => a != null)
+                        .ToList()!;
+                    return book;
+                }
+                catch
                 {
                     return null;
                 }
-
-                string responseString = await response.Content.ReadAsStringAsync();
-                OpenLibraryBook book = JsonConvert.DeserializeObject<OpenLibraryBook>(responseString);
-                book.Authors = (await book.AuthorsKeys.SelectAsync(async (author) => await this.GetAuthor(author.Author.Key)))
-                    .Where(a => a != null)
-                    .ToList()!;
-                return book;
             });
         }
 
@@ -63,13 +70,20 @@ namespace ExBook.OpenLibrary
         {
             return await this.cache.GetOrCreateAsync($"OL-AUTHOR-{openLibraryId}", async (_) =>
             {
-                openLibraryId = openLibraryId.Replace("/authors/", "");
+                try
+                {
+                    openLibraryId = openLibraryId.Replace("/authors/", "");
 
-                using HttpClient client = this.clientFactory.CreateClient();
+                    using HttpClient client = this.clientFactory.CreateClient();
 
-                HttpResponseMessage response = await client.GetAsync($"{baseUrl}/authors/{openLibraryId}.json");
-                string responseString = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<OpenLibraryAuthor>(responseString);
+                    HttpResponseMessage response = await client.GetAsync($"{baseUrl}/authors/{openLibraryId}.json");
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<OpenLibraryAuthor>(responseString);
+                } 
+                catch
+                {
+                    return null;
+                } 
             });
         }
 
@@ -99,14 +113,22 @@ namespace ExBook.OpenLibrary
             string url = $"{baseUrl}/search.json?{string.Join("&", query)}";
 
 
-            return await this.cache.GetOrCreateAsync($"OL-SEARCH-{url}", async (_) => {
-                HttpResponseMessage response = await client.GetAsync(url);
-                SearchResult result = JsonConvert.DeserializeObject<SearchResult>(await response.Content.ReadAsStringAsync());
+            return await this.cache.GetOrCreateAsync($"OL-SEARCH-{url}", async (_) =>
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    SearchResult result = JsonConvert.DeserializeObject<SearchResult>(await response.Content.ReadAsStringAsync());
 
-                string? id = result.Docs.Where(doc => doc.Type == "work").FirstOrDefault()?.Key;
+                    string? id = result.Docs.Where(doc => doc.Type == "work").FirstOrDefault()?.Key;
 
-                return id != null ? await this.GetBook(id) : null;
-            });            
+                    return id != null ? await this.GetBook(id) : null;
+                }
+                catch
+                {
+                    return null;
+                }
+            });
         }
     }
 }
