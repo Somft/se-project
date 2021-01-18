@@ -11,8 +11,8 @@ namespace ExBook.OpenLibrary.Dto
         [JsonProperty("title")]
         public string Title { get; set; } = "";
 
-        [JsonProperty("description")]
-        public string Description { get; set; } = "";
+        //[JsonProperty("description")]
+        //public object Description { get; set; } = "";
 
         [JsonProperty("first_publish_date")]
         public DateTime? FirstPublishDate { get; set; }
