@@ -138,7 +138,12 @@ namespace ExBook.Controllers
         /// <returns></returns>
         public ActionResult FullSizeCover(string Cover)
         {
-            var CoverUrl = ExBook.Extensions.BookCoverExtensions.GetLargeCoverUrl(Cover);
+            string CoverUrl;
+            if (!Cover.Contains("https:"))
+                CoverUrl = ExBook.Extensions.BookCoverExtensions.GetLargeCoverUrl(Cover);
+            else
+                CoverUrl = Cover;
+
             return PartialView("_FullSizeCover", CoverUrl);
         }
 
