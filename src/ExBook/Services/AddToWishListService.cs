@@ -36,6 +36,8 @@ namespace ExBook.Services
                 };
                 this.applicationDbContext.Add(userWishList);
             }
+
+            book.Name = book.Name.Trim();
             Book bok = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == book.Name);
 
             if (bok != null) //book already exists
@@ -69,12 +71,14 @@ namespace ExBook.Services
 
                 if (bok2 == null) //book doesnt exists in database
                 {
+                    book.Created = "01.01." + book.Created;
+                    DateTime d = DateTime.Parse(book.Created);
                     bok = new Book()
                    {
                        Id = Guid.NewGuid(),
                        Name = bookAPI?.Title ?? book.Name,
                        Author = bookAPI?.Authors.FirstOrDefault().Name ?? book.Author,
-                       Created = bookAPI?.FirstPublishDate ?? DateTime.Parse(book.Created),
+                       Created = bookAPI?.FirstPublishDate ?? d,
                        CoverUrl = bookAPI?.Covers.FirstOrDefault().ToString() ?? null,
                        Isbn = bookAPI?.Key ?? null,
                        Subjects = subjectslist ?? null
