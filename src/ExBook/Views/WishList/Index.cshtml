@@ -1,9 +1,11 @@
 ﻿@model ExBook.Models.WhishList.WishListViewModel
 @{
     ViewData["Title"] = "Your Wish List";
-    string[] TableHeaders = new string[] {"Book Title"
+    string[] TableHeaders = new string[] {
+                        "Book Title"
                         ,"Author"
                         ,"Created"
+                        ,"Actions"
                         };
 }
 
@@ -15,19 +17,35 @@
     }
 *@
 <style>
+
+.container {
+  padding: 2rem 0rem;
+}
+
+h4 {
+  margin: 2rem 0rem 1rem;
+}
+
+  td, th {
+    vertical-align: middle;
+  }
     .center {
-        margin: 0;
+      /*  margin: 0;
         position: absolute;
         top: 50%;
         left: 50%;
         -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);*/
+         display: inline-block;
+          vertical-align: bottom;
     }
 </style>
 
-<div class="table">
-    <table class="table table-bordered table-hover">
-        <thead>
+<div class="container">
+<div class="row">
+    <div class="col-12">
+        <table class="table table-bordered">
+            <thead>
             <tr>
                 @{
                     foreach (var head in TableHeaders)
@@ -38,9 +56,9 @@
                     }
                 }
             </tr>
-        </thead>
+            </thead>
 
-        <tbody>
+            <tbody>
             @{
                 if (Model != null)
                 {
@@ -51,8 +69,8 @@
                             <td> @book.Book.Author</td>
                             <td> @book.Book.Created</td>
                             <form asp-controller="AddToWishList" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromWishList" method="post">
-                                <td><input type="submit" value="Remove this book" /></td>
-                            </form>
+                             <td><button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td>
+                             </form>
                         </tr>
 
                        
@@ -62,14 +80,15 @@
             }
             </tbody>
         </table>
+    </div>
+</div>
+</div>
 
-    <div class="center">
+
+ <div class="center">
         <form asp-area="" asp-controller="WishList" asp-action="Add">
             <button type="submit" class="btn btn-dark">Add</button>
         </form>
     </div>
-
-
-</div>
 
 
