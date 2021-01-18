@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Threading.Tasks;
 
@@ -67,7 +68,6 @@ namespace ExBook.Controllers
             });
         }
 
-
         [HttpPost]
         [Route("/searchShelves")]
         [AllowAnonymous]
@@ -76,7 +76,7 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View("Bookshelves", new SearchBookShelfBookViewModel()
                 {
-                    BookShelfBooks = await searchService.GetBookShelfBooksById(Id)
+                    BookShelfBooks = await searchService.GetBookShelfBooksById(Id, this.HttpContext.User.GetId().Value)
                 })
                 : this.RedirectToHome() as IActionResult;
         }
@@ -139,7 +139,7 @@ namespace ExBook.Controllers
         public ActionResult FullSizeCover(string CoverUrl)
         {
             var model = "https://covers.openlibrary.org/b/id/9271451-M.jpg";
-            return PartialView("FullSizeCover", model);
+            return PartialView("_FullSizeCover", CoverUrl);
         }
 
 

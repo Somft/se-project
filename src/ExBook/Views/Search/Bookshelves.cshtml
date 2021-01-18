@@ -8,6 +8,7 @@
         Search Books on bookshelves
     </div>
     <div class="card-body">
+        <div class="modal fade " id="coverModal" role="dialog"></div>
         <form asp-controller="Search" asp-action="Bookshelves" method="get">
             <div class="form-row align-items-center">
                 <div class="col-auto">
@@ -26,7 +27,7 @@
                 <div class="col-auto">
                     <button type="reset" class="btn btn-danger mb-2" id="clearSearch">Clear</button>
                 </div>
-</form>
+        </form>
         @*<div class="col-auto">
             <form asp-controller="Search" asp-action="Index" method="get">
                 <button type="submit" class="btn btn-info mb-2">Return</button>
@@ -36,7 +37,7 @@
     </div>
 
 
-    </div>
+</div>
 </div>
 <table class="table table-striped">
     <tr>
@@ -57,24 +58,47 @@
     <td>@book.Book.Author</td>
     @if (@book.Book.CoverUrl != null)
     {
-        <td><img src=@book.Book.CoverUrl alt="Cover" style="width:32px;height:32px;"></td>
+        <td><img src=@book.Book.CoverUrl alt="Cover" style="width:32px;height:32px;" onclick="Open('@book.Book.CoverUrl');"></td>
     }
     else
     {
-        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Cover" style="width:32px;height:32px;"></td>
+        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:32px;height:32px;"></td>
     }
-    <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" alt="Real Photo" style="width:32px;height:32px;"></td>
+    @if (@book.Photo != null)
+    {
+        <td><img src=@book.Photo alt="Real Photo" style="width:32px;height:32px;" onclick="Open('@book.Photo');"></td>
+    }
+    else
+    {
+        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Real Photo" style="width:32px;height:32px;"></td>
+    }
 
+    <form asp-controller="Transaction" asp-route-id="@book.Id" asp-action="Initialize" method="post">
+        <td><input type="submit" value="Send offer" class="btn btn-primary btn-sm" /></td>
+    </form>
     <form asp-controller="Search" asp-route-id="@book.BookId" asp-action="GetBookshelvesForBook" method="post">
-        <td><input type="submit" value="Send offer"  class="btn btn-primary btn-sm " /></td>
+        <td><input type="submit" value="Search" class="btn btn-primary btn-sm " /></td>
     </form>
 </tr>
     }
 </table>
-
-<script>
+@section Scripts
+{
+    <script>
+    function Open(cover) {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("FullSizeCover", "Search")',
+                    data: { CoverUrl: cover },
+                    success: function (data) {
+                        $('#coverModal').html(data);
+                        $('#coverModal').modal('show');
+                    }
+                })
+    };
     window.onload = function () {
         document.getElementById('FilterTitle').value = "@Model.FilterTitle";
         document.getElementById('FilterLogin').value = "@Model.FilterLogin";
     };
-</script>
+    </script>
+}

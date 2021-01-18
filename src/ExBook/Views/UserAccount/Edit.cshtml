@@ -1,0 +1,178 @@
+﻿@model ExBook.Models.UserAccountViewModel
+@{
+    var modifiedUser = Model.ModifiedUser;
+    var currentUser = Model.CurrentUser;
+    }
+<div id="wrapper">
+    <div id="page" class="container">
+        <h1 class="heading has-text-weight-bold is-size-4">User's data</h1>
+
+        <form asp-controller="UserAccount" asp-action="Update">
+
+            <div class="control">
+                <input class="input is-danger"
+                       type="text"
+                       name="Id"
+                       id="Id"
+                       value="@modifiedUser.Id"
+                       hidden>
+                <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+            </div>
+
+            @if (currentUser != null && currentUser.Role == "admin")
+            {
+
+                <div id="field">
+                    <label class="label" for="inlineFormInput">Email</label>
+
+                    <div class="control">
+                        <input class="input is-danger"
+                               type="text"
+                               name="Email"
+                               id="Email"
+                               value="@modifiedUser.Email">
+                        <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                    </div>
+                </div>
+
+                <div id="field">
+                    <label class="label" for="inlineFormInput">Login</label>
+
+                    <div class="control">
+                        <input class="input is-danger"
+                               type="text"
+                               name="Login"
+                               id="Login"
+                               value="@modifiedUser.Login">
+                        <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                    </div>
+                </div>
+
+                <div id="field">
+                    <label class="label" for="inlineFormInput">Name</label>
+
+                    <div class="control">
+                        <input class="input is-danger"
+                               type="text"
+                               name="Name"
+                               id="Name"
+                               value="@modifiedUser.Name">
+                        <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                    </div>
+                </div>
+
+                <div id="field">
+                    <label class="label" for="inlineFormInput">Surname</label>
+
+                    <div class="control">
+                        <input class="input is-danger"
+                               type="text"
+                               name="Surname"
+                               id="Surname"
+                               value="@modifiedUser.Surname">
+                        <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                    </div>
+                </div>
+
+                <div id="field">
+                    <label class="label" for="inlineFormInput">Password</label>
+
+                    <div class="control">
+                        <input class="input is-danger"
+                               type="text"
+                               name="Password"
+                               id="Password"
+                               value="@modifiedUser.Password">
+                        <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                    </div>
+                </div>
+
+                <div id="field">
+                    <label class="label" for="inlineFormInput">Role</label>
+
+                    <div class="control">
+                        <input class="input is-danger"
+                               type="text"
+                               name="Role"
+                               id="Role"
+                               value="@modifiedUser.Role">
+                        <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                    </div>
+                </div>
+            }
+
+
+
+
+            <div id="field">
+                <label class="label" for="inlineFormInput">Contact Number</label>
+
+                <div class="control">
+                    <input class="input is-danger"
+                           type="text"
+                           name="ContactNumber"
+                           id="ContactNumber"
+                           value="@modifiedUser.ContactNumber">
+                    <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                </div>
+            </div>
+
+            <div id="field">
+                <label class="label" for="inlineFormInput">Address</label>
+
+                <div class="control">
+                    <textarea class="textarea is-danger"
+                              name="Address"
+                              id="Address">
+                              @modifiedUser.Address
+                    </textarea>
+                    <!--<p class="help is-danger">{{$errors->first('excerpt')}}</p> -->
+                </div>
+            </div>
+
+            <div id="field">
+                <label class="label" for="inlineFormInput">Postal Code</label>
+
+                <div class="control">
+                    <input class="input is-danger"
+                           type="text"
+                           name="PostalCode"
+                           id="PostalCode"
+                           value="@modifiedUser.PostalCode">
+                    <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                </div>
+            </div>
+
+            <div id="field">
+                <label class="label" for="inlineFormInput">City</label>
+
+                <div class="control">
+                    <input class="input is-danger"
+                           type="text"
+                           name="City"
+                           id="City"
+                           value="@modifiedUser.City">
+                    <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                </div>
+            </div>
+
+            <div id="field">
+                <label class="label" for="inlineFormInput">Country</label>
+
+                <div class="control">
+                    <input class="input is-danger"
+                           type="text"
+                           name="Country"
+                           id="Country"
+                           value="@modifiedUser.Country">
+                    <!-- <p class="help is-danger">{{$errors->first('title')}}</p>-->
+                </div>
+            </div>
+
+            <div id="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit">Submit</button>
+                </div>
+            </div>
+
+        </form>

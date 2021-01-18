@@ -1,5 +1,9 @@
-﻿using ExBook.Data;
+﻿
+
+using ExBook.Data;
 using ExBook.Extensions;
+using ExBook.Mails.Services;
+using ExBook.Mails.Templates;
 using ExBook.Views.Authentication;
 
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 using System;
@@ -22,14 +27,16 @@ namespace ExBook.Controllers
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IConfiguration configuration;
+        private readonly IMailSender mailSender;
+        private readonly ILogger logger;
 
-        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration)
+        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration, IMailSender mailSender, ILogger<AuthenticationController> logger)
         {
             this.applicationDbContext = applicationDbContext;
             this.configuration = configuration;
+            this.mailSender = mailSender;
+            this.logger = logger;
         }
-
-
 
         [HttpGet]
         [Route("/login")]
@@ -48,18 +55,60 @@ namespace ExBook.Controllers
         {
             User? user = await this.AuthenticateAsync(request.Login, request.Password);
 
-            if (user != null)
+            if (user == null)
             {
-                this.HttpContext.Response.Cookies.Append("Authentication", this.GenerateJwt(user), new CookieOptions());
-
-                return this.RedirectToHome();
+                return this.View(new LoginViewModel()
+                {
+                    Message = "Incorrect username or password",
+                    Login = request.Login
+                });
             }
 
-            return this.View(new LoginViewModel()
+            if (!user.IsEmailConfirmed)
             {
-                Message = "Incorrect username or password",
-                Login = request.Login
-            });
+                return this.View(new LoginViewModel()
+                {
+                    Message = "Account is not active",
+                    Login = request.Login
+                });
+            }
+
+            if (user.IsEmailAuthenticationEnabled)
+            {
+
+                var token = this.GenerateJwt(user);
+                var url = this.configuration["App:Url"] + "login-token?token=" + token;
+                logger.LogInformation(url);
+                await this.mailSender.SendEmail("Authentication", new AuthenticationContext(user.Email, "Loging in")
+                {
+                    Token = url
+                });
+
+                return this.RedirectToEMailAuthorization();
+            }
+            else
+            {
+                this.HttpContext.Response.Cookies.Append("Authentication", this.GenerateJwt(user), new CookieOptions());
+                return this.RedirectToHome();
+
+            }
+        }
+
+        [HttpGet]
+        [Route("/login-token")]
+        [AllowAnonymous]
+        public IActionResult LoginWithToken(string token)
+        {
+            this.HttpContext.Response.Cookies.Append("Authentication", token, new CookieOptions());
+            return this.RedirectToHome();
+        }
+
+        [HttpGet]
+        [Route("/login-token-sent")]
+        [AllowAnonymous]
+        public IActionResult LoginWithTokenSent()
+        {
+            return this.View("LoginTokenSent");
         }
 
 
@@ -69,6 +118,13 @@ namespace ExBook.Controllers
         {
             this.HttpContext.Response.Cookies.Delete("Authentication");
             return this.RedirectToLogin();
+        }
+
+        [HttpGet("/confirm-account")]
+        [AllowAnonymous]
+        public IActionResult ConfirmAccount()
+        {
+            return null;
         }
 
         private async Task<User?> AuthenticateAsync(string login, string password)
@@ -96,7 +152,7 @@ namespace ExBook.Controllers
                 {
                         new Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new Claim(ClaimTypes.NameIdentifier, user.Login),
-                        new Claim(ClaimTypes.Email, "test"),
+                        new Claim(ClaimTypes.Email, user.Email),
                 },
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
