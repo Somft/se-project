@@ -25,6 +25,7 @@ namespace ExBook.Services
         
         public async Task<bool> AddBook(AddToWishListViewModel book, Guid? user)
         {
+            
             WishList userWishList = this.applicationDbContext.WishLists.FirstOrDefault(b => b.UserId == user); // whishlist from current user
             if ( userWishList == null)
             {
@@ -57,10 +58,15 @@ namespace ExBook.Services
             else // book doesnt exists, add to Book and wishlist
             {
                 Book bok2 = null;
+                List<Subject> subjectslist = null;
                 var bookAPI = await SearchBook(book.Name, book.Author);
-                if(bookAPI != null)
-                     bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
-               
+                if (bookAPI != null)
+                {
+                    bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
+                    subjectslist =
+                        this.applicationDbContext.Subjects.Where(s => bookAPI.Subjects.Contains(s.Name)).ToList();
+                }
+
                 if (bok2 == null) //book doesnt exists in database
                 {
                     bok = new Book()
@@ -70,7 +76,9 @@ namespace ExBook.Services
                        Author = bookAPI?.Authors.FirstOrDefault().Name ?? book.Author,
                        Created = bookAPI?.FirstPublishDate ?? DateTime.Parse(book.Created),
                        CoverUrl = bookAPI?.Covers.FirstOrDefault().ToString() ?? null,
-                       Isbn = bookAPI?.Key ?? null
+                       Isbn = bookAPI?.Key ?? null,
+                       Subjects = subjectslist ?? null
+                       
                        
                    };
                     this.applicationDbContext.Books.Add(bok);

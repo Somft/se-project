@@ -2,10 +2,26 @@
 @{
     ViewData["Title"] = "Add Book To Wish List";
 }
+<style>
+    .vertical-center {
+       position: relative;
+       bottom: 20px;
+       right: 20px;
+       background-color: darkred;
+       color: #FFFFFF;
+       padding: 10px;
+       border-radius: 10px;
+       -moz-border-radius: 10px;
+       -webkit-border-radius: 10px;
+       margin:20px;
+       height: 40px;
+         }
+</style>
+    
 <div>
     <div class="card login-card shadow-sm">
         <div class="card-body">
-            <h3 class="card-title text-left mb-4 mt-1">Add book to your wish list</h3>
+            <h3 class="card-title text-left mb-4 mt-1">Add a book to your wish list</h3>
             <hr>
             @if (Model.Message != null)
             {
@@ -13,26 +29,26 @@
             }
             <form asp-controller="AddToWishList" asp-action="Index" method="post">
                 <div class="form-group">
-                    <label for="Name">Name</label>
-                    <input asp-for="Name" class=@GetInputClass("Name") type="text">
+                    <label for="Book title:">Name</label>
+                    <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
                     <span asp-validation-for="Name" class="invalid-feedback"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="Author">Author</label>
-                    <input asp-for="Author" class=@GetInputClass("Author") placeholder="login" type="text">
+                    <label for="Author:">Author</label>
+                    <input asp-for="Author" class=@GetInputClass("Author") placeholder="J.K Rowling" type="text">
                     <span asp-validation-for="Author" class="invalid-feedback"></span>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="Created">Created</label>
-                        <input asp-for="Created" class=@GetInputClass("Created") type="text">
+                        <input asp-for="Created" class=@GetInputClass("Created") placeholder="2001" type="text">
                         <span asp-validation-for="Created" class="invalid-feedback"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Add book  </button>
+                     <button type="submit" class="vertical-center">Add this book</button>
                 </div>
             </form>
         </div>
