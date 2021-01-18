@@ -75,7 +75,7 @@
                 @if (@book.CoverUrl != null)
                 {
                     <td>
-                        <img src=@book.CoverUrl alt="Cover" style="width:32px;height:32px;" id="test" onclick="Open('@book.CoverUrl');" />
+                        <img src=@ExBook.Extensions.BookCoverExtensions.GetSmallCoverUrl(@book.CoverUrl) alt="Cover" style="width:32px;height:32px;" id="test" onclick="Open('@book.CoverUrl');" />
                     </td>
                 }
                 else
@@ -183,7 +183,7 @@
                 $.ajax({
                     type: "Get",
                     url: '@Url.Action("FullSizeCover", "Search")',
-                    data: { CoverUrl: cover },
+                    data: { Cover: cover },
                     success: function (data) {
                         $('#coverModal').html(data);
                         $('#coverModal').modal('show');
