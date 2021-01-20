@@ -1,0 +1,122 @@
+﻿@model ExBook.Models.BookShelf.BookShelfViewModel
+@{
+    ViewData["Title"] = "Your Wish List";
+    string[] TableHeaders = new string[] {
+                        "Book Title"
+                        ,"Author"
+                        ,"Created"
+                        ,"Actions"
+                        };
+}
+
+
+@*<h1>Index</h1>
+    @foreach (var book in Model.Books)
+    {
+        <div>Book Title: @book.Book.Name </div>
+    }
+*@
+<style>
+
+.container {
+  padding: 2rem 0rem;
+}
+
+h4 {
+  margin: 2rem 0rem 1rem;
+}
+
+  td, th {
+    vertical-align: middle;
+  }
+
+    .header {
+      text-align: left;
+      background: white;
+      color: black;
+      font-size: 30px;
+    }
+    .vertical-center {
+   position: relative;
+   bottom: 20px;
+   right: 20px;
+   background-color: #000000;
+   color: #FFFFFF;
+   padding: 10px;
+   border-radius: 10px;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   margin:10px;
+   height: 40px;
+     }
+     
+     .parent{
+       position: relative;
+       top: 10%;
+
+     }
+</style>
+
+
+
+<div class = "parent">
+<div class="container">
+    <div class="header">
+        <h1>Your bookshelf</h1>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    @{
+                        foreach (var head in TableHeaders)
+                        {
+                            <th>
+                                @head
+                            </th>
+                        }
+                    }
+                </tr>
+                </thead>
+
+                <tbody>
+                @{
+                    if (Model != null)
+                    {
+                        foreach (var book in Model.Books)
+                        {
+                            <tr>
+                                <td> @book.Book.Name</td>
+                                <td> @book.Book.Author</td>
+                                <td> @book.Book.Created</td>
+                                <form asp-controller="AddToBookshelf" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromShelf" method="post">
+                                    <td><button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td>
+                                </form>
+                            </tr>
+
+
+
+                        }
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div >
+        <form method="get" asp-area="" asp-controller="AddToBookShelf" asp-action="Index">
+            <button type="submit" class="vertical-center">Add new book</button>
+        </form>
+    </div>
+</div>
+</div>   
+
+     
+
+
+
+
+
+

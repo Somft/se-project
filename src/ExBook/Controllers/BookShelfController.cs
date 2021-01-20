@@ -1,11 +1,11 @@
 using ExBook.Data;
 using ExBook.Extensions;
-using ExBook.Models.Authentication;
-using ExBook.Models.WhishList;
+using ExBook.Models.BookShelf;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 using System;
 using System.Linq;
@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace ExBook.Controllers
 {
-    public class BookShelfController
+    [Authorize]
+    public class BookShelfController : Controller
     {
         private readonly BookShelfService bookShelfService;
         private ApplicationDbContext dbContext;
@@ -23,22 +24,15 @@ namespace ExBook.Controllers
             this.dbContext = dbContext;
         }
         
+        
         [HttpGet]
         [Route("/bookshelf")]
         public async Task<IActionResult> Index()
         {
             Guid userID = GetUserID();
             var result = await bookShelfService.GetUserBook(userID);
-            return View (new WishListViewModel() {Books = result });
-          
-        }
-       
-        [HttpPost]
-        [Route("/addToList")]
-        public IActionResult Add()
-        {
-            //this.HttpContext.Response.Cookies.Delete("Authentication");
-            return this.RedirectToAddToWishList();
+            return View (new BookShelfViewModel() {Books = result });
+            
         }
 
         public Guid GetUserID()
