@@ -1,9 +1,11 @@
 ﻿@model ExBook.Models.WhishList.WishListViewModel
 @{
     ViewData["Title"] = "Your Wish List";
-    string[] TableHeaders = new string[] {"Book Title"
+    string[] TableHeaders = new string[] {
+                        "Book Title"
                         ,"Author"
                         ,"Created"
+                        ,"Actions"
                         };
 }
 
@@ -15,61 +17,106 @@
     }
 *@
 <style>
-    .center {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
+
+.container {
+  padding: 2rem 0rem;
+}
+
+h4 {
+  margin: 2rem 0rem 1rem;
+}
+
+  td, th {
+    vertical-align: middle;
+  }
+
+    .header {
+      text-align: left;
+      background: white;
+      color: black;
+      font-size: 30px;
     }
+    .vertical-center {
+   position: relative;
+   bottom: 20px;
+   right: 20px;
+   background-color: #000000;
+   color: #FFFFFF;
+   padding: 10px;
+   border-radius: 10px;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   margin:10px;
+   height: 40px;
+     }
+     
+     .parent{
+       position: relative;
+       top: 10%;
+
+     }
 </style>
 
-<div class="table">
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
+
+
+<div class = "parent">
+<div class="container">
+    <div class="header">
+        <h1>Your wishlist</h1>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    @{
+                        foreach (var head in TableHeaders)
+                        {
+                            <th>
+                                @head
+                            </th>
+                        }
+                    }
+                </tr>
+                </thead>
+
+                <tbody>
                 @{
-                    foreach (var head in TableHeaders)
+                    if (Model != null)
                     {
-                        <th>
-                            @head
-                        </th>
+                        foreach (var book in Model.Books)
+                        {
+                            <tr>
+                                <td> @book.Book.Name</td>
+                                <td> @book.Book.Author</td>
+                                <td> @book.Book.Created</td>
+                                <form asp-controller="AddToWishList" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromWishList" method="post">
+                                    <td><button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td>
+                                </form>
+                            </tr>
+
+
+
+                        }
                     }
                 }
-            </tr>
-        </thead>
+                </tbody>
+            </table>
+        </div>
 
-        <tbody>
-            @{
-                if (Model != null)
-                {
-                    foreach (var book in Model.Books)
-                    {
-                        <tr>
-                            <td> @book.Book.Name</td>
-                            <td> @book.Book.Author</td>
-                            <td> @book.Book.Created</td>
-                            <form asp-controller="AddToWishList" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromWishList" method="post">
-                                <td><input type="submit" value="Remove this book" /></td>
-                            </form>
-                        </tr>
-
-                       
-                        
-                    }
-                }
-            }
-            </tbody>
-        </table>
-
-    <div class="center">
+    </div>
+    <div >
         <form asp-area="" asp-controller="WishList" asp-action="Add">
-            <button type="submit" class="btn btn-dark">Add</button>
+            <button type="submit" class="vertical-center">Add new book</button>
         </form>
     </div>
-
-
 </div>
+</div>   
+
+     
+
+
+
+
 
 

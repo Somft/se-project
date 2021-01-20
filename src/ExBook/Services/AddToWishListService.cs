@@ -25,6 +25,7 @@ namespace ExBook.Services
         
         public async Task<bool> AddBook(AddToWishListViewModel book, Guid? user)
         {
+            
             WishList userWishList = this.applicationDbContext.WishLists.FirstOrDefault(b => b.UserId == user); // whishlist from current user
             if ( userWishList == null)
             {
@@ -35,6 +36,8 @@ namespace ExBook.Services
                 };
                 this.applicationDbContext.Add(userWishList);
             }
+
+            book.Name = book.Name.Trim();
             Book bok = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == book.Name);
 
             if (bok != null) //book already exists
@@ -56,19 +59,32 @@ namespace ExBook.Services
             }
             else // book doesnt exists, add to Book and wishlist
             {
+                Book bok2 = null;
+                List<Subject> subjectslist = null;
                 var bookAPI = await SearchBook(book.Name, book.Author);
-                Book bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
+                if (bookAPI != null)
+                {
+                    bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
+                    subjectslist =
+                        this.applicationDbContext.Subjects.Where(s => bookAPI.Subjects.Contains(s.Name)).ToList();
+                }
+
                 if (bok2 == null) //book doesnt exists in database
                 {
+                    book.Created = "01.01." + book.Created;
+                    DateTime d = DateTime.Parse(book.Created);
                     bok = new Book()
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = bookAPI.Title ?? book.Name,
-                        Author = bookAPI.Authors.FirstOrDefault().Name ?? book.Author,
-                        Created = bookAPI.FirstPublishDate ?? DateTime.Parse(book.Created),
-                        CoverUrl = bookAPI.Covers.FirstOrDefault().ToString() ?? null,
-                        Isbn = bookAPI.Key ?? null
-                    };
+                   {
+                       Id = Guid.NewGuid(),
+                       Name = bookAPI?.Title ?? book.Name,
+                       Author = bookAPI?.Authors.FirstOrDefault().Name ?? book.Author,
+                       Created = bookAPI?.FirstPublishDate ?? d,
+                       CoverUrl = bookAPI?.Covers.FirstOrDefault().ToString() ?? null,
+                       Isbn = bookAPI?.Key ?? null,
+                       Subjects = subjectslist ?? null
+                       
+                       
+                   };
                     this.applicationDbContext.Books.Add(bok);
 
                     userWishList.WishListBooks.Add(new WishListBook()
