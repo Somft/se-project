@@ -1,4 +1,7 @@
-$HEADER$namespace $NAMESPACE$
+namespace ExBook.Services
 {
-  public class $CLASS$ {$END$}
+    public class BookShelfService
+    {
+        
+    }
 }
