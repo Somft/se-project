@@ -87,6 +87,11 @@ namespace ExBook.Data
                     .HasDefaultValue(false)
                     .HasColumnName("is_locked");
 
+                entity.Property(e => e.IsRemoved)
+                   .IsRequired()
+                   .HasDefaultValue(false)
+                   .HasColumnName("is_removed");
+
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.BookShelfBooks)
                     .HasForeignKey(d => d.BookId)
