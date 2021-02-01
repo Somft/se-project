@@ -1,4 +1,4 @@
-﻿@model ExBook.Models.WhishList.WishListViewModel
+﻿@model ExBook.Models.BookShelf.BookShelfViewModel
 @{
     ViewData["Title"] = "Your Wish List";
     string[] TableHeaders = new string[] {
@@ -62,7 +62,7 @@ h4 {
 <div class = "parent">
 <div class="container">
     <div class="header">
-        <h1>Your wishlist</h1>
+        <h1>Your bookshelf</h1>
     </div>
     <div class="row">
         <div class="col-12">
@@ -90,7 +90,7 @@ h4 {
                                 <td> @book.Book.Name</td>
                                 <td> @book.Book.Author</td>
                                 <td> @book.Book.Created</td>
-                                <form asp-controller="AddToWishList" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromWishList" method="post">
+                                <form asp-controller="AddToBookshelf" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromShelf" method="post">
                                     <td><button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button></td>
                                 </form>
                             </tr>
@@ -106,7 +106,7 @@ h4 {
 
     </div>
     <div >
-        <form asp-area="" asp-controller="WishList" asp-action="Add">
+        <form method="get" asp-area="" asp-controller="AddToBookShelf" asp-action="Index">
             <button type="submit" class="vertical-center">Add new book</button>
         </form>
     </div>

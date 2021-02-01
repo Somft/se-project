@@ -1,10 +1,7 @@
-﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-
-namespace ExBook.Models.AddToWhishList
+namespace ExBook.Models.AddToBookShelf
 {
-    public class AddToWishListViewModel
+    public class AddToBookShelfViewModel
     {
         [Required]
         [MinLength(1)]
@@ -20,8 +17,8 @@ namespace ExBook.Models.AddToWhishList
         [MinLength(4)]
         [MaxLength(4)]
         public string Created { get; set; } = "";
-        public string? Message { get; set; } = null;
-
+        
+        public string? Message
+         { get; set; } = null;
     }
-
 }

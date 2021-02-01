@@ -1,4 +1,5 @@
 using ExBook.Configuration;
+using ExBook.Controllers;
 using ExBook.Extensions;
 using ExBook.Extensions.DependencyInjection;
 using ExBook.Middleware;
@@ -33,6 +34,9 @@ namespace ExBook
             services.AddTransient<AddToWishListService>();
             services.AddTransient<InitializeTransactionService>();
             services.AddTransient<UserAccountService>();
+            services.AddTransient<BookShelfService>();
+            services.AddTransient<AddToBookShelfService>();
+            
 
             services.AddTransient<OpenLibraryClient>();
             services.AddHttpClient();
