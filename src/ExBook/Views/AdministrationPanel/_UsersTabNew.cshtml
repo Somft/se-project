@@ -1,0 +1,87 @@
+﻿@model List<ExBook.Data.User>
+<div class="card border-secondary" style="max-height: 82vh; overflow: hidden;">
+    <div class="card-body">
+        <div class="container-fluid h-100 d-flex flex-column">
+            <div class="row flex-fill">
+                <div class="col-4 border" style="max-height: 80vh;overflow:auto;">
+                    <div class="list-group" id="list-tab" role="tablist">
+                        @foreach (var user in @Model)
+                        {
+                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" onclick="OpenUserDetails('@user.Id');" role="tab" aria-controls="profile">@user.Login</a>
+                        }
+                        @*<a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+
+                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+                            <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>*@
+                    </div>
+                </div>
+                <div class="col border" style="max-height: 80vh;overflow:auto;">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                            <div class="row flex-fill">
+                                <div class="container-fluid" id="userDetails">
+
+                                </div>
+                            </div>
+                            <div class="row flex-fill">
+                                <div class="col "id="userTransactions2" style="padding-right:0 !important">
+
+                                </div>
+                                <div class="col"id="userTransactions3"style="padding-left:0 !important">
+
+                                </div>
+                            </div>
+                            <div class="row flex-fill">
+                                <div class="container-fluid" id="userTransactions">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!--<div class="row">
+        <div class="col-4">
+            <div class="list-group" id="list-tab" role="tablist">
+                @foreach (var user in @Model)
+                {
+                    <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" onclick="OpenUserDetails('@user.Id');" role="tab" aria-controls="profile">@user.Login</a>
+                }-->
+                @*<a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+
+                    <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+                    <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>*@
+            <!--</div>
+        </div>
+        <div class="col">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                    <div class="row">
+                        <div class="container-fluid" id="userDetails">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid" id="userTransactions">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>-->
+    @section Scripts
+{
+<script>
+
+</script>
+}

@@ -20,7 +20,11 @@ namespace ExBook.Services
 
         public async Task<List<User>> GetUsers()
         {
-            List<User> users = await this.applicationDbContext.Users.ToListAsync();
+            List<User> users = await this.applicationDbContext.Users
+                .Include(u=>u.InitiatedTransactions)
+                .Include(u=>u.ReceivedTransactions)
+                .Include(u=>u.BookShelves)
+                .ToListAsync();
             return users;
         }
 
@@ -75,6 +79,23 @@ namespace ExBook.Services
                 this.applicationDbContext.Remove(transaction);
                 await this.applicationDbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task UpdateUser(User sentUserData)
+        {
+            User currentUser = await GetUserById(sentUserData.Id);
+            currentUser.Login = sentUserData.Login;
+            currentUser.Email = sentUserData.Email;
+            currentUser.Password = sentUserData.Password;
+            currentUser.Role = sentUserData.Role;
+            currentUser.Name = sentUserData.Name;
+            currentUser.Surname = sentUserData.Surname;
+            currentUser.ContactNumber = sentUserData.ContactNumber;
+            currentUser.Address = sentUserData.Address;
+            currentUser.PostalCode = sentUserData.PostalCode;
+            currentUser.City = sentUserData.City;
+            currentUser.Country = sentUserData.Country;
+            await this.applicationDbContext.SaveChangesAsync();
         }
     }
 }

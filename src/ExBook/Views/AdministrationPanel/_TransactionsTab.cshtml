@@ -1,18 +1,24 @@
 ﻿@model List<ExBook.Data.Transaction>
-    <div class="card border-secondary mb-3">
-        <div class="card-body">
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Initiatior</th>
-                        <th scope="col">Recipient</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var transaction in Model)
-                    {
+<div class="card border">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#transactionsBody" aria-expanded="true" aria-controls="collapse-example" id="heading-example">
+            <i class="fa fa-chevron-down pull-left"></i>
+            Transactions
+        </a>
+    </div>
+    <div class="card-body" id="transactionsBody">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Initiatior</th>
+                    <th scope="col">Recipient</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Model)
+                {
                     <tr>
                         <td>@transaction.Initiator.Login</td>
                         <td>@transaction.Recipient.Login</td>
@@ -47,8 +53,19 @@
                             </div>
                         </td>
                     </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .card-header .fa {
+        transition: .3s transform ease-in-out;
+    }
+
+    .card-header .collapsed .fa {
+        transform: rotate(-90deg);
+    }
+</style>
+

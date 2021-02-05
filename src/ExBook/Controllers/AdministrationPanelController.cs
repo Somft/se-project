@@ -1,4 +1,5 @@
-﻿using ExBook.Extensions;
+﻿using ExBook.Data;
+using ExBook.Extensions;
 using ExBook.Models.AdministrationPanel;
 using ExBook.Services;
 
@@ -48,6 +49,14 @@ namespace ExBook.Controllers
             return PartialView("_UserDetailsModal", user);
         }
 
+        public async Task<ActionResult> ShowUserTransactionsAsync(string userId)
+        {
+            Guid id = Guid.Parse(userId);
+            var user = await administrationPanelService.GetUserById(id);
+            var allTransactions = user.InitiatedTransactions.Concat(user.ReceivedTransactions).ToList();
+            return PartialView("_TransactionsTab", allTransactions);
+        }
+
         public async Task<ActionResult> DeleteUserConfirmation(string userId)
         {
             Guid id = Guid.Parse(userId);
@@ -72,6 +81,16 @@ namespace ExBook.Controllers
         {
             await administrationPanelService.DeleteTransactionById(transactionId);
             return this.RedirectToAdminPanel();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateUserAsync(User user)
+        {
+            if (this.HttpContext.User.Identity.IsAuthenticated)
+            {
+                    await administrationPanelService.UpdateUser(user);
+            }
+            return await this.ShowUserDetailsAsync(user.Id.ToString());
         }
     }
 }

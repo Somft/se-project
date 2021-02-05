@@ -5,48 +5,32 @@
         <div class="card-header">
             Administration Panel
         </div>
-        <div class="card-body">
-            <div class="modal fade" id="viewModal" role="dialog"></div>
+            <div class="card-body">
+                <div class="modal fade" id="viewModal" role="dialog"></div>
 
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="true">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="false">Transactions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="ratings-tab" data-toggle="tab" href="#ratings" role="tab" aria-controls="ratings" aria-selected="false">Ratings</a>
-                </li>
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab"> @Html.Partial("_UsersTab", Model.Users)</div>
-                <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">@Html.Partial("_TransactionsTab", Model.Transactions)</div>
-                <div class="tab-pane fade" id="ratings" role="tabpanel" aria-labelledby="ratings-tab">@Html.Partial("_RatingsTab", Model.Ratings)</div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="true">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="false">Transactions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="ratings-tab" data-toggle="tab" href="#ratings" role="tab" aria-controls="ratings" aria-selected="false">Ratings</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent" >
+                    <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab" > @Html.Partial("_UsersTabNew", Model.Users)</div>
+                    <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">@Html.Partial("_TransactionsTab", Model.Transactions)</div>
+                    <div class="tab-pane fade" id="ratings" role="tabpanel" aria-labelledby="ratings-tab">@Html.Partial("_RatingsTab", Model.Ratings)</div>
+                </div>
             </div>
-        </div>
     </div>
 </body>
 @section Scripts
 {
     <script>
-        $(document).ready(function () {
-
-            //$('.users').click(function () {
-            //    var url = $('#usersModal').data('url');
-            //    $.get(url, function (data) {
-            //        $("#usersModal").html(data);
-            //        $("#usersModal").modal('show');
-            //    });
-            //});
-            //$('.users').click(function () {
-            //    var url = $('#myModal').data('url');
-            //    $.get(url, function (data) {
-            //        $("#myModal").html(data);
-            //        $("#myModal").modal('show');
-            //    });
-            //});
-        });
                     function Open(currentId) {
                 $.ajax({
                     type: "Get",
@@ -83,7 +67,73 @@
                 })
             };
 
+                function OpenUserDetails(currentId) {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("ShowUserDetails", "AdministrationPanel")',
+                    data: { userId: currentId },
+                    success: function (data) {
+                        $('#list-home').hide();
+                        $('#userDetails').html(data);
 
+                        $.ajax({
+                            type: "Get",
+                            url: '@Url.Action("ShowUserTransactions", "AdministrationPanel")',
+                            data: { userId: currentId },
+                            success: function (data) {
+                                $('#userTransactions').html(data);
+                                $('#userTransactions2').html(data);
+                                $('#userTransactions3').html(data);
+                                $('#list-home').fadeIn('fast');
+                            }
+                        });
+                    }
+                })
+        };
+        function EditUser() {
+            $('.details').each(function () {
+                $(this).removeAttr('readonly');
+            });
+        };
+        function CancelEdit(currentId) {
+            $.ajax({
+                type: "Get",
+                url: '@Url.Action("ShowUserDetails", "AdministrationPanel")',
+                data: { userId: currentId },
+                success: function (data) {
+                    $('#userDetails').html(data);
+                }
+            });
+            $('.details').each(function () {
+                $(this).attr('readonly', 'readonly');
+            });
+        };
+       function UpdateUser(){
+            var user = {};
+            user.Login = $('#inputLogin').val();
+            user.Id = $('#inputId').val();
+           user.Email = $('#inputEmail').val();
+           user.Name = $('#inputName').val();
+           user.Password = $('#inputPassword').val();
+           user.Role = $('#inputRole').val();
+           user.Surname = $('#inputSurname').val();
+           user.IsEmailConfirmed = $('#IsEmailConfirmed').val();
+           user.IsEmailAuthenticationEnabled = $('#IsEmailAuthenticationEnabled').val();
+           user.ContactNumber = $('#inputContactNumber').val();
+           user.Address = $('#inputAddress').val();
+           user.PostalCode = $('#inputZip').val();
+           user.City = $('#inputCity').val();
+           user.Country = $('#inputCountry').val();
+
+           $.ajax({
+               type: "POST",
+               url: '@Url.Action("UpdateUser", "AdministrationPanel")',
+               data: { user: user },
+                success: function (data) {
+                    $('#userDetails').html(data);
+                }
+            });
+        };
 
     </script>
 }
