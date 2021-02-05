@@ -3,7 +3,7 @@
     ViewData["Title"] = "Search";
 }
 
-<div class="card searchbar-card shadow-sm">
+<div class="card searchbar-card shadow-sm sticky-top">
     <div class="card-header">
         Search Books on bookshelves
     </div>
@@ -29,59 +29,62 @@
                 </div>
         </form>
         @*<div class="col-auto">
-            <form asp-controller="Search" asp-action="Index" method="get">
-                <button type="submit" class="btn btn-info mb-2">Return</button>
-            </form>
-        </div>*@
-
+                <form asp-controller="Search" asp-action="Index" method="get">
+                    <button type="submit" class="btn btn-info mb-2">Return</button>
+                </form>
+            </div>*@
     </div>
 
 
 </div>
+
+<div class="books flex">
+    <div class="row" style="margin-right:0 !important; margin-left:0 !important">
+        @foreach (var book in Model.BookShelfBooks)
+        {
+            <div class="col-4 ">
+                <div class="list-group" style="max-height:280px;">
+                    <li class="list-group-item list-group-item-action flex-column align-items-start" style="height:280px;">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">
+                                <b>"@book.Book.Name"</b>
+                                <br />@book.Book.Author
+                            </h5>
+                            <small>@book.Book.Created.Value.ToShortDateString()</small>
+                        </div>
+                        <p class="mb-1">
+                            @if (@book.Photo != null)
+                            {
+                                <img src=@book.Photo alt="Real Photo" style="width:110px;height:160px;" onclick="Open('@book.Photo');">
+                            }
+                            else
+                            {
+                                <img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:110px;height:160px;">
+
+                            }
+                            Owner: @book.BookShelf.User.Login
+                            <div class="btn-group float-right" role="group" aria-label="Basic example">
+                                <form asp-controller="Transaction" asp-route-id="@book.Id" asp-action="Initialize" method="post">
+                                    <button type="submit" class="btn btn-primary btn-sm" title="Send offer">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </p>
+                        <small>@GetSubjects(@book.Book)</small>
+                    </li>
+                </div>
+            </div>
+        }
+    </div>
 </div>
-<table class="table table-striped">
-    <tr>
-        <th scope="col">BookShelf Owner Name</th>
-        <th scope="col">BookShelf Owner Login</th>
-        <th scope="col">Title</th>
-        <th scope="col">Author</th>
-        <th scope="col">Cover</th>
-        <th scope="col">Photo</th>
-        <th scope="col">Transactions</th>
-    </tr>
-    @foreach (var book in Model.BookShelfBooks)
+@functions { 
+    string GetSubjects(ExBook.Data.Book book)
     {
-<tr>
-    <td>@($"{book.BookShelf.User.Name} {book.BookShelf.User.Surname}")</td>
-    <td>@book.BookShelf.User.Login</td>
-    <td>@book.Book.Name</td>
-    <td>@book.Book.Author</td>
-    @if (@book.Book.CoverUrl != null)
-    {
-        <td><img src=@ExBook.Extensions.BookCoverExtensions.GetSmallCoverUrl(@book.Book.CoverUrl) alt="Cover"  onclick="Open('@book.Book.CoverUrl');"></td>
-    }
-    else
-    {
-        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:36px;height:58px;"></td>
-    }
-    @if (@book.Photo != null)
-    {
-        <td><img src=@book.Photo alt="Real Photo" style="width:36px;height:58px;" onclick="Open('@book.Photo');"></td>
-    }
-    else
-    {
-        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Real Photo" style="width:36px;height:58px;"></td>
+        return String.Join(',', book.Subjects.Select(s => s.Name));
     }
 
-    <form asp-controller="Transaction" asp-route-id="@book.Id" asp-action="Initialize" method="post">
-        <td><input type="submit" value="Send offer" class="btn btn-primary btn-sm" /></td>
-    </form>
-    <form asp-controller="Search" asp-route-id="@book.BookId" asp-action="GetBookshelvesForBook" method="post">
-        <td><input type="submit" value="Search" class="btn btn-primary btn-sm " /></td>
-    </form>
-</tr>
-    }
-</table>
+}
 @section Scripts
 {
     <script>
