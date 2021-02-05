@@ -1,0 +1,72 @@
+﻿@model List<ExBook.Data.Transaction>
+<div class="card border">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#transactionsBody" aria-expanded="true" aria-controls="collapse-example" id="heading-example">
+            <i class="fa fa-chevron-down pull-left"></i>
+            Transactions
+        </a>
+    </div>
+    <div class="card-body" id="transactionsBody">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Initiatior</th>
+                    <th scope="col">Recipient</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in Model)
+                {
+                    <tr>
+                        <td>@transaction.Initiator.Login</td>
+                        <td>@transaction.Recipient.Login</td>
+                        <td>
+                            @if (@transaction.Status.Equals(ExBook.Data.Transaction.Statuses.Initialized))
+                            {
+                                <i class="far fa-file" title="Initialized"></i>
+                            }
+                            else if (@transaction.Status.Equals(ExBook.Data.Transaction.Statuses.Reviewed))
+                            {
+                                <i class="far fa-eye" style="color:cornflowerblue" title="Reviewed"></i>
+                            }
+                            else if (@transaction.Status.Equals(ExBook.Data.Transaction.Statuses.Rejected))
+                            {
+                                <i class="far fa-times" style="color:red" title="Rejected"></i>
+                            }
+                            else if (@transaction.Status.Equals(ExBook.Data.Transaction.Statuses.Accepted))
+                            {
+                                <i class="far fa-check" style="color:green" title="Accepted"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-question-circle"></i>
+                            }
+
+
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                               
+                                <a href="@Url.Action("Index", "Transaction", new { id = @transaction.Id })" class="btn btn-secondary users" title="Details"><i class="fas fa-info-circle"></i></a>
+                                <a onclick="DeleteTransaction('@transaction.Id');" class="btn btn-secondary"><i class="fas fa-trash-alt"  title="Delete"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .card-header .fa {
+        transition: .3s transform ease-in-out;
+    }
+
+    .card-header .collapsed .fa {
+        transform: rotate(-90deg);
+    }
+</style>
+

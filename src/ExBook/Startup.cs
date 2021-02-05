@@ -32,6 +32,7 @@ namespace ExBook
             services.AddTransient<SearchService>();
             services.AddTransient<WishListService>();
             services.AddTransient<AddToWishListService>();
+            services.AddTransient<AdministrationPanelService>();
             services.AddTransient<InitializeTransactionService>();
             services.AddTransient<UserAccountService>();
             services.AddTransient<BookShelfService>();

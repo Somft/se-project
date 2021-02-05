@@ -24,5 +24,14 @@ namespace ExBook.Extensions
                 return null;
             }
         }
+
+        public static bool HasRole(this ClaimsPrincipal principal, string role)
+        {
+            string? roleClaim = principal.GetClaim(ClaimTypes.Role);
+            if (roleClaim != null && roleClaim.Equals(role))
+                return true;
+
+            return false;
+        }
     }
 }

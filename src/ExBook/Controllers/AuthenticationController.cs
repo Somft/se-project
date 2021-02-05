@@ -153,6 +153,7 @@ namespace ExBook.Controllers
                         new Claim(ClaimTypes.Sid, user.Id.ToString()),
                         new Claim(ClaimTypes.NameIdentifier, user.Login),
                         new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Role, user.Role)
                 },
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);

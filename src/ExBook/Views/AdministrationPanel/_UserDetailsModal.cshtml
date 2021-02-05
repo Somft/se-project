@@ -1,0 +1,106 @@
+﻿@model ExBook.Data.User
+<div class="card">
+    <div class="card-header">
+                    <a data-toggle="collapse" href="#detailsBody" aria-expanded="true" aria-controls="collapse-example" id="heading-example">
+                        <i class="fa fa-chevron-down pull-left"></i>
+                        User Details
+                    </a>
+                    <div class="btn-group float-right" role="group" aria-label="Basic example">
+                        @*<button type="button" class="btn btn-secondary users" onclick="Open('@user.Id');">View</button>*@
+                        @*<a href="@Url.Action("EditAdmin", "UserAccount", new { ModifiedUserId = Model.Id })" class="btn btn-outline-secondary users"> <i class="fas fa-edit"></i></a>*@
+                        <a onclick="EditUser();" class="btn btn-outline-secondary users" title="Edit"> <i class="fas fa-edit"></i></a>
+                        <button type="button" class="btn btn-outline-secondary users" onclick="UpdateUser();" title="Save"> <i class="fas fa-save"></i></button>
+                        <button type="button" class="btn btn-outline-secondary users" onclick="CancelEdit('@Model.Id');" title="Cancel"> <i class="fas fa-window-close"></i></button>
+                        <button type="button" class="btn btn-outline-secondary users" onclick="DeleteUser('@Model.Id');" title="Delete"> <i class="fas fa-trash-alt"></i></button>
+                    </div>
+    </div>
+    <div class="card-body collapse show" id="detailsBody">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputId">Id</label>
+                <input type="text" class="form-control details" id="inputId" placeholder="Id" value="@Model.Id" readonly required disabled>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputLogin">Login</label>
+                <input type="text" class="form-control details" id="inputLogin" placeholder="Login" value="@Model.Login" readonly required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputPassword">Password</label>
+                <input type="text" class="form-control details" id="inputPassword" placeholder="Password" value="@Model.Password" readonly required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputEmail">Email</label>
+                <input type="text" class="form-control details" id="inputEmail" placeholder="Email" value="@Model.Email" readonly required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputRole">Role</label>
+                <input type="text" class="form-control details" id="inputRole" placeholder="Role" value="@Model.Role" readonly required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputName">Name</label>
+                <input type="text" class="form-control details" id="inputName" placeholder="Name" value="@Model.Name" readonly required>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputSurname">Surname</label>
+                <input type="text" class="form-control details" id="inputSurname" placeholder="Surname" value="@Model.Surname" readonly required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                @Html.CheckBoxFor(u => u.IsEmailConfirmed, new { onclick = "return false" })
+                <label class="form-check-label" for="IsEmailConfirmed"> Email Confirmed </label>
+                @*<input class="form-check-input" id="inputEmailConfirmed" name="inputEmailConfirmed" type="checkbox" value="@Model.IsEmailConfirmed" readonly />*@
+            </div>
+            <div class="form-group col-md-4">
+                @Html.CheckBoxFor(u => u.IsEmailAuthenticationEnabled, new { onclick = "return false" })
+                <label class="form-check-label" for="IsEmailAuthenticationEnabled"> 2FA Enabled </label>
+                @*<input class="form-check-input" id="input2FA" name="input2FA" type="checkbox" value="@Model.IsEmailAuthenticationEnabled" readonly />*@
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputContactNumber">Contact Number</label>
+                <input type="text" class="form-control details" id="inputContactNumber" placeholder="Number" value="@Model.ContactNumber" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputAddress">Address</label>
+                <input type="text" class="form-control details" id="inputAddress" placeholder="Address" value="@Model.Address" readonly>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputCity">City</label>
+                <input type="text" class="form-control details" id="inputCity" placeholder="City" value="@Model.City" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputZip">Postal Code</label>
+                <input type="text" class="form-control details" id="inputZip" placeholder="Postal Code" value="@Model.PostalCode" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputCountry">Country</label>
+                <input type="text" class="form-control details" id="inputCountry" placeholder="Country" value="@Model.Country" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+    </script>
+}
+<style>
+    .card-header .fa {
+        transition: .3s transform ease-in-out;
+    }
+
+    .card-header .collapsed .fa {
+        transform: rotate(-90deg);
+    }
+</style>
