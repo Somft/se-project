@@ -1,4 +1,4 @@
-﻿@model List<ExBook.Data.BookShelfBook>
+﻿@model List<ExBook.Data.WishListBook>
 <div class="card border">
     <div class="card-header">
         <a data-toggle="collapse" href="#wishlistBody" aria-expanded="true" aria-controls="collapse-example" id="heading-example">
@@ -6,38 +6,40 @@
             Wishlist
         </a>
     </div>
-    <div class="card-body" id="wishlistBody">
+    <div class="card-body" id="wishlistBody" style="max-height: 560px;overflow:auto;">
         @foreach (var book in Model)
         {
-            <div class="list-group">
+            <div class="list-group" style="max-height:280px;">
                 <li class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">List group item heading</h5>
-                        <small>3 days ago</small>
+                        <h5 class="mb-1"><b>"@book.Book.Name"</b> @book.Book.Author</h5>
+                        <small>@book.Book.Created.Value.ToShortDateString()</small>
                     </div>
-                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                    <small>Donec id elit non mi porta.</small>
-                </li>
-                <li class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">List group item heading</h5>
-                        <small class="text-muted">3 days ago</small>
-                    </div>
-                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                    <small class="text-muted">Donec id elit non mi porta.</small>
-                </li>
-                <li class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">List group item heading</h5>
-                        <small class="text-muted">3 days ago</small>
-                    </div>
-                    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                    <small class="text-muted">Donec id elit non mi porta.</small>
+                    <p class="mb-1">
+                        @if (@book.Book.CoverUrl != null)
+                        {
+                            <img src=@ExBook.Extensions.BookCoverExtensions.GetMediumCoverUrl(@book.Book.CoverUrl) alt="Cover" style="width:110px;height:160px;" id="test" onclick="Open('@book.Book.CoverUrl');" />
+                        }
+                        else
+                        {
+                            <img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:110px;height:160px;">
+                        }
+                        <div class="btn-group float-right" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-secondary users" onclick="DeleteWishlistBook('@book.Id');" title="Delete"> <i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </p>
+                    <small>@GetSubjects(@book.Book)</small>
                 </li>
             </div>
         }
     </div>
 </div>
+
+@functions { string GetSubjects(ExBook.Data.Book book)
+    {
+        return String.Join(',', book.Subjects.Select(s => s.Name));
+    }
+}
 
 <style>
     .card-header .fa {

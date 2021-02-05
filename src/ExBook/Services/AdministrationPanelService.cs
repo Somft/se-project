@@ -37,6 +37,26 @@ namespace ExBook.Services
             return transactions;
         }
 
+        public async Task<List<WishListBook>> GetUserWishlist(Guid id)
+        {
+            List<WishListBook> books = await this.applicationDbContext.WishListBooks
+                .Include(t => t.Book)
+                .ThenInclude(t => t.Subjects)
+                .Where(t=> t.WishListId==id)
+                .ToListAsync();
+            return books;
+        }
+
+        public async Task<List<BookShelfBook>> GetUserBookshelf(Guid id)
+        {
+            List<BookShelfBook> books = await this.applicationDbContext.BookShelfBooks
+                .Include(t => t.Book)
+                .ThenInclude(t => t.Subjects)
+                .Where(t => t.BookShelfId == id)
+                .ToListAsync();
+            return books;
+        }
+
         public async Task<List<Rating>> GetRatings()
         {
             List<Rating> ratings = await this.applicationDbContext.Ratings
@@ -52,6 +72,15 @@ namespace ExBook.Services
         {
             return await this.applicationDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
+        public async Task<BookShelfBook> GetBookshelfBookById(Guid id)
+        {
+            return await this.applicationDbContext.BookShelfBooks.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<WishListBook> GetWishlistBookById(Guid id)
+        {
+            return await this.applicationDbContext.WishListBooks.FirstOrDefaultAsync(u => u.Id == id);
+        }
 
         public async Task DeleteUserById(Guid id)
         {
@@ -59,6 +88,25 @@ namespace ExBook.Services
             if (user != null)
             {
                 this.applicationDbContext.Remove(user);
+                await this.applicationDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteBookshelfBookById(Guid id)
+        {
+            var book = await this.applicationDbContext.BookShelfBooks.FirstOrDefaultAsync(u => u.Id == id);
+            if (book != null)
+            {
+                this.applicationDbContext.Remove(book);
+                await this.applicationDbContext.SaveChangesAsync();
+            }
+        }
+        public async Task DeleteWishlistBookById(Guid id)
+        {
+            var book = await this.applicationDbContext.WishListBooks.FirstOrDefaultAsync(u => u.Id == id);
+            if (book != null)
+            {
+                this.applicationDbContext.Remove(book);
                 await this.applicationDbContext.SaveChangesAsync();
             }
         }

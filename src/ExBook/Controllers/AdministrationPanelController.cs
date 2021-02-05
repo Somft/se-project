@@ -57,6 +57,54 @@ namespace ExBook.Controllers
             return PartialView("_TransactionsTab", allTransactions);
         }
 
+        public async Task<ActionResult> ShowUserWishlistAsync(string userId)
+        {
+            Guid id = Guid.Parse(userId);
+            var user = await administrationPanelService.GetUserById(id);
+            List<WishListBook> wishlistBooks=new List<WishListBook>();
+            if (user.WishLists!= null&& user.WishLists.Count != 0)
+                wishlistBooks = await administrationPanelService.GetUserWishlist(user.WishLists.FirstOrDefault().Id);
+
+            return PartialView("_UserWishlist", wishlistBooks);
+        }
+
+        public async Task<ActionResult> ShowUserBookshelfAsync(string userId)
+        {
+            Guid id = Guid.Parse(userId);
+            var user = await administrationPanelService.GetUserById(id);
+            List<BookShelfBook> bookshelfBooks = new List<BookShelfBook>();
+            if (user.BookShelves != null && user.BookShelves.Count != 0)
+                bookshelfBooks = await administrationPanelService.GetUserBookshelf(user.BookShelves.FirstOrDefault().Id);
+
+            return PartialView("_UserBookshelf", bookshelfBooks);
+        }
+        public async Task<ActionResult> DeleteBookshelfBookConfirmation(string bookId)
+        {
+            Guid id = Guid.Parse(bookId);
+            var book = await administrationPanelService.GetBookshelfBookById(id);
+            return PartialView("_DeleteBookshelfBook", book);
+        }
+
+        public async Task<ActionResult> DeleteWishlistBookConfirmation(string bookId)
+        {
+            Guid id = Guid.Parse(bookId);
+            var book = await administrationPanelService.GetWishlistBookById(id);
+            return PartialView("_DeleteWishlistBook", book);
+        }
+
+        public async Task<IActionResult> DeleteBookshelfBookAsync(Guid bookId)
+        {
+            await administrationPanelService.DeleteBookshelfBookById(bookId);
+            return this.RedirectToAdminPanel();
+        }
+
+        public async Task<IActionResult> DeleteWishlistBookAsync(Guid bookId)
+        {
+            await administrationPanelService.DeleteWishlistBookById(bookId);
+            return this.RedirectToAdminPanel();
+        }
+
+
         public async Task<ActionResult> DeleteUserConfirmation(string userId)
         {
             Guid id = Guid.Parse(userId);

@@ -48,8 +48,9 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="@Url.Action("Index", "Transaction", new { id = @transaction.Id })" class="btn btn-secondary users">Details</a>
-                                <a onclick="DeleteTransaction('@transaction.Id');" class="btn btn-secondary">Delete</a>
+                               
+                                <a href="@Url.Action("Index", "Transaction", new { id = @transaction.Id })" class="btn btn-secondary users" title="Details"><i class="fas fa-info-circle"></i></a>
+                                <a onclick="DeleteTransaction('@transaction.Id');" class="btn btn-secondary"><i class="fas fa-trash-alt"  title="Delete"></i></a>
                             </div>
                         </td>
                     </tr>
