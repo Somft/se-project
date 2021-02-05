@@ -1,10 +1,9 @@
-﻿using ExBook.Data;
-using ExBook.Models.AddToWhishList;
+using ExBook.Data;
+using ExBook.Models.AddToBookShelf;
 using ExBook.OpenLibrary;
 using ExBook.OpenLibrary.Dto;
 
 using Microsoft.EntityFrameworkCore;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,29 +11,29 @@ using System.Threading.Tasks;
 
 namespace ExBook.Services
 {
-    public class AddToWishListService
+    public class AddToBookShelfService
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly OpenLibraryClient openLibraryClient;
 
-        public AddToWishListService(ApplicationDbContext applicationDbContext, OpenLibraryClient openLibraryClient)
+        public AddToBookShelfService(ApplicationDbContext applicationDbContext, OpenLibraryClient openLibraryClient)
         {
             this.applicationDbContext = applicationDbContext;
             this.openLibraryClient = openLibraryClient;
         }
         
-        public async Task<bool> AddBook(AddToWishListViewModel book, Guid? user)
+         public async Task<bool> AddBookToBookshelf(AddToBookShelfViewModel book, Guid? user)
         {
             
-            WishList userWishList = this.applicationDbContext.WishLists.FirstOrDefault(b => b.UserId == user); // whishlist from current user
-            if ( userWishList == null)
+            BookShelf? userBookShelf = this.applicationDbContext.BookShelves.FirstOrDefault(b => b.UserId == user); // bookshelf from current user
+            if ( userBookShelf == null)
             {
-                userWishList = new WishList()
+                userBookShelf = new BookShelf()
                 {
                     Id = Guid.NewGuid(),
                     UserId = user.Value
                 };
-                this.applicationDbContext.Add(userWishList);
+                this.applicationDbContext.Add(userBookShelf);
             }
 
             book.Name = book.Name.Trim();
@@ -43,13 +42,21 @@ namespace ExBook.Services
             if (bok != null) //book already exists
             {
 
-                if (await this.applicationDbContext.WishListBooks.AnyAsync(b => b.WishListId == userWishList.Id && b.BookId == bok.Id)) // exists in wishlist? throw error
+                if (await this.applicationDbContext.BookShelfBooks.AnyAsync(b => b.BookShelfId == userBookShelf.Id && b.BookId == bok.Id && b.IsRemoved == false && b.IsLocked == false )) // exists in bookshelf? throw error
                 {
                     return false;
                 }
+                if (await this.applicationDbContext.BookShelfBooks.AnyAsync(b => b.BookShelfId == userBookShelf.Id && b.BookId == bok.Id && b.IsRemoved == true && b.IsLocked == false ))
+                {
+                    BookShelfBook ?bookToBringBack = this.applicationDbContext.BookShelfBooks.FirstOrDefault(b =>
+                        b.BookShelfId == userBookShelf.Id && b.BookId == bok.Id);
+                        bookToBringBack.IsRemoved = false;
+                        await this.applicationDbContext.SaveChangesAsync();
+                        return true;
+                }
                 else // if no, add to wishlist
                 {
-                    userWishList.WishListBooks.Add(new WishListBook()
+                    userBookShelf.BookShelfBooks.Add(new BookShelfBook()
                     {
                         Id = Guid.NewGuid(),
                         BookId = bok.Id
@@ -61,7 +68,7 @@ namespace ExBook.Services
             {
                 Book bok2 = null;
                 List<Subject> subjectslist = null;
-                var bookAPI = await SearchBook(book.Name, book.Author);
+                var bookAPI = await this.SearchBook(book.Name, book.Author);
                 if (bookAPI != null)
                 {
                     bok2 = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == bookAPI.Title);
@@ -87,7 +94,7 @@ namespace ExBook.Services
                    };
                     this.applicationDbContext.Books.Add(bok);
 
-                    userWishList.WishListBooks.Add(new WishListBook()
+                    userBookShelf.BookShelfBooks.Add(new BookShelfBook()
                     {
                         Id = Guid.NewGuid(),
                         BookId = bok.Id
@@ -95,13 +102,13 @@ namespace ExBook.Services
                 }
                 else //book exists in database
                 {
-                    if (await this.applicationDbContext.WishListBooks.AnyAsync(b => b.WishListId == userWishList.Id && b.BookId == bok2.Id)) // exists in wishlist? throw error
+                    if (await this.applicationDbContext.BookShelfBooks.AnyAsync(b => b.BookShelfId == userBookShelf.Id && b.BookId == bok2.Id)) // exists in wishlist? throw error
                     {
                         return false;
                     }
                     else // if no, add to wishlist
                     {
-                        userWishList.WishListBooks.Add(new WishListBook()
+                        userBookShelf.BookShelfBooks.Add(new BookShelfBook()
                         {
                             Id = Guid.NewGuid(),
                             BookId = bok2.Id
@@ -118,24 +125,23 @@ namespace ExBook.Services
 
             return true;
         }
+         
+         public async Task<OpenLibraryBook?> SearchBook(string? title, string? author)
+         {
+             return await openLibraryClient.SearchBook(title, author);
+         }
+         
+         public async Task<bool> RemoveBook(Guid Id)
+         {
+            
+             BookShelfBook bok = this.applicationDbContext.BookShelfBooks.FirstOrDefault(b => b.BookId == Id);
 
-        public async Task<bool> RemoveBook(Guid Id)
-        {
-            
-            WishListBook bok = this.applicationDbContext.WishListBooks.FirstOrDefault(b => b.BookId == Id);
-            
-            
-            this.applicationDbContext.WishListBooks.Remove(bok);
-           
-            
-            await this.applicationDbContext.SaveChangesAsync();
+             bok.IsRemoved = true;
 
-            return true;
-        }
+             await this.applicationDbContext.SaveChangesAsync();
 
-        public async Task<OpenLibraryBook?> SearchBook(string? title, string? author)
-        {
-            return await openLibraryClient.SearchBook(title, author);
-        }
+             return true;
+         }
+
     }
 }

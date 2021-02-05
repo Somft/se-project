@@ -12,6 +12,8 @@
     <EmbeddedResource Remove="Views\Authorization\**" />
     <EntityDeploy Remove="Views\Authorization\**" />
     <None Remove="Views\Authorization\**" />
+    <Content Remove="Views\AddToBookShelf\Index2.cshtml" />
+    <Compile Remove="Views\AddToBookShelf\Index2.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,5 +37,9 @@
     <ProjectReference Include="..\ExBook.Extensions\ExBook.Extensions.csproj" />
     <ProjectReference Include="..\ExBook.Mails\ExBook.Mails.csproj" />
     <ProjectReference Include="..\ExBook.OpenLibrary\ExBook.OpenLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\AddToBookShelf\AddBookToShelf.cshtml" />
   </ItemGroup>
 </Project>

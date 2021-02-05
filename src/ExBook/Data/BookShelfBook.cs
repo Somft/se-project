@@ -16,6 +16,7 @@ namespace ExBook.Data
         public Guid Id { get; set; }
         public Guid? Photo { get; set; }
         public bool IsLocked { get; set; }
+        public bool IsRemoved { get; set; }
         public Guid BookId { get; set; }
         public Guid BookShelfId { get; set; }
 

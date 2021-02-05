@@ -58,19 +58,19 @@
     <td>@book.Book.Author</td>
     @if (@book.Book.CoverUrl != null)
     {
-        <td><img src=@book.Book.CoverUrl alt="Cover" style="width:32px;height:32px;" onclick="Open('@book.Book.CoverUrl');"></td>
+        <td><img src=@ExBook.Extensions.BookCoverExtensions.GetSmallCoverUrl(@book.Book.CoverUrl) alt="Cover"  onclick="Open('@book.Book.CoverUrl');"></td>
     }
     else
     {
-        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:32px;height:32px;"></td>
+        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:36px;height:58px;"></td>
     }
     @if (@book.Photo != null)
     {
-        <td><img src=@book.Photo alt="Real Photo" style="width:32px;height:32px;" onclick="Open('@book.Photo');"></td>
+        <td><img src=@book.Photo alt="Real Photo" style="width:36px;height:58px;" onclick="Open('@book.Photo');"></td>
     }
     else
     {
-        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Real Photo" style="width:32px;height:32px;"></td>
+        <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Real Photo" style="width:36px;height:58px;"></td>
     }
 
     <form asp-controller="Transaction" asp-route-id="@book.Id" asp-action="Initialize" method="post">
@@ -89,7 +89,7 @@
                 $.ajax({
                     type: "Get",
                     url: '@Url.Action("FullSizeCover", "Search")',
-                    data: { CoverUrl: cover },
+                    data: { Cover: cover },
                     success: function (data) {
                         $('#coverModal').html(data);
                         $('#coverModal').modal('show');

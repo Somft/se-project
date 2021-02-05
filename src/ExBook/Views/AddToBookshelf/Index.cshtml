@@ -1,6 +1,6 @@
-﻿@model ExBook.Models.AddToWhishList.AddToWishListViewModel
+@model ExBook.Models.AddToBookShelf.AddToBookShelfViewModel
 @{
-    ViewData["Title"] = "Add Book To Wish List";
+    ViewData["Title"] = "Add Book To bookshelf";
 }
 <style>
     .vertical-center {
@@ -21,13 +21,13 @@
 <div>
     <div class="card login-card shadow-sm">
         <div class="card-body">
-            <h3 class="card-title text-left mb-4 mt-1">Add a book to your wish list</h3>
+            <h3 class="card-title text-left mb-4 mt-1">Add a book to your bookshelf</h3>
             <hr>
             @if (Model.Message != null)
             {
                 <p class="text-danger text-center">@Model.Message</p>
             }
-            <form asp-controller="AddToWishList" asp-action="Index" method="post">
+            <form asp-controller="AddToBookshelf" asp-action="Index" method="post">
                 <div class="form-group">
                     <label for="Book title:">Name</label>
                     <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
