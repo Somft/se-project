@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ExBook.Models.Home;
+using ExBook.Services;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +12,19 @@ namespace ExBook.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly HomeService homeService;
+
+        public HomeController(HomeService homeService)
         {
-            return this.View();
+            this.homeService = homeService;
+        }
+        [HttpGet]
+        public async Task<IActionResult> IndexAsync()
+        {
+            return this.View(new HomeViewModel()
+            {
+                LatestBooks = await this.homeService.GetLatestBooksAsync()
+            });
         }
 
         [HttpGet]

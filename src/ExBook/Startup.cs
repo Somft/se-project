@@ -37,6 +37,7 @@ namespace ExBook
             services.AddTransient<UserAccountService>();
             services.AddTransient<BookShelfService>();
             services.AddTransient<AddToBookShelfService>();
+            services.AddTransient<HomeService>();
             
 
             services.AddTransient<OpenLibraryClient>();
