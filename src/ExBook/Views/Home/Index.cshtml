@@ -147,12 +147,22 @@
                 <p>Saturday: 8:00-13:00</p>
                 <p>Sunday: Unfortunately, our phone service isn't available</p>
 
-            </div>
-            <div class="col-12">
-                <hr class="light">
-                <h5>&copy: ex-book.piura.pl</h5>
+                </div>
+                <div class="col-12">
+                    <hr class="light">
+                    <h5>&copy ex-book.piura.pl @GetVersion()</h5>
+                </div>
             </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
+
+
+@functions {
+    @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+    private string GetVersion()
+    {
+        return Configuration["App:Version"] ?? "";
+    }
+}

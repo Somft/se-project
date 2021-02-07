@@ -94,7 +94,11 @@ namespace ExBook.Services
 
         public async Task DeleteBookshelfBookById(Guid id)
         {
-            var book = await this.applicationDbContext.BookShelfBooks.FirstOrDefaultAsync(u => u.Id == id);
+            var book = await this.applicationDbContext.BookShelfBooks
+                .Include(b => b.InitiatorTransactions)
+                .Include(b => b.RecipientTransactions)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
             if (book != null)
             {
                 this.applicationDbContext.Remove(book);

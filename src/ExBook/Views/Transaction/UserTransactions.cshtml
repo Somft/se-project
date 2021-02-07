@@ -1,9 +1,239 @@
-﻿@using ExBook.Extensions
-@using ExBook.Data
+﻿@using ExBook.Data
+@using ExBook.Extensions
 
-@model ExBook.Models.Transaction.TransactionViewModel
+@model ExBook.Models.Transactions.UserTransactionsViewModel
 @{
     ViewData["Title"] = "Transactions";
 }
 
-Transactions
+@{
+    Func<Transaction, Microsoft.AspNetCore.Html.IHtmlContent> RenderTransactionLink =
+    @<form asp-controller="Transaction"
+           asp-action="Index"
+           method="get"
+           class="p-2">
+        <input type="hidden" name="id" value=@item.Id />
+        <input type="submit" value="More..." class="btn btn-primary btn-sm " />
+    </form>;
+
+Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderBooks =
+@<span>
+    @if (item.Any())
+    {
+        int max = 3;
+
+        @string.Join(", ", item.Select(b => b.Book.Name).Take(max));
+
+        @if (item.Count() > 3)
+        {
+            @(", ...")
+        }
+    }
+    else
+    {
+        @("-")
+    }
+</span>;
+}
+
+@if (Model.Accepted.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            Accepted transactions
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator / Recipient books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
+
+                @foreach (var transaction in Model.Accepted)
+                {
+                    var isInitiator = (this.Context.User.GetId() ?? Guid.Empty) == transaction.InitiatorId;
+
+                    <tr>
+                        <td>@UserName(transaction.Recipient)</td>
+                        <td>@RenderBooks(isInitiator ? transaction.InitiatorBooks : transaction.RecipientBooks)</td>
+                        <td>@RenderBooks(!isInitiator ? transaction.InitiatorBooks : transaction.RecipientBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.Rejected.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            Rejected transactions
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
+
+                @foreach (var transaction in Model.Rejected)
+                {
+                    <tr>
+                        <td>@UserName(transaction.Recipient)</td>
+                        <td>@RenderBooks(transaction.InitiatorBooks)</td>
+                        <td>@RenderBooks(transaction.RecipientBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                            <form asp-controller="Transaction"
+                                  asp-action="Remove"
+                                  asp-route-transactionId="@transaction.Id"
+                                  method="post"
+                                  class="p-2">
+                                <input type="submit" value="Remove" class="btn btn-danger btn-sm " />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.ToReview.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            To review
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
+
+                @foreach (var transaction in Model.ToReview)
+                {
+                    <tr>
+                        <td>@UserName(transaction.Initiator)</td>
+                        <td>@RenderBooks(transaction.RecipientBooks)</td>
+                        <td>@RenderBooks(transaction.InitiatorBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                            <form asp-controller="Transaction"
+                                  asp-action="Reject"
+                                  asp-route-transactionId="@transaction.Id"
+                                  method="post"
+                                  class="p-2">
+                                <input type="submit" value="Reject" class="btn btn-danger btn-sm " />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.Waiting.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            Waiting for review
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
+
+                @foreach (var transaction in Model.Waiting)
+                {
+                    <tr>
+                        <td>@UserName(transaction.Recipient)</td>
+                        <td>@RenderBooks(transaction.InitiatorBooks)</td>
+                        <td>@RenderBooks(transaction.RecipientBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.Drafts.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            Drafts
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
+
+                @foreach (var transaction in Model.Drafts)
+                {
+                    <tr>
+                        <td>@UserName(transaction.Recipient)</td>
+                        <td>@RenderBooks(transaction.InitiatorBooks)</td>
+                        <td>@RenderBooks(transaction.RecipientBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                            <form asp-controller="Transaction"
+                                  asp-action="Remove"
+                                  asp-route-transactionId="@transaction.Id"
+                                  method="post"
+                                  class="p-2">
+                                <input type="submit" value="Remove" class="btn btn-danger btn-sm " />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+
+
+
+@if (!Model.ToReview.Any() && !Model.Waiting.Any() && !Model.Rejected.Any())
+{
+    <div class="alert alert-info" role="alert" style="margin: 0 auto; margin-top: 30px; width: max-content">
+        You don't have any active trasaction.
+    </div>
+}
+
+<style>
+    .card
+    {
+        margin: 30px;
+    }
+</style>
+
+@functions {
+    private string UserName(User user)
+    {
+        return user.Name + " " + user.Surname;
+    }
+}

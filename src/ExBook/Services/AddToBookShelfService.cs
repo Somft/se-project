@@ -42,7 +42,8 @@ namespace ExBook.Services
             if (bok != null) //book already exists
             {
 
-                if (await this.applicationDbContext.BookShelfBooks.AnyAsync(b => b.BookShelfId == userBookShelf.Id && b.BookId == bok.Id && b.IsRemoved == false && b.IsLocked == false )) // exists in bookshelf? throw error
+                if (await this.applicationDbContext.BookShelfBooks
+                    .AnyAsync(b => b.BookShelfId == userBookShelf.Id && b.BookId == bok.Id && b.IsRemoved == false && b.IsLocked == false )) // exists in bookshelf? throw error
                 {
                     return false;
                 }
