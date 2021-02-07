@@ -31,8 +31,13 @@ namespace ExBook.Services
 
         public async Task<User> UpdateData(Guid? userId, User sentUserData)
         {
-            User currentUser = await GetUser(sentUserData.Id);
+            User currentUser = await GetUser(userId);
             currentUser.ContactNumber = sentUserData.ContactNumber;
+            currentUser.Login = sentUserData.Login;
+            currentUser.Password = sentUserData.Password;
+            currentUser.Email = sentUserData.Email;
+            currentUser.Name = sentUserData.Name;
+            currentUser.Surname = sentUserData.Surname;
             currentUser.Address = sentUserData.Address;
             currentUser.PostalCode = sentUserData.PostalCode;
             currentUser.City = sentUserData.City;
