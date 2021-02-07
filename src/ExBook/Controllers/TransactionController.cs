@@ -1,6 +1,6 @@
 ﻿using ExBook.Data;
 using ExBook.Extensions;
-using ExBook.Models.Transaction;
+using ExBook.Models.Transactions;
 using ExBook.Services;
 
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace ExBook.Controllers
             this.dbContext = applicationDbContext;
             this.initializeTransactionService = initializeTransactionService;
 
-        }        
+        }
 
         [HttpGet]
         [Route("/transation")]
@@ -67,7 +67,25 @@ namespace ExBook.Controllers
         [Route("/transactions")]
         public async Task<IActionResult> UserTransactions()
         {
-            return View();
+            Guid userId = this.HttpContext.User.GetId()!.Value;
+
+            return this.View(new UserTransactionsViewModel()
+            {
+                ToReview = await this.dbContext.Transactions
+                    .Where(t => t.RecipientId == userId)
+                    .Where(t => t.Status == Transaction.Statuses.Reviewed)
+                    .ToListAsync(),
+
+                Waiting = await this.dbContext.Transactions
+                    .Where(t => t.InitiatorId == userId)
+                    .Where(t => t.Status == Transaction.Statuses.Reviewed)
+                    .ToListAsync(),
+
+                Rejected = await this.dbContext.Transactions
+                    .Where(t => t.InitiatorId == userId)
+                    .Where(t => t.Status == Transaction.Statuses.Rejected)
+                    .ToListAsync(),
+            });
         }
 
         [HttpPost]
@@ -81,7 +99,7 @@ namespace ExBook.Controllers
 
             if (initiator.Id == recipient.Id)
             {
-                return BadRequest();
+                return this.BadRequest();
             }
 
             var transaction = new Transaction
@@ -125,6 +143,50 @@ namespace ExBook.Controllers
                 id = transaction.Id,
             });
         }
+
+        [HttpPost]
+        [Route("/transation/accept")]
+        public async Task<IActionResult> Accept(Guid transactionId)
+        {
+            Transaction transaction = await this.dbContext.Transactions
+                .SingleAsync(t => t.Id == transactionId);
+
+            await this.dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction("Index", new
+            {
+                id = transaction.Id,
+            });
+        }
+
+        [HttpPost]
+        [Route("/transation/reject")]
+        public async Task<IActionResult> Reject(Guid transactionId)
+        {
+            Transaction transaction = await this.dbContext.Transactions
+                .SingleAsync(t => t.Id == transactionId);
+
+            transaction.Status = Transaction.Statuses.Rejected;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction(nameof(UserTransactions));
+        }
+
+        [HttpPost]
+        [Route("/transation/remove")]
+        public async Task<IActionResult> Remove(Guid transactionId)
+        {
+            Transaction transaction = await this.dbContext.Transactions
+                .SingleAsync(t => t.Id == transactionId);
+
+            transaction.Status = Transaction.Statuses.Removed;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction(nameof(UserTransactions));
+        }
+
 
         [HttpPost]
         [Route("/transation/books/recipient/add")]

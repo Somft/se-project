@@ -1,7 +1,7 @@
 ﻿@using ExBook.Extensions
 @using ExBook.Data
 
-@model ExBook.Models.Transaction.TransactionViewModel
+@model ExBook.Models.Transactions.TransactionViewModel
 @{
     ViewData["Title"] = "Transaction";
 }
@@ -161,7 +161,7 @@
     </div>
 
     <div class="col-12 col-md-12 p-2">
-        <div class="card text-right p-2">
+        <div class="card text-right p-2 flex-row-reverse">
             @if (IsInitiatorLogged())
             {
                 @if (this.Model.Transaction.Status == Transaction.Statuses.Initialized)
@@ -176,9 +176,54 @@
 
                 @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
                 {
-                    <div class="alert alert-info" role="alert" style="width: max-content;">
+                    <div class="alert alert-info" role="alert" style="width: max-content; margin: 0 auto">
                         This transaction is currently reviewed.
                     </div>
+                }
+
+                @if (this.Model.Transaction.Status == Transaction.Statuses.Rejected)
+                {
+                    <form asp-controller="Transaction"
+                          asp-action="Remove"
+                          asp-route-transactionId="@Model.Transaction.Id"
+                          method="post"
+                          class="p-2">
+                        <input type="submit" value="Remove" class="btn btn-danger btn-sm " />
+                    </form>
+
+                    <form asp-controller="Transaction"
+                          asp-action="Retry"
+                          asp-route-transactionId="@Model.Transaction.Id"
+                          method="post"
+                          class="p-2">
+                        <input type="submit" value="Retry" class="btn btn-primary btn-sm " />
+                    </form>
+
+                    <div class="alert alert-warning p-2" role="alert" style="width: max-content">
+                        This transaction was rejected.
+                    </div>
+                }
+            }
+
+            @if (IsRecipiedLogged())
+            {
+                @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
+                {
+                    <form asp-controller="Transaction"
+                          asp-action="Reject"
+                          asp-route-transactionId="@Model.Transaction.Id"
+                          method="post"
+                          class="p-2">
+                        <input type="submit" value="Reject" class="btn btn-danger btn-sm " />
+                    </form>
+
+                    <form asp-controller="Transaction"
+                          asp-action="Accept"
+                          asp-route-transactionId="@Model.Transaction.Id"
+                          method="post"
+                          class="p-2">
+                        <input type="submit" value="Accept" class="btn btn-primary btn-sm " />
+                    </form>
                 }
             }
         </div>

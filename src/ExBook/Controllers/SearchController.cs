@@ -1,7 +1,4 @@
-﻿using ExBook.Data;
-using ExBook.Extensions;
-using ExBook.Models;
-using ExBook.Models.Authentication;
+﻿using ExBook.Extensions;
 using ExBook.Models.Search;
 using ExBook.Services;
 
@@ -10,9 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace ExBook.Controllers
@@ -31,7 +25,7 @@ namespace ExBook.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> IndexAsync(string filterTitle, string filterAuthor, bool filterAvailable, string filterSubject)
         {
-            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterAuthor) || filterAvailable|| !string.IsNullOrEmpty(filterSubject))
+            if (!string.IsNullOrEmpty(filterTitle) || !string.IsNullOrEmpty(filterAuthor) || filterAvailable || !string.IsNullOrEmpty(filterSubject))
             {
                 return this.HttpContext.User.Identity.IsAuthenticated
                  ? await this.SearchBooks(filterTitle, filterAuthor, filterAvailable, filterSubject)
@@ -42,8 +36,8 @@ namespace ExBook.Controllers
                 return this.HttpContext.User.Identity.IsAuthenticated
                     ? this.View(new SearchBookViewModel()
                     {
-                        Books = await searchService.GetAllAvailableBooks(),
-                        Subjects = new SelectList(await searchService.GetAllSubjectsNames()),
+                        Books = await this.searchService.GetAllAvailableBooks(),
+                        Subjects = new SelectList(await this.searchService.GetAllSubjectsNames()),
                         FilterTitle = null,
                         FilterAuthor = null,
                         FilterAvailable = false,
@@ -59,8 +53,8 @@ namespace ExBook.Controllers
         {
             return this.View("Index", new SearchBookViewModel()
             {
-                Books = await searchService.GetBooksFiltered(filterTitle, filterAuthor, filterAvailable, filterSubject),
-                Subjects = new SelectList(await searchService.GetAllSubjectsNames()),
+                Books = await this.searchService.GetBooksFiltered(filterTitle, filterAuthor, filterAvailable, filterSubject),
+                Subjects = new SelectList(await this.searchService.GetAllSubjectsNames()),
                 FilterTitle = filterTitle,
                 FilterAuthor = filterAuthor,
                 FilterAvailable = filterAvailable,
@@ -76,7 +70,7 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.View("Bookshelves", new SearchBookShelfBookViewModel()
                 {
-                    BookShelfBooks = await searchService.GetBookShelfBooksById(Id, this.HttpContext.User.GetId().Value)
+                    BookShelfBooks = await this.searchService.GetBookShelfBooksById(Id, this.HttpContext.User.GetId().Value)
                 })
                 : this.RedirectToHome() as IActionResult;
         }
@@ -97,7 +91,7 @@ namespace ExBook.Controllers
                 return this.HttpContext.User.Identity.IsAuthenticated
                     ? this.View("Bookshelves", new SearchBookShelfBookViewModel()
                     {
-                        BookShelfBooks = await searchService.GetAllBookShelfBooks(),
+                        BookShelfBooks = await this.searchService.GetAllBookShelfBooks(),
                         FilterTitle = null,
                         FilterLogin = null
                     })
@@ -110,7 +104,7 @@ namespace ExBook.Controllers
         {
             return this.View("Bookshelves", new SearchBookShelfBookViewModel()
             {
-                BookShelfBooks = await searchService.GetBookShelfBooksFiltered(filterTitle, filterLogin),
+                BookShelfBooks = await this.searchService.GetBookShelfBooksFiltered(filterTitle, filterLogin),
                 FilterTitle = filterTitle,
                 FilterLogin = filterLogin
             });
@@ -121,14 +115,13 @@ namespace ExBook.Controllers
         {
             if (this.HttpContext.User.Identity.IsAuthenticated)
             {
-                Guid bookId;
-                if (Guid.TryParse(Id, out bookId))
+                if (Guid.TryParse(Id, out Guid bookId))
                 {
-                    await searchService.AddToWishList(Guid.Parse(Id), this.HttpContext.User.GetId().Value);
-                    return Json(true);
+                    await this.searchService.AddToWishList(Guid.Parse(Id), this.HttpContext.User.GetId().Value);
+                    return this.Json(true);
                 }
             }
-            return Json(false);
+            return this.Json(false);
         }
 
         /// <summary>
@@ -140,11 +133,15 @@ namespace ExBook.Controllers
         {
             string CoverUrl;
             if (!Cover.Contains("https:"))
+            {
                 CoverUrl = ExBook.Extensions.BookCoverExtensions.GetLargeCoverUrl(Cover);
+            }
             else
+            {
                 CoverUrl = Cover;
+            }
 
-            return PartialView("_FullSizeCover", CoverUrl);
+            return this.PartialView("_FullSizeCover", CoverUrl);
         }
 
 

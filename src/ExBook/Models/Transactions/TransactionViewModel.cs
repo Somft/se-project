@@ -3,11 +3,11 @@
 using System.Collections.Generic;
 
 
-namespace ExBook.Models.Transaction
+namespace ExBook.Models.Transactions
 {
     public class TransactionViewModel
     {
-        public Data.Transaction Transaction { get; set; } = null!;
+        public Transaction Transaction { get; set; } = null!;
         public BookShelfBook initialBook { get; set; } = null!;
         public ICollection<BookShelfBook> InitiatorBooks { get; set; } = null!;
         public ICollection<BookShelfBook> RecipientBooks { get; set; } = null!;

@@ -3,7 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Hosting;
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace ExBook
 {
@@ -11,6 +14,7 @@ namespace ExBook
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine($"ExBook {GetAppVersion()}");
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -27,9 +31,20 @@ namespace ExBook
                          .ToList()
                          .ForEach(source => config.AddJsonFile(source!.Path.Replace(".json", "") + ".secrets.json", true));
 
+
+                        config.AddInMemoryCollection(new Dictionary<string, string>
+                        {
+                            { "App:Version", GetAppVersion() }
+                        });
                     });
                     webBuilder.UseStartup<Startup>();
                 });
+        }
+
+        private static string GetAppVersion()
+        {
+            AssemblyName assemblyInfo = typeof(Program).Assembly.GetName();
+            return "V" + assemblyInfo.Version?.ToString() ?? "0";
         }
     }
 }
