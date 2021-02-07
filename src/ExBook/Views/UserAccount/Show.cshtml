@@ -1,45 +1,97 @@
-﻿@model ExBook.Models.UserAccountViewModel
+﻿@model ExBook.Data.User
+<div class="container flex align-items-center " style="height:100%;">
+    <div class="row justify-content-center align-items-center" style="height:90vh;">
+        <form asp-controller="UserAccount" asp-action="Update">
+            <div class="card">
+                <div class="card-header align-items-center">
+                    User Details
+                    <div class="btn-group float-right" role="group" aria-label="Basic example">
+                        <a onclick="EditUser();" class="btn btn-outline-secondary users" title="Edit"> <i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-4">
+                            <label for="inputLogin">Login</label>
+                            <input type="text" class="form-control details" id="Login" name="Login" placeholder="Login" value="@Model.Login" readonly required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputPassword">Password</label>
+                            <input type="text" class="form-control details" id="Password" name="Password" placeholder="Password" value="@Model.Password" readonly required>
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-4">
+                            <label for="inputEmail">Email</label>
+                            <input type="text" class="form-control details" id="Email" name="Email" placeholder="Email" value="@Model.Email" readonly required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputContactNumber">Contact Number</label>
+                            <input type="text" class="form-control details" id="ContactNumber" name="ContactNumber" placeholder="Number" value="@Model.ContactNumber" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-4">
+                            <label for="inputName">Name</label>
+                            <input type="text" class="form-control details" id="Name" name="Name" placeholder="Name" value="@Model.Name" readonly required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputSurname">Surname</label>
+                            <input type="text" class="form-control details" id="Surname" name="Surname" placeholder="Surname" value="@Model.Surname" readonly required>
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-4">
+                            <label for="inputAddress">Address</label>
+                            <input type="text" class="form-control details" id="Address" name="Address" placeholder="Address" value="@Model.Address" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCity">City</label>
+                            <input type="text" class="form-control details" id="City" name="City" placeholder="City" value="@Model.City" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-4">
+                            <label for="inputZip">Postal Code</label>
+                            <input type="text" class="form-control details" id="PostalCode" name="PostalCode" placeholder="Postal Code" value="@Model.PostalCode" readonly>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputCountry">Country</label>
+                            <input type="text" class="form-control details" id="Country" name="Country" placeholder="Country" value="@Model.Country" readonly>
+                        </div>
+                    </div>
 
-<h2>
-    User's personal data
-</h2>
-
-<div class="user-data">
-    <table class="table table-striped">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Login</th>
-            <th scope="col">E-mail</th>
-            <th scope="col">Name</th>
-            <th scope="col">Role</th>
-            <th scope="col">Is administrator</th>
-            <th scope="col">Contact</th>
-            <th scope="col">Address</th>
-            <th scope="col">Postal Code</th>
-            <th scope="col">City</th>
-            <th scope="col">Country</th>
-        </tr>
-        @{var user = Model.ModifiedUser;
-            <tr>
-                <td>@user.Id</td>
-                <td>@user.Login</td>
-                <td>@user.Email</td>
-                <td>@($"{user.Name} {user.Surname}")</td>
-                <td>@user.Role</td>
-                <td>@user.IsEmailConfirmed</td>
-                <td>@($"{user.ContactNumber??"No data"}") </td>
-                <td>@($"{user.Address??"No data"}") </td>
-                <td>@($"{user.PostalCode??"No data"}") </td>
-                <td>@($"{user.City??"No data"}") </td>
-                <td>@($"{user.Country??"No data"}") </td>
-            </tr>
-            }
-    </table>
-</div>
-<form asp-controller="UserAccount" asp-action="Edit" method="get">
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-2">Edit </button>
+                </div>
+                <div class="card-footer">
+                    <div class="float-right buttons " style="visibility:hidden;" id="footerButtons">
+                        <button type="submit" class="btn btn-primary btn-sm" title="Save">Save</button>
+                        <a href="@Url.Action("Index", "UserAccount")" class="btn btn-primary btn-sm" title="Cancel"> Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-</form> 
-    
+</div>
 
+
+
+    @section Scripts
+{
+        <script type="text/javascript">
+            function EditUser() {
+                var footer = document.getElementById("footerButtons");
+                $('.details').each(function () {
+                    $(this).removeAttr('readonly');
+                });
+                footer.style.visibility = "visible";
+            };
+
+        </script>
+    }
+
+    <style>
+        .col-md-4 {
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+    </style>

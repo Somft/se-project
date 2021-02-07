@@ -1,12 +1,12 @@
 ﻿@model ExBook.Models.Search.SearchBookViewModel
 @{ ViewData["Title"] = "Search"; }
 
-<div class="card searchbar-card shadow-sm">
+<div class="modal fade " id="coverModal" role="dialog"></div>
+<div class="card searchbar-card shadow-sm sticky-top">
     <div class="card-header">
         Search Books
     </div>
-    <div class="card-body">
-        <div class="modal fade " id="coverModal" role="dialog"></div>
+    <div class="card-body ">
         <form asp-controller="Search" asp-action="Index" method="get">
             <div class="form-row align-items-center">
                 <div class="col-auto">
@@ -51,74 +51,74 @@
     </div>
 </div>
 </div>
-<div class="books">
-    <table class="table table-striped">
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Cover</th>
-            <th scope="col">Available</th>
-            <th scope="col">Add to wishlist</th>
-        </tr>
+<div class="books flex">
+    <div class="row" style="margin-right:0 !important; margin-left:0 !important">
         @foreach (var book in Model.Books)
         {
-            <tr>
-                <td>@book.Name</td>
-                <td>@book.Author</td>
-                <td>
-                    @foreach (var subject in book.Subjects)
-                    {
-                        @subject.Name <br />
-                    }
-                </td>
-                @if (@book.CoverUrl != null)
-                {
-                    <td>
-                        <img src=@ExBook.Extensions.BookCoverExtensions.GetSmallCoverUrl(@book.CoverUrl) alt="Cover" style="width:32px;height:32px;" id="test" onclick="Open('@book.CoverUrl');" />
-                    </td>
-                }
-                else
-                {
-                    <td><img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:32px;height:32px;"></td>
-                }
-                @if (CheckBookshelves(Model.UserId, @book))
-                {
-                    <form asp-controller="Search" asp-route-id="@book.Id" asp-action="GetBookshelvesForBook" method="post">
-                        <td><input type="submit" value="Get this book" title="Show available books" class="btn btn-primary btn-sm " /></td>
-                    </form>
-                }
-                else
-                {
-                    <td>
-                        <span title="Sorry, currently there is no bookshelf containing this book">
-                            <div class="disabledGet">
-                                <input type="submit" value="Get this book" disabled class="btn btn-secondary btn-sm" />
+            <div class="col-4 ">
+                <div class="list-group" style="max-height:280px;">
+                    <li class="list-group-item list-group-item-action flex-column align-items-start" style="height:280px;">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">
+                                <b>"@book.Name"</b>
+                                <br />@book.Author
+                            </h5>
+                            <small>@book.Created.Value.ToShortDateString()</small>
+                        </div>
+                        <p class="mb-1">
+                            @if (@book.CoverUrl != null)
+                            {
+                                <img src=@ExBook.Extensions.BookCoverExtensions.GetMediumCoverUrl(@book.CoverUrl) alt="Cover" style="width:110px;height:160px;" id="test" onclick="Open('@book.CoverUrl');" />
+                            }
+                            else
+                            {
+                                <img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:110px;height:160px;">
+                            }
+                            <div class="btn-group float-right" role="group" aria-label="Basic example">
+                                @if (CheckBookshelves(Model.UserId, @book))
+                                {
+                                    <form asp-controller="Search" asp-route-id="@book.Id" asp-action="GetBookshelvesForBook" method="post">
+                                      
+                                        <button type="submit" class="btn btn-primary btn-sm" title="Show available books">
+                                            <i class="fas fa-book-medical"></i>
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span title="Sorry, currently there is no bookshelf containing this book">
+                                        <div class="disabledGet">
+                                          
+                                            <button type="submit" disabled class="btn btn-secondary btn-sm">
+                                                <i class="fas fa-book-medical"></i>
+                                            </button>
+                                        </div>
+                                    </span>
+                                }
+                                @if (!GetIsOnWishlist(Model.UserId, @book))
+                                {                                  
+                                    <button type="submit" class="btn btn-primary btn-sm" id="@book.Id"
+                                            onclick="addToWishList('@book.Id');" title="Add this book to your wishlist">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-secondary btn-sm" id="@book.Id"
+                                            onclick="addToWishList('@book.Id');" title="This book is already on your wishlist">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+
+                                }
                             </div>
-                        </span>
-                    </td>
-                }
-
-                @if (!GetIsOnWishlist(Model.UserId, @book))
-                {
-                    <td>
-                        <input type="submit" value="Add to wishlist" title="Add this book to your wishlist" class="btn btn-primary btn-sm" id="@book.Id"
-                               onclick="addToWishList('@book.Id');" />
-                    </td>
-
-                }
-                else
-                {
-                    <td>
-                        <input type="submit" value="Add to wishlist" title="This book is already on your wishlist" class="btn btn-secondary btn-sm"
-                               id="@book.Id"
-                               onclick="addToWishList('@book.Id');" />
-                    </td>
-                }
-            </tr>
+                        </p>
+                        <small>@GetSubjects(@book)</small>
+                    </li>
+                </div>
+            </div>
         }
-
-    </table>
+    </div>
 </div>
 
 
@@ -139,19 +139,24 @@
             return false;
     }
 
+    string GetSubjects(ExBook.Data.Book book)
+    {
+        return String.Join(',', book.Subjects.Select(s => s.Name));
+    }
+
 }
 
 <style>
     /*        .searchbar-card {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        @@media screen and ( min-height: 400px ) {
-            .searchbar-card {
-                margin-top: calc(50vh - 200px);
+                max-width: 500px;
+                margin: 0 auto;
             }
-        }*/
+
+            @@media screen and ( min-height: 400px ) {
+                .searchbar-card {
+                    margin-top: calc(50vh - 200px);
+                }
+            }*/
     .disabledGet {
         pointer-events: none;
     }

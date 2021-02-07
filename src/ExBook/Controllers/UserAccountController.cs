@@ -28,10 +28,7 @@ namespace ExBook.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.View("Show",new UserAccountViewModel()
-                {
-                    ModifiedUser = await userAccountService.GetUser(this.HttpContext.User.GetId())
-                })
+                ? this.View("Show", await userAccountService.GetUser(this.HttpContext.User.GetId()))
                 : this.RedirectToHome() as IActionResult;
         }
 
@@ -67,11 +64,7 @@ namespace ExBook.Controllers
         public async Task<IActionResult> Update(User sentUserData)
         {
             return this.HttpContext.User.Identity.IsAuthenticated
-                ? this.View("Show", new UserAccountViewModel()
-                {
-                    ModifiedUser = await userAccountService.UpdateData(this.HttpContext.User.GetId(),sentUserData)
-                                        
-                })
+                ? this.View("Show",await userAccountService.UpdateData(this.HttpContext.User.GetId(),sentUserData))
                 : this.RedirectToHome() as IActionResult;
         }
 
