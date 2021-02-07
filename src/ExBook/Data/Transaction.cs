@@ -20,7 +20,7 @@ namespace ExBook.Data
 
         public virtual User Recipient { get; set; }
         public virtual User Initiator { get; set; }
-        public virtual Rating Rating { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; }
         public virtual ICollection<BookShelfBook> RecipientBooks { get; set; }
         public virtual ICollection<BookShelfBook> InitiatorBooks { get; set; }
 

@@ -123,8 +123,8 @@ namespace ExBook.Data
                 entity.Property(e => e.Value).HasColumnName("value");
 
                 entity.HasOne(d => d.Transaction)
-                    .WithOne(p => p.Rating)
-                    .HasForeignKey<Rating>(d => d.TransactionId)
+                    .WithMany(p => p.Ratings)
+                    .HasForeignKey(d => d.TransactionId)
                     .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("rating_fk");
             });

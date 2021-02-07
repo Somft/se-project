@@ -334,12 +334,30 @@ namespace ExBook.Controllers
 
         [HttpGet]
         [Route("/transation/rate")]
-        public async Task<IActionResult> Rate(Guid transactionId)
+        public async Task<IActionResult> Rating(Guid transactionId)
         {
             Transaction transaction = await this.dbContext.Transactions
               .SingleAsync(t => t.Id == transactionId);
 
-            return this.View();
+            return this.View(new TransactionRatingViewModel() 
+            { 
+                Transaction = transaction,
+            });
+        }
+
+        [HttpPost]
+        [Route("/transation/rate")]
+        public async Task<IActionResult> Rating(Guid transactionId, TransactionRatingViewModel request)
+        {
+            request.Transaction = await this.dbContext.Transactions
+             .SingleAsync(t => t.Id == transactionId);
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(request);
+            }
+
+            return this.View(request);
         }
     }
 }

@@ -251,7 +251,7 @@
                 @if ((IsRecipiedLogged() || IsInitiatorLogged()) && Model.Transaction.Status == Transaction.Statuses.Accepted)
                 {
                     <form asp-controller="Transaction"
-                          asp-action="Rate"
+                          asp-action="Rating"
                           method="get"
                           class="p-2">
                         <input type="hidden" name="transactionId" value=@Model.Transaction.Id />
