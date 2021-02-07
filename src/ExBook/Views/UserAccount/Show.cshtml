@@ -1,6 +1,7 @@
 ﻿@model ExBook.Data.User
-    <form asp-controller="UserAccount" asp-action="Update">
-        <div class="container flex justify-content-center" style="height:100%;">
+<div class="container flex align-items-center " style="height:100%;">
+    <div class="row justify-content-center align-items-center" style="height:90vh;">
+        <form asp-controller="UserAccount" asp-action="Update">
             <div class="card">
                 <div class="card-header align-items-center">
                     User Details
@@ -8,7 +9,7 @@
                         <a onclick="EditUser();" class="btn btn-outline-secondary users" title="Edit"> <i class="fas fa-edit"></i></a>
                     </div>
                 </div>
-                <div class="card-body" style="height:70vh;">
+                <div class="card-body">
                     <div class="form-row justify-content-center">
                         <div class="form-group col-md-4">
                             <label for="inputLogin">Login</label>
@@ -68,8 +69,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
+</div>
+
 
 
     @section Scripts
