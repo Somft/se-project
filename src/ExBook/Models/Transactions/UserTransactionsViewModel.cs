@@ -11,6 +11,8 @@ namespace ExBook.Models.Transactions
 
         public List<Transaction> Rejected { get; set; } = new List<Transaction>();
 
-        public List<Transaction> Drafts = new List<Transaction>();
+        public List<Transaction> Accepted { get; set; } = new List<Transaction>();
+
+        public List<Transaction> Drafts { get; set; } = new List<Transaction>();
     }
 }

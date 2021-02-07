@@ -5,57 +5,47 @@
 @{
     ViewData["Title"] = "Transaction";
 }
+<div style="margin: 30px">
+    <h3 class="card-title">Exchange with @GetRecipientName()</h3>
+    <div class="row">
 
-<h3 class="card-title">Exchange with @GetRecipientName()</h3>
-<div class="row">
+        @if ((IsRecipiedLogged() || IsInitiatorLogged()) && Model.Transaction.Status == Transaction.Statuses.Accepted)
+        {
+            <div class="col-12 col-md-12">
+                <div class="alert alert-success" role="alert">
+                    <h2>This transaction is accepted.</h2>
+                    You can send your books to second user, using following contact information:
+                    <hr />
+                    @{ var user = IsInitiatorLogged() ? Model.Transaction.Recipient : Model.Transaction.Initiator; }
+                    <div>
+                        <div><b>@user.Name @user.Surname</b></div>
+                        <div>e-mail: <i>@user.Email</i></div>
+                        <div>phone number: <i>@user.ContactNumber</i></div>
+                        <div><i>@user.Address</i></div>
+                        <div><i>@user.PostalCode  @user.City</i></div>
+                        <div><i>@user.Country</i></div>
+                    </div>
+                </div>
+            </div>
+        }
 
-    <div class="col-12 col-md-6 p-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">
-                    @if (IsInitiatorLogged())
-                    {
-                        @("Your books")
-                    }
-                    else
-                    {
-                        @(GetInitiatorName() +" books")
-                    }
-                </h4>
+
+        <div class="col-12 col-md-6 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        @if (IsInitiatorLogged())
+                        {
+                            @("Your books")
+                        }
+                        else
+                        {
+                            @(GetInitiatorName() +" books")
+                        }
+                    </h4>
 
 
-                <h5>Books in transaction</h5>
-                <table class="table table-striped">
-                    <tr>
-                        <th scope="col">Author</th>
-                        <th scope="col">Title</th>
-                        <th scope="col"></th>
-                    </tr>
-
-                    @foreach (var book in Model.Transaction.InitiatorBooks)
-                    {
-                        <tr>
-                            <td>@book.Book.Name</td>
-                            <td>@book.Book.Author</td>
-                            @if (IsEditingEnabled())
-                            {
-                                <td>
-                                    <form asp-controller="Transaction"
-                                          asp-action="RemoveInitiatorBooks"
-                                          asp-route-transactionId="@Model.Transaction.Id"
-                                          asp-route-bookId="@book.Id"
-                                          method="post">
-                                        <input type="submit" value="-" class="btn btn-danger btn-sm " />
-                                    </form>
-                                </td>
-                            }
-                        </tr>
-                    }
-                </table>
-
-                @if (IsEditingEnabled())
-                {
-                    <h5>Books available</h5>
+                    <h5>Books in transaction</h5>
                     <table class="table table-striped">
                         <tr>
                             <th scope="col">Author</th>
@@ -63,74 +53,74 @@
                             <th scope="col"></th>
                         </tr>
 
-                        @foreach (var book in Model.InitiatorBooks)
+                        @foreach (var book in Model.Transaction.InitiatorBooks)
                         {
                             <tr>
                                 <td>@book.Book.Name</td>
                                 <td>@book.Book.Author</td>
-                                <td>
-                                    <form asp-controller="Transaction"
-                                          asp-action="AddInitiatorBooks"
-                                          asp-route-transactionId="@Model.Transaction.Id"
-                                          asp-route-bookId="@book.Id"
-                                          method="post">
-                                        <input type="submit" value="+" class="btn btn-primary btn-sm " />
-                                    </form>
-                                </td>
+                                @if (IsEditingEnabled())
+                                {
+                                    <td>
+                                        <form asp-controller="Transaction"
+                                              asp-action="RemoveInitiatorBooks"
+                                              asp-route-transactionId="@Model.Transaction.Id"
+                                              asp-route-bookId="@book.Id"
+                                              method="post">
+                                            <input type="submit" value="-" class="btn btn-danger btn-sm " />
+                                        </form>
+                                    </td>
+                                }
                             </tr>
                         }
                     </table>
-                }
+
+                    @if (IsEditingEnabled())
+                    {
+                        <h5>Books available</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <th scope="col">Author</th>
+                                <th scope="col">Title</th>
+                                <th scope="col"></th>
+                            </tr>
+
+                            @foreach (var book in Model.InitiatorBooks)
+                            {
+                                <tr>
+                                    <td>@book.Book.Name</td>
+                                    <td>@book.Book.Author</td>
+                                    <td>
+                                        <form asp-controller="Transaction"
+                                              asp-action="AddInitiatorBooks"
+                                              asp-route-transactionId="@Model.Transaction.Id"
+                                              asp-route-bookId="@book.Id"
+                                              method="post">
+                                            <input type="submit" value="+" class="btn btn-primary btn-sm " />
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-6 p-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">
-                    @if (IsRecipiedLogged())
-                    {
-                        @("Your books")
-                    }
-                    else
-                    {
-                        @(GetRecipientName() + " books")
-                    }
-                </h4>
+        <div class="col-12 col-md-6 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        @if (IsRecipiedLogged())
+                        {
+                            @("Your books")
+                        }
+                        else
+                        {
+                            @(GetRecipientName() + " books")
+                        }
+                    </h4>
 
-                <h5>Books in transaction</h5>
-                <table class="table table-striped">
-                    <tr>
-                        <th scope="col">Author</th>
-                        <th scope="col">Title</th>
-                        <th scope="col"></th>
-                    </tr>
-
-                    @foreach (var book in Model.Transaction.RecipientBooks)
-                    {
-                        <tr>
-                            <td>@book.Book.Name</td>
-                            <td>@book.Book.Author</td>
-                            @if (IsEditingEnabled())
-                            {
-                                <td>
-                                    <form asp-controller="Transaction"
-                                          asp-action="RemoveRecipientBooks"
-                                          asp-route-transactionId="@Model.Transaction.Id"
-                                          asp-route-bookId="@book.Id"
-                                          method="post">
-                                        <input type="submit" value="-" class="btn btn-danger btn-sm " />
-                                    </form>
-                                </td>
-                            }
-                        </tr>
-                    }
-                </table>
-
-                @if (IsEditingEnabled())
-                {
-                    <h5>Books available</h5>
+                    <h5>Books in transaction</h5>
                     <table class="table table-striped">
                         <tr>
                             <th scope="col">Author</th>
@@ -138,98 +128,140 @@
                             <th scope="col"></th>
                         </tr>
 
-                        @foreach (var book in Model.RecipientBooks)
+                        @foreach (var book in Model.Transaction.RecipientBooks)
                         {
                             <tr>
-                                <td>@book.Book.Name</td>
                                 <td>@book.Book.Author</td>
-                                <td>
-                                    <form asp-controller="Transaction"
-                                          asp-action="AddRecipientBooks"
-                                          asp-route-transactionId="@Model.Transaction.Id"
-                                          asp-route-bookId="@book.Id"
-                                          method="post">
-                                        <input type="submit" value="+" class="btn btn-primary btn-sm " />
-                                    </form>
-                                </td>
+                                <td>@book.Book.Name</td>
+                                @if (IsEditingEnabled())
+                                {
+                                    <td>
+                                        <form asp-controller="Transaction"
+                                              asp-action="RemoveRecipientBooks"
+                                              asp-route-transactionId="@Model.Transaction.Id"
+                                              asp-route-bookId="@book.Id"
+                                              method="post">
+                                            <input type="submit" value="-" class="btn btn-danger btn-sm " />
+                                        </form>
+                                    </td>
+                                }
                             </tr>
                         }
                     </table>
-                }
+
+                    @if (IsEditingEnabled())
+                    {
+                        <h5>Books available</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <th scope="col">Author</th>
+                                <th scope="col">Title</th>
+                                <th scope="col"></th>
+                            </tr>
+
+                            @foreach (var book in Model.RecipientBooks)
+                            {
+                                <tr>
+                                    <td>@book.Book.Author</td>
+                                    <td>@book.Book.Name</td>
+                                    <td>
+                                        <form asp-controller="Transaction"
+                                              asp-action="AddRecipientBooks"
+                                              asp-route-transactionId="@Model.Transaction.Id"
+                                              asp-route-bookId="@book.Id"
+                                              method="post">
+                                            <input type="submit" value="+" class="btn btn-primary btn-sm " />
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-12 col-md-12 p-2">
-        <div class="card text-right p-2 flex-row-reverse">
-            @if (IsInitiatorLogged())
-            {
-                @if (this.Model.Transaction.Status == Transaction.Statuses.Initialized)
+        <div class="col-12 col-md-12">
+            <div class="card text-right p-2 flex-row-reverse">
+                @if (IsInitiatorLogged())
                 {
-                    <form asp-controller="Transaction"
-                          asp-action="SendToReview"
-                          asp-route-transactionId="@Model.Transaction.Id"
-                          method="post">
-                        <input type="submit" value="Submit" class="btn btn-primary btn-sm " />
-                    </form>
+                    @if (this.Model.Transaction.Status == Transaction.Statuses.Initialized)
+                    {
+                        <form asp-controller="Transaction"
+                              asp-action="SendToReview"
+                              asp-route-transactionId="@Model.Transaction.Id"
+                              method="post">
+                            <input type="submit" value="Submit" class="btn btn-primary btn-sm " />
+                        </form>
+                    }
+
+                    @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
+                    {
+                        <div class="alert alert-info" role="alert" style="width: max-content; margin: 0 auto">
+                            This transaction is currently reviewed.
+                        </div>
+                    }
+
+                    @if (this.Model.Transaction.Status == Transaction.Statuses.Rejected)
+                    {
+                        <form asp-controller="Transaction"
+                              asp-action="Remove"
+                              asp-route-transactionId="@Model.Transaction.Id"
+                              method="post"
+                              class="p-2">
+                            <input type="submit" value="Remove" class="btn btn-danger btn-sm " />
+                        </form>
+
+                        <form asp-controller="Transaction"
+                              asp-action="Retry"
+                              asp-route-transactionId="@Model.Transaction.Id"
+                              method="post"
+                              class="p-2">
+                            <input type="submit" value="Retry" class="btn btn-primary btn-sm " />
+                        </form>
+
+                        <div class="alert alert-warning p-2" role="alert" style="width: max-content">
+                            This transaction was rejected.
+                        </div>
+                    }
                 }
 
-                @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
+                @if (IsRecipiedLogged())
                 {
-                    <div class="alert alert-info" role="alert" style="width: max-content; margin: 0 auto">
-                        This transaction is currently reviewed.
-                    </div>
+                    @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
+                    {
+                        <form asp-controller="Transaction"
+                              asp-action="Reject"
+                              asp-route-transactionId="@Model.Transaction.Id"
+                              method="post"
+                              class="p-2">
+                            <input type="submit" value="Reject" class="btn btn-danger btn-sm " />
+                        </form>
+
+                        <form asp-controller="Transaction"
+                              asp-action="Accept"
+                              asp-route-transactionId="@Model.Transaction.Id"
+                              method="post"
+                              class="p-2">
+                            <input type="submit" value="Accept" class="btn btn-primary btn-sm " />
+                        </form>
+                    }
                 }
 
-                @if (this.Model.Transaction.Status == Transaction.Statuses.Rejected)
+                @if ((IsRecipiedLogged() || IsInitiatorLogged()) && Model.Transaction.Status == Transaction.Statuses.Accepted)
                 {
                     <form asp-controller="Transaction"
-                          asp-action="Remove"
-                          asp-route-transactionId="@Model.Transaction.Id"
-                          method="post"
+                          asp-action="Rate"
+                          method="get"
                           class="p-2">
-                        <input type="submit" value="Remove" class="btn btn-danger btn-sm " />
-                    </form>
-
-                    <form asp-controller="Transaction"
-                          asp-action="Retry"
-                          asp-route-transactionId="@Model.Transaction.Id"
-                          method="post"
-                          class="p-2">
-                        <input type="submit" value="Retry" class="btn btn-primary btn-sm " />
-                    </form>
-
-                    <div class="alert alert-warning p-2" role="alert" style="width: max-content">
-                        This transaction was rejected.
-                    </div>
-                }
-            }
-
-            @if (IsRecipiedLogged())
-            {
-                @if (this.Model.Transaction.Status == Transaction.Statuses.Reviewed)
-                {
-                    <form asp-controller="Transaction"
-                          asp-action="Reject"
-                          asp-route-transactionId="@Model.Transaction.Id"
-                          method="post"
-                          class="p-2">
-                        <input type="submit" value="Reject" class="btn btn-danger btn-sm " />
-                    </form>
-
-                    <form asp-controller="Transaction"
-                          asp-action="Accept"
-                          asp-route-transactionId="@Model.Transaction.Id"
-                          method="post"
-                          class="p-2">
-                        <input type="submit" value="Accept" class="btn btn-primary btn-sm " />
+                        <input type="hidden" name="transactionId" value=@Model.Transaction.Id />
+                        <input type="submit" value="Rate transaction" class="btn btn-primary btn-sm " />
                     </form>
                 }
-            }
+            </div>
         </div>
     </div>
 </div>
-
 @functions
 {
     private bool IsRecipiedLogged()

@@ -1,4 +1,5 @@
 ﻿@using ExBook.Data
+@using ExBook.Extensions
 
 @model ExBook.Models.Transactions.UserTransactionsViewModel
 @{
@@ -35,7 +36,38 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
 </span>;
 }
 
+@if (Model.Accepted.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            Accepted transactions
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator / Recipient books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
 
+                @foreach (var transaction in Model.Accepted)
+                {
+                    var isInitiator = (this.Context.User.GetId() ?? Guid.Empty) == transaction.InitiatorId;
+
+                    <tr>
+                        <td>@UserName(transaction.Recipient)</td>
+                        <td>@RenderBooks(isInitiator ? transaction.InitiatorBooks : transaction.RecipientBooks)</td>
+                        <td>@RenderBooks(!isInitiator ? transaction.InitiatorBooks : transaction.RecipientBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
 
 @if (Model.Rejected.Any())
 {

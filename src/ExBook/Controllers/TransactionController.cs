@@ -89,7 +89,12 @@ namespace ExBook.Controllers
                 Drafts = await this.dbContext.Transactions
                     .Where(t => t.InitiatorId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Initialized)
-                    .ToListAsync()
+                    .ToListAsync(),
+
+                Accepted = await this.dbContext.Transactions
+                    .Where(t => t.InitiatorId == userId || t.RecipientId == userId)
+                    .Where(t => t.Status == Transaction.Statuses.Accepted)
+                    .ToListAsync(),
             });
         }
 
@@ -154,11 +159,20 @@ namespace ExBook.Controllers
         public async Task<IActionResult> Accept(Guid transactionId)
         {
             Transaction transaction = await this.dbContext.Transactions
+                .Include(t => t.RecipientBooks)
+                .Include(t => t.InitiatorBooks)
                 .SingleAsync(t => t.Id == transactionId);
+
+            transaction.Status = Transaction.Statuses.Accepted;
+
+            foreach (BookShelfBook book in transaction.RecipientBooks.Concat(transaction.InitiatorBooks))
+            {
+                book.IsLocked = true;
+            }
 
             await this.dbContext.SaveChangesAsync();
 
-            return this.RedirectToAction("Index", new
+            return this.RedirectToAction(nameof(Index), new
             {
                 id = transaction.Id,
             });
@@ -225,7 +239,7 @@ namespace ExBook.Controllers
 
             await this.dbContext.SaveChangesAsync();
 
-            return this.RedirectToAction(nameof(Index), new 
+            return this.RedirectToAction(nameof(Index), new
             {
                 id = newTransaction.Id,
             });
@@ -245,7 +259,7 @@ namespace ExBook.Controllers
 
             await this.dbContext.SaveChangesAsync();
 
-            return this.RedirectToAction("Index", new
+            return this.RedirectToAction(nameof(Index), new
             {
                 id = transaction.Id,
             });
@@ -304,6 +318,16 @@ namespace ExBook.Controllers
             {
                 id = transaction.Id,
             });
+        }
+
+        [HttpGet]
+        [Route("/transation/rate")]
+        public async Task<IActionResult> Rate(Guid transactionId)
+        {
+            Transaction transaction = await this.dbContext.Transactions
+              .SingleAsync(t => t.Id == transactionId);
+
+            return View();
         }
     }
 }
