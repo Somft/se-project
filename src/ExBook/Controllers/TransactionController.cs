@@ -119,7 +119,7 @@ namespace ExBook.Controllers
             await this.dbContext.AddAsync(transaction);
             this.dbContext.SaveChanges();
 
-            return this.RedirectToAction("Index", new
+            return this.RedirectToAction(nameof(Index), new
             {
                 id = transaction.Id,
             });
@@ -189,17 +189,46 @@ namespace ExBook.Controllers
 
             if (transaction.Status == Transaction.Statuses.Initialized)
             {
-                dbContext.Transactions.Remove(transaction);
-            } 
+                this.dbContext.Transactions.Remove(transaction);
+            }
             else
             {
                 transaction.Status = Transaction.Statuses.Removed;
             }
-            
+
 
             await this.dbContext.SaveChangesAsync();
 
             return this.RedirectToAction(nameof(UserTransactions));
+        }
+
+        [HttpPost]
+        [Route("/transation/retry")]
+        public async Task<IActionResult> Retry(Guid transactionId)
+        {
+            Transaction transaction = await this.dbContext.Transactions
+                .Include(t => t.RecipientBooks)
+                .Include(t => t.InitiatorBooks)
+                .SingleAsync(t => t.Id == transactionId);
+
+            transaction.Status = Transaction.Statuses.Removed;
+
+            Transaction newTransaction = this.dbContext.Transactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid(),
+                InitiatorId = transaction.InitiatorId,
+                RecipientId = transaction.RecipientId,
+                InitiatorBooks = transaction.InitiatorBooks,
+                RecipientBooks = transaction.RecipientBooks,
+                Status = Transaction.Statuses.Initialized,
+            }).Entity;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction(nameof(Index), new 
+            {
+                id = newTransaction.Id,
+            });
         }
 
 

@@ -35,6 +35,8 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
 </span>;
 }
 
+
+
 @if (Model.Rejected.Any())
 {
     <div class="card">
@@ -72,7 +74,6 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
         </div>
     </div>
 }
-
 
 @if (Model.ToReview.Any())
 {
@@ -143,7 +144,6 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
     </div>
 }
 
-
 @if (Model.Drafts.Any())
 {
     <div class="card">
@@ -181,6 +181,8 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
         </div>
     </div>
 }
+
+
 
 
 @if (!Model.ToReview.Any() && !Model.Waiting.Any() && !Model.Rejected.Any())
