@@ -17,9 +17,10 @@ namespace ExBook.Services
         {
             this.applicationDbContext = applicationDbContext;
         }
-        public Task<List<Book>> GetLatestBooksAsync()
+        public async Task<List<Book>> GetLatestBooksAsync()
         {
-            return applicationDbContext.Books.OrderByDescending(b => b.Id).Take(3).ToListAsync();
+            var books = await this.applicationDbContext.Books.ToListAsync();
+            return books.Skip(Math.Max(0, books.Count - 3)).ToList();
         }
         public string GetMessage()
         {

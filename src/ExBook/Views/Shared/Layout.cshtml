@@ -51,7 +51,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "BookShelf")"><i class="far fa-book"></i>Bookshelf</a>
+                            <a class="nav-link" href="@Url.Action("Index", "BookShelf")"><i class="fas fa-book"></i> Bookshelf</a>
                         </li>
 
                         <li class="nav-item">
@@ -60,7 +60,7 @@
 
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("UserTransactions", "Transaction")">
-                                <i class="fas fa-book"></i>
+                                <i class="fas fa-people-carry"></i>
                                 Transactions
                                 @{int transactions = GetTransactions();}
 
@@ -250,13 +250,12 @@
         overflow: hidden;
     }
 
-        .book:before
-        {
+        .book:before {
             position: absolute;
             content: '';
             width: 80%;
             height: 220%;
-            background: rgba(77, 175, 124, 0.8);
+            background: rgba(117, 164, 131, 0.8);
             top: -50%;
             left: -100%;
             z-index: 1;
@@ -290,7 +289,6 @@
 
         .book-text h3
         {
-            font-family: poppins;
         }
 
     .book:hover .book-text
