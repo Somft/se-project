@@ -69,32 +69,44 @@ namespace ExBook.Controllers
         {
             Guid userId = this.HttpContext.User.GetId()!.Value;
 
+            List<Transaction> transactions = await this.dbContext.Transactions
+                    .Include(t => t.Recipient)
+                    .Include(t => t.Initiator)
+                    .Include(t => t.InitiatorBooks)
+                        .ThenInclude(t => t.Book)
+                        .AsSplitQuery()
+                    .Include(t => t.RecipientBooks)
+                        .ThenInclude(t => t.Book)
+                        .AsSplitQuery()
+                    .Where(t => t.InitiatorId == userId || t.RecipientId == userId)
+                    .ToListAsync();
+
             return this.View(new UserTransactionsViewModel()
             {
-                ToReview = await this.dbContext.Transactions
+                ToReview = transactions
                     .Where(t => t.RecipientId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Reviewed)
-                    .ToListAsync(),
+                    .ToList(),
 
-                Waiting = await this.dbContext.Transactions
+                Waiting = transactions
                     .Where(t => t.InitiatorId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Reviewed)
-                    .ToListAsync(),
+                    .ToList(),
 
-                Rejected = await this.dbContext.Transactions
+                Rejected = transactions
                     .Where(t => t.InitiatorId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Rejected)
-                    .ToListAsync(),
+                    .ToList(),
 
-                Drafts = await this.dbContext.Transactions
+                Drafts = transactions
                     .Where(t => t.InitiatorId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Initialized)
-                    .ToListAsync(),
+                    .ToList(),
 
-                Accepted = await this.dbContext.Transactions
+                Accepted = transactions
                     .Where(t => t.InitiatorId == userId || t.RecipientId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Accepted)
-                    .ToListAsync(),
+                    .ToList(),
             });
         }
 
@@ -327,7 +339,7 @@ namespace ExBook.Controllers
             Transaction transaction = await this.dbContext.Transactions
               .SingleAsync(t => t.Id == transactionId);
 
-            return View();
+            return this.View();
         }
     }
 }
