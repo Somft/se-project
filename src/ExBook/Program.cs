@@ -46,10 +46,10 @@ namespace ExBook
             AssemblyName assemblyInfo = typeof(Program).Assembly.GetName();
             if (assemblyInfo.Version == null)
             {
-                return "V0";
+                return "v0.0.0.0";
             }
             DateTime buildDate = new DateTime(2000, 1, 1).AddDays(assemblyInfo.Version.Build).AddSeconds(assemblyInfo.Version.Revision * 2);
-            return "V" + assemblyInfo.Version?.ToString() + " " + buildDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            return "v" + assemblyInfo.Version?.ToString() + "-rc.1 " + buildDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
         }
     }

@@ -140,12 +140,22 @@
                 <hr class="light">
                 <p>Project Manager: Emilia Gosiewska</p>
                 <hr class="light">
-                <p>Bartłomiej Piura</p>
-                <p>Bartosz Groffik</p>
-                <p>Paweł Szafraniec</p>
-                <p>Łukasz Kwiecień</p>
-                <p>Oliwia Mlonek</p>
-                <p>Emilia Gosiewska</p>
+                @{var authors = new List<(string name, string url)>()
+                    {
+                      ("Bartłomiej Piura", "https://github.com/Somft"),
+                      ("Bartosz Groffik", "https://github.com/Bartman119"),
+                      ("Paweł Szafraniec", "https://github.com/pawelszafraniec11"),
+                      ("Łukasz Kwiecień", "https://github.com/lukiop7"),
+                      ("Oliwia Mlonek", "https://github.com/secondconcerto"),
+                      ("Emilia Gosiewska", "https://github.com/emiliagosiewska"),
+                    };
+                }
+                @foreach (var author in authors.OrderBy(o => o.name))
+                {
+                    <p>
+                        <a href=@author.url>@author.name</a>
+                    </p>
+                }
             </div>
             <div class="col-lg-4" .col-lg-4>
                 <hr class="light">
