@@ -122,6 +122,10 @@ namespace ExBook.Data
 
                 entity.Property(e => e.Value).HasColumnName("value");
 
+                entity.Property(e => e.Author)
+                    .HasColumnName("author")
+                    .HasConversion<string>();
+
                 entity.HasOne(d => d.Transaction)
                     .WithMany(p => p.Ratings)
                     .HasForeignKey(d => d.TransactionId)

@@ -78,6 +78,7 @@ namespace ExBook.Controllers
                     .Include(t => t.RecipientBooks)
                         .ThenInclude(t => t.Book)
                         .AsSplitQuery()
+                    .Include(t => t.Ratings)
                     .Where(t => t.InitiatorId == userId || t.RecipientId == userId)
                     .ToListAsync();
 
@@ -104,7 +105,9 @@ namespace ExBook.Controllers
                     .ToList(),
 
                 Accepted = transactions
-                    .Where(t => t.InitiatorId == userId || t.RecipientId == userId)
+                    .Where(t =>
+                        (t.InitiatorId == userId && !t.Ratings.Any(r => r.Author == RatingAuthor.Initiator)) ||
+                        (t.RecipientId == userId && !t.Ratings.Any(r => r.Author == RatingAuthor.Recipient)))
                     .Where(t => t.Status == Transaction.Statuses.Accepted)
                     .ToList(),
             });
@@ -339,8 +342,8 @@ namespace ExBook.Controllers
             Transaction transaction = await this.dbContext.Transactions
               .SingleAsync(t => t.Id == transactionId);
 
-            return this.View(new TransactionRatingViewModel() 
-            { 
+            return this.View(new TransactionRatingViewModel()
+            {
                 Transaction = transaction,
             });
         }
@@ -349,15 +352,37 @@ namespace ExBook.Controllers
         [Route("/transation/rate")]
         public async Task<IActionResult> Rating(Guid transactionId, TransactionRatingViewModel request)
         {
-            request.Transaction = await this.dbContext.Transactions
+            Guid userId = this.HttpContext.User.GetId()!.Value;
+
+            Transaction transaction = await this.dbContext.Transactions
+                .Include(t => t.Ratings)
              .SingleAsync(t => t.Id == transactionId);
 
             if (!this.ModelState.IsValid)
             {
+                request.Transaction = transaction;
                 return this.View(request);
             }
 
-            return this.View(request);
+            RatingAuthor author = transaction.RecipientId == userId
+                ? RatingAuthor.Recipient
+                : RatingAuthor.Initiator;
+
+            Rating rating = transaction.Ratings.FirstOrDefault(r => r.Author == author)
+                ?? this.dbContext.Ratings.Add(new Rating()
+                {
+                    Id = Guid.NewGuid(),
+                    Author = author,
+                    Transaction = transaction,
+
+                }).Entity;
+
+            rating.Comment = request.Comments ?? "";
+            rating.Value = request.Rating ?? 0;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return this.RedirectToAction(nameof(UserTransactions));
         }
     }
 }

@@ -9,8 +9,15 @@ namespace ExBook.Data
         public Guid Id { get; set; }
         public string Comment { get; set; }
         public int Value { get; set; }
+        public RatingAuthor Author { get; set; }
         public Guid TransactionId { get; set; }
 
         public virtual Transaction Transaction { get; set; }
+    }
+
+    public enum RatingAuthor
+    {
+        Recipient,
+        Initiator
     }
 }

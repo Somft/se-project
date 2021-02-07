@@ -217,7 +217,11 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
 
 
 
-@if (!Model.ToReview.Any() && !Model.Waiting.Any() && !Model.Rejected.Any())
+@if (!Model.ToReview.Any() 
+    && !Model.Waiting.Any() 
+    && !Model.Rejected.Any() 
+    && !Model.Accepted.Any() 
+    && !Model.Drafts.Any())
 {
     <div class="alert alert-info" role="alert" style="margin: 0 auto; margin-top: 30px; width: max-content">
         You don't have any active trasaction.

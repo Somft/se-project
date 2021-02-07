@@ -44,7 +44,13 @@ namespace ExBook
         private static string GetAppVersion()
         {
             AssemblyName assemblyInfo = typeof(Program).Assembly.GetName();
-            return "V" + assemblyInfo.Version?.ToString() ?? "0";
+            if (assemblyInfo.Version == null)
+            {
+                return "V0";
+            }
+            DateTime buildDate = new DateTime(2000, 1, 1).AddDays(assemblyInfo.Version.Build).AddSeconds(assemblyInfo.Version.Revision * 2);
+            return "V" + assemblyInfo.Version?.ToString() + " " + buildDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
+
         }
     }
 }

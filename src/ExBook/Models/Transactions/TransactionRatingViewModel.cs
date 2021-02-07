@@ -1,15 +1,15 @@
 ﻿using ExBook.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExBook.Models.Transactions
 {
     public class TransactionRatingViewModel
     {
-        public Transaction Transaction { get; set; } = null!;
+        public Transaction? Transaction { get; set; } = null;
 
-        [Required]
         [MaxLength(200)]
-        public string Comments { get; set; } = "";
+        public string? Comments { get; set; } = null;
 
         [Required]
         [Range(1, 10)]
