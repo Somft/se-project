@@ -85,6 +85,11 @@ namespace ExBook.Controllers
                     .Where(t => t.InitiatorId == userId)
                     .Where(t => t.Status == Transaction.Statuses.Rejected)
                     .ToListAsync(),
+
+                Drafts = await this.dbContext.Transactions
+                    .Where(t => t.InitiatorId == userId)
+                    .Where(t => t.Status == Transaction.Statuses.Initialized)
+                    .ToListAsync()
             });
         }
 
@@ -178,9 +183,19 @@ namespace ExBook.Controllers
         public async Task<IActionResult> Remove(Guid transactionId)
         {
             Transaction transaction = await this.dbContext.Transactions
+                .Include(t => t.RecipientBooks)
+                .Include(t => t.InitiatorBooks)
                 .SingleAsync(t => t.Id == transactionId);
 
-            transaction.Status = Transaction.Statuses.Removed;
+            if (transaction.Status == Transaction.Statuses.Initialized)
+            {
+                dbContext.Transactions.Remove(transaction);
+            } 
+            else
+            {
+                transaction.Status = Transaction.Statuses.Removed;
+            }
+            
 
             await this.dbContext.SaveChangesAsync();
 

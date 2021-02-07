@@ -143,6 +143,46 @@ Func<IEnumerable<BookShelfBook>, Microsoft.AspNetCore.Html.IHtmlContent> RenderB
     </div>
 }
 
+
+@if (Model.Drafts.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            Drafts
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Your books</th>
+                    <th scope="col">Initiator books</th>
+                    <th scope="col" style="width: 0"></th>
+                </tr>
+
+                @foreach (var transaction in Model.Drafts)
+                {
+                    <tr>
+                        <td>@UserName(transaction.Recipient)</td>
+                        <td>@RenderBooks(transaction.InitiatorBooks)</td>
+                        <td>@RenderBooks(transaction.RecipientBooks)</td>
+                        <td class="d-flex flex-row-reverse">
+                            @RenderTransactionLink(transaction)
+                            <form asp-controller="Transaction"
+                                  asp-action="Remove"
+                                  asp-route-transactionId="@transaction.Id"
+                                  method="post"
+                                  class="p-2">
+                                <input type="submit" value="Remove" class="btn btn-danger btn-sm " />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+
 @if (!Model.ToReview.Any() && !Model.Waiting.Any() && !Model.Rejected.Any())
 {
     <div class="alert alert-info" role="alert" style="margin: 0 auto; margin-top: 30px; width: max-content">
