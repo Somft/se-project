@@ -55,7 +55,7 @@
                         <p class="mb-1">
                             @if (@book.Photo != null)
                             {
-                                <img src=@book.Photo alt="Real Photo" style="width:110px;height:160px;" onclick="Open('@book.Photo');">
+                                <img src=@("/attachment?id=" + @book.Photo) alt="Real Photo" style="width:110px;height:160px;" onclick="Open('@book.Photo');">
                             }
                             else
                             {
