@@ -4,7 +4,7 @@ using ExBook.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System;
 using System.Threading.Tasks;
 
 namespace ExBook.Controllers
@@ -63,6 +63,15 @@ namespace ExBook.Controllers
             return this.HttpContext.User.Identity.IsAuthenticated
                 ? this.RedirectToHome() as IActionResult
                 : this.View();
+        }
+
+        [HttpGet]
+        [Route("/confirm")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmRegistration(Guid key)
+        {
+            await this.registrationService.ConfirmRegistration(key);
+            return this.RedirectToHome();
         }
     }
 }

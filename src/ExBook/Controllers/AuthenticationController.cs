@@ -81,7 +81,7 @@ namespace ExBook.Controllers
                 logger.LogInformation(url);
                 await this.mailSender.SendEmail("Authentication", new AuthenticationContext(user.Email, "Loging in")
                 {
-                    Token = url
+                    Url = url
                 });
 
                 return this.RedirectToEMailAuthorization();

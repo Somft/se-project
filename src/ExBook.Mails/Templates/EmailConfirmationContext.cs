@@ -2,6 +2,9 @@
 {
     public class EmailConfirmationContext : EmailContext
     {
+        public string Url { get; set; } = "";
+
+
         public EmailConfirmationContext()
         {
         }

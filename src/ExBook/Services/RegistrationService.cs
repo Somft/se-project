@@ -4,10 +4,9 @@ using ExBook.Mails.Templates;
 using ExBook.Models.Authentication;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExBook.Services
@@ -16,11 +15,13 @@ namespace ExBook.Services
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IMailSender mailSender;
+        private readonly IConfiguration configuration;
 
-        public RegistrationService(ApplicationDbContext applicationDbContext, IMailSender mailSender)
+        public RegistrationService(ApplicationDbContext applicationDbContext, IMailSender mailSender, IConfiguration configuration)
         {
             this.applicationDbContext = applicationDbContext;
             this.mailSender = mailSender;
+            this.configuration = configuration;
         }
 
         public async Task<bool> RegisterUser(RegisterViewModel userData)
@@ -30,7 +31,7 @@ namespace ExBook.Services
                 return false;
             }
 
-            this.applicationDbContext.Users.Add(new User()
+            User user = this.applicationDbContext.Users.Add(new User()
             {
                 Id = Guid.NewGuid(),
                 Login = userData.Login,
@@ -40,13 +41,25 @@ namespace ExBook.Services
                 Password = userData.Password,
                 Role = "user",
                 IsEmailConfirmed = false,
-            });
+            }).Entity;
             await this.applicationDbContext.SaveChangesAsync();
 
-            await this.mailSender.SendEmail("EmailConfirmation", new EmailConfirmationContext("Account confirmation", userData.Email) { });
+            await this.mailSender.SendEmail(
+                "EmailConfirmation",
+                new EmailConfirmationContext(userData.Email, "Account confirmation")
+                {
+                    Url = this.configuration["App:Url"] + "confirm?key=" + user.Id,
+                });
 
             return true;
         }
 
+
+        public async Task ConfirmRegistration(Guid userId)
+        {
+            User user = await this.applicationDbContext.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            user.IsEmailConfirmed = true;
+            await applicationDbContext.SaveChangesAsync();
+        }
     }
 }

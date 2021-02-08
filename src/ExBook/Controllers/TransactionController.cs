@@ -1,5 +1,7 @@
 ﻿using ExBook.Data;
 using ExBook.Extensions;
+using ExBook.Mails.Services;
+using ExBook.Mails.Templates;
 using ExBook.Models.Transactions;
 using ExBook.Services;
 
@@ -17,13 +19,13 @@ namespace ExBook.Controllers
     {
         private readonly ApplicationDbContext dbContext;
         private readonly InitializeTransactionService initializeTransactionService;
+        private readonly IMailSender mailSender;
 
-        public TransactionController(ApplicationDbContext applicationDbContext,
-            InitializeTransactionService initializeTransactionService)
+        public TransactionController(ApplicationDbContext dbContext, InitializeTransactionService initializeTransactionService, IMailSender mailSender)
         {
-            this.dbContext = applicationDbContext;
+            this.dbContext = dbContext;
             this.initializeTransactionService = initializeTransactionService;
-
+            this.mailSender = mailSender;
         }
 
         [HttpGet]
@@ -168,6 +170,11 @@ namespace ExBook.Controllers
 
             await this.dbContext.SaveChangesAsync();
 
+            await mailSender.SendEmail(
+                   "NewTransaction",
+                   new NewTransactionContext(transaction.Recipient.Email, "New transaction"));
+
+
             return this.RedirectToAction("Index", new
             {
                 id = transaction.Id,
@@ -192,6 +199,10 @@ namespace ExBook.Controllers
 
             await this.dbContext.SaveChangesAsync();
 
+            await mailSender.SendEmail(
+                  "TransactionAccepted",
+                  new TransactionAcceptedContext(transaction.Initiator.Email, "Transaction was accepted"));
+
             return this.RedirectToAction(nameof(Index), new
             {
                 id = transaction.Id,
@@ -208,6 +219,10 @@ namespace ExBook.Controllers
             transaction.Status = Transaction.Statuses.Rejected;
 
             await this.dbContext.SaveChangesAsync();
+
+            await mailSender.SendEmail(
+                   "TransactionRejected",
+                   new TransactionAcceptedContext(transaction.Initiator.Email, "Transaction was rejected"));
 
             return this.RedirectToAction(nameof(UserTransactions));
         }
