@@ -1,5 +1,6 @@
 using ExBook.Configuration;
 using ExBook.Controllers;
+using ExBook.Data;
 using ExBook.Extensions;
 using ExBook.Extensions.DependencyInjection;
 using ExBook.Middleware;
@@ -8,6 +9,7 @@ using ExBook.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -43,6 +45,8 @@ namespace ExBook
 
             services.AddTransient<OpenLibraryClient>();
             services.AddHttpClient();
+
+            services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddMvc();
 
