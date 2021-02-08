@@ -1,40 +1,51 @@
-﻿@model ExBook.Views.Authentication.LoginViewModel
+﻿
+@model ExBook.Views.Authentication.LoginViewModel
 @{
     ViewData["Title"] = "Sign in";
 }
 <div>
+
     <div class="card login-card shadow-sm">
         <div class="card-body">
-            <h3 class="card-title text-left mb-4 mt-1">Sign in</h3>
+            <div class="text-center intro"> <img src="~/images/login.png" width="160"> </div>
+            <h3 class="mt-4 text-center">Sign in</h3>
+
             <hr>
             @if (Model.Message != null)
             {
                 <p class="text-danger text-center">@Model.Message</p>
             }
-        <form method="post" action="">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+            <form method="post" action="">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        </div>
+                        <input name="login" class="form-control" placeholder="login" type="text" value=@Model.Login>
                     </div>
-                    <input name="login" class="form-control" placeholder="login" type="text" value=@Model.Login>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                        </div>
+                        <input name="password" class="form-control" placeholder="password" type="password">
                     </div>
-                    <input name="password" class="form-control" placeholder="password" type="password">
                 </div>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block"> Login  </button>
-            </div>
-            <div class="d-flex justify-content-center links">
-                Don't have an account? <a href="/register">Sign Up</a>
-            </div>
-        </form>
+                <div class="form-group">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-outline-success btn-block">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign in
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center links">
+                    Don't have an account?
+                    &nbsp;
+                    <a href="/register">Sign Up</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -49,7 +60,7 @@
     {
         .login-card
         {
-            margin-top: calc(50vh - 200px);
+            margin-top: calc(35vh - 200px);
         }
     }
 </style>
