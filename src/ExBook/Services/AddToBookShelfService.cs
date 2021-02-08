@@ -15,14 +15,16 @@ namespace ExBook.Services
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly OpenLibraryClient openLibraryClient;
+        private readonly AttachmentService attachmentService;
 
-        public AddToBookShelfService(ApplicationDbContext applicationDbContext, OpenLibraryClient openLibraryClient)
+        public AddToBookShelfService(ApplicationDbContext applicationDbContext, OpenLibraryClient openLibraryClient, AttachmentService attachmentService)
         {
             this.applicationDbContext = applicationDbContext;
             this.openLibraryClient = openLibraryClient;
+            this.attachmentService = attachmentService;
         }
-        
-         public async Task<bool> AddBookToBookshelf(AddToBookShelfViewModel book, Guid? user)
+
+        public async Task<bool> AddBookToBookshelf(AddToBookShelfViewModel book, Guid? user)
         {
             
             BookShelf? userBookShelf = this.applicationDbContext.BookShelves.FirstOrDefault(b => b.UserId == user); // bookshelf from current user
@@ -39,6 +41,8 @@ namespace ExBook.Services
             book.Name = book.Name.Trim();
             Book bok = this.applicationDbContext.Books.FirstOrDefault(b => b.Name == book.Name);
 
+            Guid? photo = book.Photo != null ? await attachmentService.AddAttachment(book.Photo) : (Guid?)null;
+
             if (bok != null) //book already exists
             {
 
@@ -52,6 +56,7 @@ namespace ExBook.Services
                     BookShelfBook ?bookToBringBack = this.applicationDbContext.BookShelfBooks.FirstOrDefault(b =>
                         b.BookShelfId == userBookShelf.Id && b.BookId == bok.Id);
                         bookToBringBack.IsRemoved = false;
+                        bookToBringBack.Photo = photo;
                         await this.applicationDbContext.SaveChangesAsync();
                         return true;
                 }
@@ -60,7 +65,8 @@ namespace ExBook.Services
                     userBookShelf.BookShelfBooks.Add(new BookShelfBook()
                     {
                         Id = Guid.NewGuid(),
-                        BookId = bok.Id
+                        BookId = bok.Id,
+                        Photo = photo,
                     });
 
                 }
@@ -98,7 +104,8 @@ namespace ExBook.Services
                     userBookShelf.BookShelfBooks.Add(new BookShelfBook()
                     {
                         Id = Guid.NewGuid(),
-                        BookId = bok.Id
+                        BookId = bok.Id,
+                        Photo = photo,
                     });
                 }
                 else //book exists in database
@@ -116,7 +123,8 @@ namespace ExBook.Services
                         userBookShelf.BookShelfBooks.Add(new BookShelfBook()
                         {
                             Id = Guid.NewGuid(),
-                            BookId = bok2.Id
+                            BookId = bok2.Id,
+                            Photo = photo,
                         });
 
                     }
