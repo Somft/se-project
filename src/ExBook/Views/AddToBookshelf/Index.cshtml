@@ -2,7 +2,83 @@
 @{
     ViewData["Title"] = "Add Book To bookshelf";
 }
+
+<div class="container flex align-items-center " style="height:100%;">
+    <div class="row justify-content-center align-items-center" style="height:90vh;">
+       <form asp-controller="AddToBookshelf" asp-action="Index" method="post">
+           <div class="card">
+               
+               <div class="card-header align-items-center">
+                   Add another treasure to your bookshelf!
+                   @*<div class="btn-group float-right" role="group" aria-label="Basic example">
+                        <a onclick="EditUser();" class="btn btn-outline-secondary users" title="Edit"> <i class="fas fa-edit"></i></a>
+                    </div>*@
+               </div>
+              
+               <div class="card-body" style="padding: 2.25rem">
+                    @if (Model.Message != null)
+                    {
+                       <p class="text-danger text-center">@Model.Message</p>
+                    }
+                   <div class="form-row justify-content-center">
+                       <div class="form-group col-md-12">
+                           <label for="Book title:">Name</label>
+                           <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
+                           <span asp-validation-for="Name" class="invalid-feedback"></span></div>
+                   </div>
+
+                   <div class="form-row justify-content-center">
+                       <div class="form-group col-md-12">
+                           <label for="Author:">Author</label>
+                           <input asp-for="Author" class=@GetInputClass("Author") placeholder="J.K Rowling" type="text">
+                           <span asp-validation-for="Author" class="invalid-feedback"></span></div>
+                   </div>
+
+
+                   <div class="form-row justify-content-center">
+                       <div class="form-group col-md-12">
+                           <label for="Created">Created</label>
+                           <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
+                           <span asp-validation-for="Created" class="invalid-feedback"></span> </div>
+
+                   </div>
+
+
+               </div>
+               <div class="card-footer">
+                   <div class="float-right buttons " style="visibility: visible;" id="footerButtons">
+                       <button type="submit" class="vertical-center">Add this book</button>
+                   </div>
+               </div>
+           </div>
+        </form>
+    </div>
+</div>
+
+
 <style>
+        .col-md-12 {
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+    </style>
+
+
+@functions {
+    private string GetInputClass(string inputName)
+    {
+        string result = "form-control";
+
+        if (this.ViewData.ModelState[inputName]?.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+        {
+            result += " is-invalid";
+        }
+
+        return result;
+    }
+}
+
+@*<style>
     .vertical-center {
        position: relative;
        bottom: 20px;
@@ -27,7 +103,7 @@
             {
                 <p class="text-danger text-center">@Model.Message</p>
             }
-            <form asp-controller="AddToBookshelf" asp-action="Index" method="post" enctype="multipart/form-data">
+            <form asp-controller="AddToBookshelf" asp-action="Index" method="post">
                 <div class="form-group">
                     <label for="Book title:">Name</label>
                     <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
@@ -45,13 +121,6 @@
                         <label for="Created">Created</label>
                         <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
                         <span asp-validation-for="Created" class="invalid-feedback"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="Created">Photo</label>
-                        <input asp-for="Photo" class=@GetInputClass("Photo") type="file" accept=".png">
-                        <span asp-validation-for="Photo" class="invalid-feedback"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -74,4 +143,4 @@
 
         return result;
     }
-}
+}*@
