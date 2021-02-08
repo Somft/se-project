@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 namespace ExBook.Models.AddToBookShelf
 {
@@ -18,7 +19,8 @@ namespace ExBook.Models.AddToBookShelf
         [MaxLength(4)]
         public string Created { get; set; } = "";
         
-        public string? Message
-         { get; set; } = null;
+        public string? Message { get; set; } = null;
+
+        public IFormFile? Photo { get; set; } = null;
     }
 }

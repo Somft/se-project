@@ -103,7 +103,11 @@ namespace ExBook.Services
                 }
                 else //book exists in database
                 {
-                    if (await this.applicationDbContext.BookShelfBooks.AnyAsync(b => b.BookShelfId == userBookShelf.Id && b.BookId == bok2.Id)) // exists in wishlist? throw error
+                    if (await this.applicationDbContext.BookShelfBooks.AnyAsync(
+                        b => b.BookShelfId == userBookShelf.Id && 
+                        b.BookId == bok2.Id && 
+                        !b.IsLocked &&
+                        !b.IsRemoved)) // exists in wishlist? throw error
                     {
                         return false;
                     }

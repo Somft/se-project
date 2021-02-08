@@ -29,6 +29,15 @@
             </div>
         }
 
+        @if ((IsRecipiedLogged() || IsInitiatorLogged()) && this.Model.Transaction.Status == Transaction.Statuses.Rejected)
+        {
+            <div class="col-12 col-md-12">
+                <div class="alert alert-danger" role="alert">
+                    <h2>This transaction is rejected.</h2>
+                    You can retry transaction with the same user, offering different books.
+                </div>
+            </div>
+        }
 
         <div class="col-12 col-md-6 p-2">
             <div class="card">
@@ -56,8 +65,17 @@
                         @foreach (var book in Model.Transaction.InitiatorBooks)
                         {
                             <tr>
-                                <td>@book.Book.Name</td>
-                                <td>@book.Book.Author</td>
+                                @if (Model.Transaction.Status != Transaction.Statuses.Accepted && (book.IsLocked || book.IsRemoved))
+                                {
+                                    <td class="text-danger">@book.Book.Name</td>
+                                    <td class="text-danger">@book.Book.Author</td>
+                                }
+                                else
+                                {
+                                    <td>@book.Book.Name</td>
+                                    <td>@book.Book.Author</td>
+                                }
+
                                 @if (IsEditingEnabled())
                                 {
                                     <td>
@@ -131,8 +149,16 @@
                         @foreach (var book in Model.Transaction.RecipientBooks)
                         {
                             <tr>
-                                <td>@book.Book.Author</td>
-                                <td>@book.Book.Name</td>
+                                @if (Model.Transaction.Status != Transaction.Statuses.Accepted && (book.IsLocked || book.IsRemoved))
+                                {
+                                    <td class="text-danger">@book.Book.Name</td>
+                                    <td class="text-danger">@book.Book.Author</td>
+                                }
+                                else
+                                {
+                                    <td>@book.Book.Name</td>
+                                    <td>@book.Book.Author</td>
+                                }
                                 @if (IsEditingEnabled())
                                 {
                                     <td>
@@ -191,7 +217,8 @@
                               asp-action="SendToReview"
                               asp-route-transactionId="@Model.Transaction.Id"
                               method="post">
-                            <input type="submit" value="Submit" class="btn btn-primary btn-sm " />
+                            <input type="submit" value="Submit" class="btn btn-primary btn-sm "
+                                   disabled=@IsAnyBookUnavailable() />
                         </form>
                     }
 
@@ -219,10 +246,6 @@
                               class="p-2">
                             <input type="submit" value="Retry" class="btn btn-primary btn-sm " />
                         </form>
-
-                        <div class="alert alert-warning p-2" role="alert" style="width: max-content">
-                            This transaction was rejected.
-                        </div>
                     }
                 }
 
@@ -243,7 +266,7 @@
                               asp-route-transactionId="@Model.Transaction.Id"
                               method="post"
                               class="p-2">
-                            <input type="submit" value="Accept" class="btn btn-primary btn-sm " />
+                            <input type="submit" value="Accept" class="btn btn-primary btn-sm " disabled=@IsAnyBookUnavailable() />
                         </form>
                     }
                 }
@@ -287,5 +310,12 @@
     private bool IsEditingEnabled()
     {
         return IsInitiatorLogged() && this.Model.Transaction.Status == Transaction.Statuses.Initialized;
+    }
+
+    private bool IsAnyBookUnavailable()
+    {
+        return Model.Transaction.RecipientBooks.Any(b => b.IsRemoved || b.IsLocked)
+            || Model.Transaction.InitiatorBooks.Any(b => b.IsRemoved || b.IsLocked)
+            || (!Model.Transaction.InitiatorBooks.Any() && !Model.Transaction.RecipientBooks.Any());
     }
 } 

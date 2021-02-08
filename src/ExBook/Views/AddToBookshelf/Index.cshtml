@@ -27,7 +27,7 @@
             {
                 <p class="text-danger text-center">@Model.Message</p>
             }
-            <form asp-controller="AddToBookshelf" asp-action="Index" method="post">
+            <form asp-controller="AddToBookshelf" asp-action="Index" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="Book title:">Name</label>
                     <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
@@ -45,6 +45,13 @@
                         <label for="Created">Created</label>
                         <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
                         <span asp-validation-for="Created" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="Created">Photo</label>
+                        <input asp-for="Photo" class=@GetInputClass("Photo") type="file" accept=".png">
+                        <span asp-validation-for="Photo" class="invalid-feedback"></span>
                     </div>
                 </div>
                 <div class="form-group">

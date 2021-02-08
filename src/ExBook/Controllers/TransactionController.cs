@@ -51,13 +51,13 @@ namespace ExBook.Controllers
 
                 RecipientBooks = transaction.Recipient.BookShelves
                     .SelectMany(b => b.BookShelfBooks)
-                    .Where(b => !b.IsLocked)
+                    .Where(b => !b.IsLocked && !b.IsRemoved)
                     .Where(b => !transaction.RecipientBooks.Select(b => b.Id).Contains(b.Id))
                     .ToList(),
 
                 InitiatorBooks = transaction.Initiator.BookShelves
                     .SelectMany(b => b.BookShelfBooks)
-                    .Where(b => !b.IsLocked)
+                    .Where(b => !b.IsLocked && !b.IsRemoved)
                     .Where(b => !transaction.InitiatorBooks.Select(b => b.Id).Contains(b.Id))
                     .ToList()
             });
