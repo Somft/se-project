@@ -45,7 +45,7 @@ namespace ExBook.Controllers
             }
 
             if (userId != transaction.InitiatorId && userId != transaction.RecipientId 
-                && !this.HttpContext.User.HasRole("Admin"))
+                && !this.HttpContext.User.HasRole("admin"))
             {
                 return this.BadRequest();
             }
