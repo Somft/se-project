@@ -32,19 +32,24 @@ namespace ExBook.Controllers
         {
             Guid userId = this.HttpContext.User.GetId()!.Value;
 
-            Transaction transaction = await this.dbContext.Transactions
-                .SingleAsync(t => t.Id == id);
+            Transaction? transaction = await this.dbContext.Transactions
+                .SingleOrDefaultAsync(t => t.Id == id);
 
-            if (userId != transaction.InitiatorId && userId != transaction.RecipientId)
+            if (transaction == null)
             {
-                return this.BadRequest();
+                return this.NotFound();
             }
-
             if (userId == transaction.RecipientId && transaction.Status == Transaction.Statuses.Initialized)
             {
-                return this.BadRequest();
+                return this.NotFound();
             }
 
+            if (userId != transaction.InitiatorId && userId != transaction.RecipientId 
+                && !this.HttpContext.User.HasRole("Admin"))
+            {
+                return this.BadRequest();
+            }
+            
             return this.View(new TransactionViewModel()
             {
                 Transaction = transaction,
