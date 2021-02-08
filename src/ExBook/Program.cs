@@ -49,7 +49,7 @@ namespace ExBook
                 return "v0.0.0.0";
             }
             DateTime buildDate = new DateTime(2000, 1, 1).AddDays(assemblyInfo.Version.Build).AddSeconds(assemblyInfo.Version.Revision * 2);
-            return "v" + assemblyInfo.Version?.ToString() + "-rc.1 " + buildDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            return "v" + assemblyInfo.Version?.ToString() + "-rc.2 " + buildDate.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
         }
     }
