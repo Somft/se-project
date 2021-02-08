@@ -53,14 +53,17 @@
                             <small>@book.Book.Created.Value.ToShortDateString()</small>
                         </div>
                         <p class="mb-1">
-                            @if (@book.Photo != null)
+                            @if (book.Photo != null)
                             {
-                                <img src=@("/attachment?id=" + @book.Photo) alt="Real Photo" style="width:110px;height:160px;" onclick="Open('@book.Photo');">
+                                <img src=@("/attachment?id=" + book.Photo) alt="Cover" style="width:110px;height:160px;" id="test" onclick="Open('@book.Book.CoverUrl');" />
+                            }
+                            else if (@book.Book.CoverUrl != null)
+                            {
+                                <img src=@ExBook.Extensions.BookCoverExtensions.GetMediumCoverUrl(@book.Book.CoverUrl) alt="Cover" style="width:110px;height:160px;" id="test" onclick="Open('@book.Book.CoverUrl');" />
                             }
                             else
                             {
                                 <img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:110px;height:160px;">
-
                             }
                             Owner: @book.BookShelf.User.Login
                             <div class="btn-group float-right" role="group" aria-label="Basic example">
