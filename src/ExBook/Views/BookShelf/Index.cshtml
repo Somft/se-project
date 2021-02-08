@@ -8,7 +8,169 @@
                         ,"Actions"
                         };
 }
+<div class="modal fade " id="coverModal" role="dialog"></div>
+<div class="card searchbar-card shadow-sm sticky-top">
+    <div class="card-header">
+        Your bookshelf 
+    </div>
+    <div class="card-body ">
+        
+               
+         <div >
+                <form method="get" asp-area="" asp-controller="AddToBookShelf" asp-action="Index">
+                    <button type="submit" class="btn btn-outline-dark" class="vertical-center">Add new book</button>
+                </form>
+            </div>
 
+        
+    </div>
+</div>
+
+<div class="books flex">
+    <div class="row" style="margin-right:0 !important; margin-left:0 !important">
+        @foreach (var book in Model.Books)
+        {
+            <div class="col-4 ">
+                <div class="list-group" style="max-height:280px;">
+                    <li class="list-group-item list-group-item-action flex-column align-items-start" style="height:280px;">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">
+                                <b>"@book.Book.Name"</b>
+                                <br />@book.Book.Author
+                            </h5>
+                            <small>@book.Book.Created.Value.ToShortDateString()</small>
+                        </div>
+                        <p class="mb-1">
+                            @if (@book.Book.CoverUrl != null)
+                            {
+                                <img src=@ExBook.Extensions.BookCoverExtensions.GetMediumCoverUrl(@book.Book.CoverUrl) alt="Cover" style="width:110px;height:160px;" id="test" onclick="Open('@book.Book.CoverUrl');" />
+                            }
+                            else
+                            {
+                                <img src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png" onclick="Open('https://icons.iconarchive.com/icons/papirus-team/papirus-status/256/image-missing-icon.png');" alt="Cover" style="width:110px;height:160px;">
+                            }
+                            <div class="btn-group float-right" role="group" aria-label="Basic example">
+                                
+                                @*<button type="submit" class="btn btn-primary btn-sm" id="@book.Id"
+                                          onclick="addToWishList('@book.Id');" title="Add this book to your wishlist">
+                                     <i class="fas fa-plus"></i>
+                                  </button>*@
+
+                                <form asp-controller="AddToBookshelf" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromShelf" method="post">
+                                    
+                                   <form asp-controller="AddToBookshelf" asp-route-id="@book.Book.Id" asp-action="RemoveBookFromShelf" method="post">
+                                    <td><button  class="btn btn-outline-danger" type="submit" ><i class="far fa-trash-alt"></i></button></td>
+                                   </form>
+                                    </form>
+
+                            </div>
+                        </p>
+                    </li>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hbtn {
+          position: relative;
+          box-sizing: border-box;
+          display: inline-block;
+          overflow: hidden;
+          padding: 8px 20px;
+          margin: 0px 3px 6px;
+          text-align: center;
+          border: 2px solid rgb(0, 0, 0);
+          text-decoration: none;
+          color: rgb(0, 0, 0);
+          white-space: nowrap;
+          z-index: 0;
+    } 
+     
+    
+    .hbtn i {
+          padding-right: 8px;
+    } 
+     
+    
+    .hb-fill-top::before {
+          position: absolute;
+          content: "";
+          background: rgb(0, 0, 0);
+          transition-duration: 0.3s;
+          z-index: -1;
+          inset: auto auto 0px 0px;
+          width: 100%;
+          height: 0px;
+          opacity: 1;
+    } 
+     
+    
+    .hb-fill-top:hover::before {
+          width: 100%;
+          height: 100%;
+          opacity: 1;
+    } 
+     
+    
+    .hb-fill-top:hover {
+          color: rgb(255, 255, 255);
+          background: rgb(0, 0, 0);
+          transition: color 0.3s ease 0s, background 0s ease 0.3s;
+    } 
+     
+     .hbtn2 {
+           position: relative;
+           box-sizing: border-box;
+           display: inline-block;
+           overflow: hidden;
+           padding: 8px 20px;
+           margin: 0px 3px 6px;
+           text-align: center;
+           border: 2px solid rgb(255, 255, 255);
+           text-decoration: none;
+           color: rgb(255, 255, 255);
+           white-space: nowrap;
+           z-index: 0;
+     } 
+      
+     
+     .hbtn2 i {
+           padding-right: 8px;
+     } 
+      
+     
+     .hb-fill-right-rev::before {
+           position: absolute;
+           content: "";
+           background: rgb(0, 0, 00);
+           transition-duration: 0.3s;
+           z-index: -1;
+           inset: 0px auto auto 0px;
+           width: 100%;
+           height: 100%;
+           opacity: 1;
+     } 
+      
+     
+     .hb-fill-right-rev:hover::before {
+           width: 0px;
+           height: 100%;
+           opacity: 1;
+     } 
+      
+     
+     .hb-fill-right-rev:hover {
+           background: transparent;
+           color: rgb(0, 0, 0);
+           transition: color 0.3s ease 0s, background 0s ease 0s;
+     } 
+      
+
+</style>
+    
+    
 
 @*<h1>Index</h1>
     @foreach (var book in Model.Books)
@@ -16,6 +178,7 @@
         <div>Book Title: @book.Book.Name </div>
     }
 *@
+@*
 <style>
 
 .container {
@@ -112,6 +275,7 @@ h4 {
     </div>
 </div>
 </div>   
+*@
 
      
 
