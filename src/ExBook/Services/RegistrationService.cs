@@ -2,7 +2,7 @@
 using ExBook.Mails.Services;
 using ExBook.Mails.Templates;
 using ExBook.Models.Authentication;
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -16,12 +16,14 @@ namespace ExBook.Services
         private readonly ApplicationDbContext applicationDbContext;
         private readonly IMailSender mailSender;
         private readonly IConfiguration configuration;
+        private readonly IPasswordHasher<User> passwordHasher;
 
-        public RegistrationService(ApplicationDbContext applicationDbContext, IMailSender mailSender, IConfiguration configuration)
+        public RegistrationService(ApplicationDbContext applicationDbContext, IMailSender mailSender, IConfiguration configuration, IPasswordHasher<User> passwordHasher)
         {
             this.applicationDbContext = applicationDbContext;
             this.mailSender = mailSender;
             this.configuration = configuration;
+            this.passwordHasher = passwordHasher;
         }
 
         public async Task<bool> RegisterUser(RegisterViewModel userData)
@@ -38,10 +40,11 @@ namespace ExBook.Services
                 Email = userData.Email,
                 Name = userData.Name,
                 Surname = userData.Surname,
-                Password = userData.Password,
                 Role = "user",
                 IsEmailConfirmed = false,
             }).Entity;
+            user.Password = passwordHasher.HashPassword(user, userData.Password);
+
             await this.applicationDbContext.SaveChangesAsync();
 
             await this.mailSender.SendEmail(

@@ -8,6 +8,7 @@ using ExBook.Views.Authentication;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,13 +30,20 @@ namespace ExBook.Controllers
         private readonly IConfiguration configuration;
         private readonly IMailSender mailSender;
         private readonly ILogger logger;
+        private readonly IPasswordHasher<User> passwordHasher;
 
-        public AuthenticationController(ApplicationDbContext applicationDbContext, IConfiguration configuration, IMailSender mailSender, ILogger<AuthenticationController> logger)
+        public AuthenticationController(
+            ApplicationDbContext applicationDbContext,
+            IConfiguration configuration,
+            IMailSender mailSender,
+            ILogger<AuthenticationController> logger,
+            IPasswordHasher<User> passwordHasher)
         {
             this.applicationDbContext = applicationDbContext;
             this.configuration = configuration;
             this.mailSender = mailSender;
             this.logger = logger;
+            this.passwordHasher = passwordHasher;
         }
 
         [HttpGet]
@@ -76,9 +84,9 @@ namespace ExBook.Controllers
             if (user.IsEmailAuthenticationEnabled)
             {
 
-                var token = this.GenerateJwt(user);
-                var url = this.configuration["App:Url"] + "login-token?token=" + token;
-                logger.LogInformation(url);
+                string token = this.GenerateJwt(user);
+                string url = this.configuration["App:Url"] + "login-token?token=" + token;
+                this.logger.LogInformation(url);
                 await this.mailSender.SendEmail("Authentication", new AuthenticationContext(user.Email, "Loging in")
                 {
                     Url = url
@@ -132,7 +140,7 @@ namespace ExBook.Controllers
             User? user = await this.applicationDbContext.Users.SingleOrDefaultAsync(u => u.Login == login);
 
             //TODO use hash!!!!!!!!!!!
-            if (user != null && user.Password == password)
+            if (this.passwordHasher.VerifyHashedPassword(user, user.Password, password) != PasswordVerificationResult.Failed)
             {
                 return user;
             }
