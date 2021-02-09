@@ -138,7 +138,6 @@ namespace ExBook.Services
             User currentUser = await GetUserById(sentUserData.Id);
             currentUser.Login = sentUserData.Login;
             currentUser.Email = sentUserData.Email;
-            currentUser.Password = sentUserData.Password;
             currentUser.Role = sentUserData.Role;
             currentUser.Name = sentUserData.Name;
             currentUser.Surname = sentUserData.Surname;

@@ -11,56 +11,55 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row justify-content-center">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputLogin">Login</label>
                             <input type="text" class="form-control details" id="Login" name="Login" placeholder="Login" value="@Model.Login" readonly required>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="inputPassword">Password</label>
-                            <input type="text" class="form-control details" id="Password" name="Password" placeholder="Password" value="@Model.Password" readonly required>
-                        </div>
-                    </div>
-                    <div class="form-row justify-content-center">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputEmail">Email</label>
                             <input type="text" class="form-control details" id="Email" name="Email" placeholder="Email" value="@Model.Email" readonly required>
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="inputContactNumber">Contact Number</label>
-                            <input type="text" class="form-control details" id="ContactNumber" name="ContactNumber" placeholder="Number" value="@Model.ContactNumber" readonly>
-                        </div>
                     </div>
                     <div class="form-row justify-content-center">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputName">Name</label>
                             <input type="text" class="form-control details" id="Name" name="Name" placeholder="Name" value="@Model.Name" readonly required>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputSurname">Surname</label>
                             <input type="text" class="form-control details" id="Surname" name="Surname" placeholder="Surname" value="@Model.Surname" readonly required>
                         </div>
                     </div>
                     <div class="form-row justify-content-center">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputAddress">Address</label>
                             <input type="text" class="form-control details" id="Address" name="Address" placeholder="Address" value="@Model.Address" readonly>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputCity">City</label>
                             <input type="text" class="form-control details" id="City" name="City" placeholder="City" value="@Model.City" readonly>
                         </div>
                     </div>
                     <div class="form-row justify-content-center">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputZip">Postal Code</label>
                             <input type="text" class="form-control details" id="PostalCode" name="PostalCode" placeholder="Postal Code" value="@Model.PostalCode" readonly>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="inputCountry">Country</label>
                             <input type="text" class="form-control details" id="Country" name="Country" placeholder="Country" value="@Model.Country" readonly>
                         </div>
                     </div>
-
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-6" style="visibility:hidden;">
+                            <label for="inputContactNumber">Contact Number</label>
+                            <input type="text" class="form-control details" id="ContactNumber" name="ContactNumber" placeholder="Number" value="@Model.ContactNumber" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputContactNumber">Contact Number</label>
+                            <input type="text" class="form-control details" id="ContactNumber" name="ContactNumber" placeholder="Number" value="@Model.ContactNumber" readonly>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="float-right buttons " style="visibility:hidden;" id="footerButtons">
@@ -75,23 +74,23 @@
 
 
 
-    @section Scripts
+@section Scripts
 {
-        <script type="text/javascript">
-            function EditUser() {
-                var footer = document.getElementById("footerButtons");
-                $('.details').each(function () {
-                    $(this).removeAttr('readonly');
-                });
-                footer.style.visibility = "visible";
-            };
+    <script type="text/javascript">
+        function EditUser() {
+            var footer = document.getElementById("footerButtons");
+            $('.details').each(function () {
+                $(this).removeAttr('readonly');
+            });
+            footer.style.visibility = "visible";
+        };
 
-        </script>
+    </script>
+}
+
+<style>
+    .col-md-12 {
+        margin-left: 50px;
+        margin-right: 50px;
     }
-
-    <style>
-        .col-md-12 {
-            margin-left: 50px;
-            margin-right: 50px;
-        }
-    </style>
+</style>

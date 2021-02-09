@@ -34,7 +34,6 @@ namespace ExBook.Services
             User currentUser = await GetUser(userId);
             currentUser.ContactNumber = sentUserData.ContactNumber;
             currentUser.Login = sentUserData.Login;
-            currentUser.Password = sentUserData.Password;
             currentUser.Email = sentUserData.Email;
             currentUser.Name = sentUserData.Name;
             currentUser.Surname = sentUserData.Surname;
