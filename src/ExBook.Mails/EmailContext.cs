@@ -21,7 +21,7 @@ namespace ExBook.Mails.Templates
             this.Subject = subject;
         }
 
-        public EmailContext(Mail mailToSend) : this(mailToSend.Subject, mailToSend.To)
+        public EmailContext(Mail mailToSend) : this(mailToSend.To, mailToSend.Subject)
         {
 
         }
