@@ -26,7 +26,7 @@ namespace ExBook.Mails.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            this.logger.LogDebug("Background mail sender enabled");
+            this.logger.LogInformation("Background mail sender enabled");
 
             while (!stoppingToken.IsCancellationRequested)
             {
