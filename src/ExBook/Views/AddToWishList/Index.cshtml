@@ -5,115 +5,128 @@
 
 <div class="container flex align-items-center " style="height:100%;">
     <div class="row justify-content-center align-items-center" style="height:90vh;">
-       <form asp-controller="AddToWishList" asp-action="Index" method="post">
-           <div class="card">
-               
-               <div class="card-header align-items-center">
-                   Add another volume to your wishlist!
-                   
-               </div>
-              
-               <div class="card-body" style="padding: 2.25rem" style ="padding-top: 2rem ">
+        <form asp-controller="AddToWishList" asp-action="Index" method="post">
+            <div class="card">
+
+                <div class="card-header align-items-center">
+                    Add another volume to your wishlist!
+
+                </div>
+
+                <div class="card-body" style="padding: 2.25rem" style="padding-top: 2rem ">
                     @if (Model.Message != null)
                     {
-                       <p class="text-danger text-center">@Model.Message</p>
+                        @if (Model.Success)
+                        {
+                            <p class="text-success text-center">@Model.Message</p>
+                        }
+                        else
+                        {
+                            <p class="text-danger text-center">@Model.Message</p>
+                        }
+
                     }
-                   <div class="form-row justify-content-center">
-                       <div class="form-group col-md-12">
-                           <label for="Book title:">Name</label>
-                           <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
-                           <span asp-validation-for="Name" class="invalid-feedback"></span></div>
-                   </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-12">
+                            <label for="Book title:">Name</label>
+                            <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
+                            <span asp-validation-for="Name" class="invalid-feedback"></span>
+                        </div>
+                    </div>
 
-                   <div class="form-row justify-content-center">
-                       <div class="form-group col-md-12">
-                           <label for="Author:">Author</label>
-                           <input asp-for="Author" class=@GetInputClass("Author") placeholder="J.K Rowling" type="text">
-                           <span asp-validation-for="Author" class="invalid-feedback"></span></div>
-                   </div>
-
-
-                   <div class="form-row justify-content-center">
-                       <div class="form-group col-md-12">
-                           <label for="Created">Created</label>
-                           <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
-                           <span asp-validation-for="Created" class="invalid-feedback"></span> </div>
-
-                   </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-12">
+                            <label for="Author:">Author</label>
+                            <input asp-for="Author" class=@GetInputClass("Author") placeholder="J.K Rowling" type="text">
+                            <span asp-validation-for="Author" class="invalid-feedback"></span>
+                        </div>
+                    </div>
 
 
-               </div>
-               <div class="card-footer">
-                   <div class="float-right buttons " style="visibility: visible;" id="footerButtons">
-                       <button type="submit" class="vertical-center">Wish this book</button>
-                   </div>
-               </div>
-           </div>
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-12">
+                            <label for="Created">Created</label>
+                            <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
+                            <span asp-validation-for="Created" class="invalid-feedback"></span>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="card-footer">
+                    <div class="float-right buttons " style="visibility: visible;" id="footerButtons">
+                        <button type="submit" class="vertical-center">Wish this book</button>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 
 
 <style>
-        .col-md-12 {
-            margin-left: 40px;
-            margin-right: 40px;
-        }
-    </style>
+
+    .col-md-12
+    {
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+</style>
 
 
 @*<style>
-    .vertical-center {
-       position: relative;
-       bottom: 20px;
-       right: 20px;
-       background-color: darkred;
-       color: #FFFFFF;
-       padding: 10px;
-       border-radius: 10px;
-       -moz-border-radius: 10px;
-       -webkit-border-radius: 10px;
-       margin:20px;
-       height: 40px;
-         }
-</style>
-    
-<div>
-    <div class="card login-card shadow-sm">
-        <div class="card-body">
-            <h3 class="card-title text-left mb-4 mt-1">Add a book to your wish list</h3>
-            <hr>
-            @if (Model.Message != null)
-            {
-                <p class="text-danger text-center">@Model.Message</p>
-            }
-            <form asp-controller="AddToWishList" asp-action="Index" method="post">
-                <div class="form-group">
-                    <label for="Book title:">Name</label>
-                    <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
-                    <span asp-validation-for="Name" class="invalid-feedback"></span>
-                </div>
+        .vertical-center {
+           position: relative;
+           bottom: 20px;
+           right: 20px;
+           background-color: darkred;
+           color: #FFFFFF;
+           padding: 10px;
+           border-radius: 10px;
+           -moz-border-radius: 10px;
+           -webkit-border-radius: 10px;
+           margin:20px;
+           height: 40px;
+             }
+    </style>
 
-                <div class="form-group">
-                    <label for="Author:">Author</label>
-                    <input asp-for="Author" class=@GetInputClass("Author") placeholder="J.K Rowling" type="text">
-                    <span asp-validation-for="Author" class="invalid-feedback"></span>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="Created">Created</label>
-                        <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
-                        <span asp-validation-for="Created" class="invalid-feedback"></span>
+    <div>
+        <div class="card login-card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-left mb-4 mt-1">Add a book to your wish list</h3>
+                <hr>
+                @if (Model.Message != null)
+                {
+                    <p class="text-danger text-center">@Model.Message</p>
+                }
+                <form asp-controller="AddToWishList" asp-action="Index" method="post">
+                    <div class="form-group">
+                        <label for="Book title:">Name</label>
+                        <input asp-for="Name" class=@GetInputClass("Name") placeholder="Harry Potter" type="text">
+                        <span asp-validation-for="Name" class="invalid-feedback"></span>
                     </div>
-                </div>
-                <div class="form-group">
-                     <button type="submit" class="vertical-center">Add this book</button>
-                </div>
-            </form>
+
+                    <div class="form-group">
+                        <label for="Author:">Author</label>
+                        <input asp-for="Author" class=@GetInputClass("Author") placeholder="J.K Rowling" type="text">
+                        <span asp-validation-for="Author" class="invalid-feedback"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="Created">Created</label>
+                            <input asp-for="Created" class=@GetInputClass("The year of publishment") placeholder="2001" type="text">
+                            <span asp-validation-for="Created" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                         <button type="submit" class="vertical-center">Add this book</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 
 @functions {
     private string GetInputClass(string inputName)

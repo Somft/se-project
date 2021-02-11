@@ -18,8 +18,10 @@ namespace ExBook.Models.AddToBookShelf
         [MinLength(4)]
         [MaxLength(4)]
         public string Created { get; set; } = "";
-        
+
         public string? Message { get; set; } = null;
+
+        public bool Success { get; set; } = false;
 
         public IFormFile? Photo { get; set; } = null;
     }

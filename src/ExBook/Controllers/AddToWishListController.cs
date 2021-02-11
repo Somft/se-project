@@ -25,18 +25,18 @@ namespace ExBook.Controllers
 
         [HttpGet]
         [Route("/addtowishlist")]
-    
+
         public IActionResult Index()
         {
-           return this.View(new AddToWishListViewModel() );
+            return this.View(new AddToWishListViewModel());
         }
 
         public async Task<IActionResult> Index(AddToWishListViewModel input)
         {
             string login = this.HttpContext.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Value;
             Guid num = dbContext.Users.Where(user => user.Login == login).Single().Id;
-            
-            if ( !await this.addToWishListService.AddBook(input, this.HttpContext.User.GetId()))
+
+            if (!await this.addToWishListService.AddBook(input, this.HttpContext.User.GetId()))
             {
                 input.Message = "Book exists on your wish list";
                 return this.View(input);
@@ -44,6 +44,7 @@ namespace ExBook.Controllers
             else
             {
                 input.Message = "Book added successfully!";
+                input.Success = true;
                 return this.View(input);
             }
         }
@@ -52,7 +53,7 @@ namespace ExBook.Controllers
         {
             await addToWishListService.RemoveBook(Id);
             return this.RedirectToWishList();
-           
+
         }
 
 

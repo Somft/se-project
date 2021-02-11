@@ -48,6 +48,7 @@ namespace ExBook.Controllers
             else
             {
                 input.Message = "Book added successfully!";
+                input.Success = true;
                 return this.View(input);
             }
         }

@@ -52,27 +52,29 @@
                             <a class="nav-link" href="@Url.Action("Index", "UserAccount")"><i class="far fa-user"></i> My Account</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "BookShelf")"><i class="fas fa-book"></i> Bookshelf</a>
-                        </li>
+                        @if (!ExBook.Extensions.ClaimsPrincipalExtensions.HasRole(Context.User, "admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "BookShelf")"><i class="fas fa-book"></i> Bookshelf</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "WishList")"><i class="fas fa-list"></i> Wishlist</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "WishList")"><i class="fas fa-list"></i> Wishlist</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("UserTransactions", "Transaction")">
-                                <i class="fas fa-people-carry"></i>
-                                Transactions
-                                @{int transactions = GetTransactions();}
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("UserTransactions", "Transaction")">
+                                    <i class="fas fa-people-carry"></i>
+                                    Transactions
+                                    @{int transactions = GetTransactions();}
 
-                                @if (transactions > 0)
-                                {
-                                    <span class="badge badge-pill badge-info">@transactions</span>
-                                }
-                            </a>
-                        </li>
-
+                                    @if (transactions > 0)
+                                    {
+                                        <span class="badge badge-pill badge-info">@transactions</span>
+                                    }
+                                </a>
+                            </li>
+                        }
                         @if (ExBook.Extensions.ClaimsPrincipalExtensions.HasRole(Context.User, "admin"))
                         {
                             <li class="nav-item">
@@ -128,7 +130,7 @@
     html, body
     {
         height: 100%;
-        background:beige;
+        background: beige;
     }
 
     .navbar
@@ -232,7 +234,8 @@
         overflow: hidden;
     }
 
-        .book:before {
+        .book:before
+        {
             position: absolute;
             content: '';
             width: 110%;

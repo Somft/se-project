@@ -21,7 +21,7 @@ namespace ExBook.Models.AddToWhishList
         [MaxLength(4)]
         public string Created { get; set; } = "";
         public string? Message { get; set; } = null;
-
+        public bool Success { get; set; } = false;
     }
 
 }
